@@ -1,5 +1,10 @@
 import mongoose from 'mongoose';
 
+import '@/lib/models/User';
+import '@/lib/models/Book';
+import '@/lib/models/Transaction';
+import '@/lib/models/Review';
+
 declare global {
   var mongoose: {
     conn: typeof mongoose | null;
