@@ -12,12 +12,6 @@ export default function WishlistForm() {
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const refetchWishlist = async () => {
-    const res = await fetch('/api/user/profile');
-    const data = await res.json();
-    setWishlist(data.wishlist || []);
-  };
-
   useEffect(() => {
     if (session) {
       fetch('/api/user/profile').then(res => res.json()).then(data => setWishlist(data.wishlist || []));

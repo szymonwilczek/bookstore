@@ -12,12 +12,6 @@ export default function OfferedBooksList() {
   const [offeredBooks, setOfferedBooks] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const refetchOffered = async () => {
-    const res = await fetch('/api/user/profile');
-    const data = await res.json();
-    setOfferedBooks(data.offeredBooks || []);
-  };
-
   useEffect(() => {
     if (session) {
       fetch('/api/user/profile').then(res => res.json()).then(data => setOfferedBooks(data.offeredBooks || []));
