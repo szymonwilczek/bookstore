@@ -9,7 +9,7 @@ import RegisterForm from '@/components/register/register-form';
 import { Separator } from '@/components/ui/separator';
 
 export default function RegisterPage() {
-  const handleGoogleSignIn = () => signIn('google');
+  const handleGoogleSignIn = () => signIn('google', { callbackUrl: '/profile' });
 
   const handleSubmit = async (data: { username: string; email: string; password: string }) => {
     const res = await fetch('/api/auth/register', {
@@ -19,7 +19,12 @@ export default function RegisterPage() {
     });
     const result = await res.json();
     if (res.ok) {
-      alert('Registered successfully! Please log in.');
+      alert('Registered successfully! You will be redirected to login.');
+
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 1500);
+
     } else {
       alert(result.error);
     }

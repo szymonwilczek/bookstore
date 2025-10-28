@@ -19,11 +19,11 @@ export default function LoginPage() {
     if (result?.error) {
       alert('Login error: ' + result.error);
     } else {
-      alert('Logged in successfully!');
+      window.location.href = '/profile'; 
     }
   };
 
-  const handleGoogleSignIn = () => signIn('google');
+  const handleGoogleSignIn = () => signIn('google', { callbackUrl: '/profile' });
 
   return (
     <div className='relative flex h-auto min-h-screen items-center justify-center overflow-x-hidden px-4 py-10 sm:px-6 lg:px-8'>
