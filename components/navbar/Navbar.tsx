@@ -22,6 +22,7 @@ import {InfoMenu} from "./InfoMenu.tsx"
 import {NotificationMenu} from "./NotificationMenu.tsx"
 import {UserMenu} from "./UserMenu.tsx"
 import { useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 
 export interface NavbarNavItem {
   href?: string;
@@ -72,10 +73,11 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
     const containerRef = useRef<HTMLElement>(null);
     const {data: session } = useSession();
     const [userData, setUserData] = useState(null);
+    const pathname = usePathname();
 
     useEffect(() => {
       if (session) {
-    fetch('/api/user/profile').then(res => res.json()).then(setUserData);
+        fetch('/api/user/profile').then(res => res.json()).then(setUserData);
       }
     }, [session]);
 
@@ -109,6 +111,12 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
         ref.current = node;
       }
     }, [ref]);
+
+
+
+    if (pathname === '/login' || pathname === '/register') {
+      return null;
+    }
 
     return (
       <header
