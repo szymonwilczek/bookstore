@@ -1,49 +1,69 @@
 'use client';
-import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import Link from 'next/link';
+import AuthBackgroundShape from '@/assets/svg/auth-background-shape';
+import Logo from '@/assets/svg/logo';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import LoginForm from '@/components/login/login-form';
+import { Separator } from '@/components/ui/separator';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleEmailSignIn = async () => {
+  const handleSubmit = async (data: { email: string; password: string; rememberMe: boolean }) => {
     const result = await signIn('credentials', {
-      email,
-      password,
+      email: data.email,
+      password: data.password,
+      rememberMe: data.rememberMe.toString(),
       redirect: false,
     });
     if (result?.error) {
-      alert('Błąd logowania: ' + result.error);
+      alert('Login error: ' + result.error);
     } else {
-      alert('Zalogowano!');
+      alert('Logged in successfully!');
     }
   };
 
   const handleGoogleSignIn = () => signIn('google');
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl mb-4">Zaloguj się do Instant Book Exchange</h1>
-      <Input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="mb-2"
-      />
-      <Input
-        type="password"
-        placeholder="Hasło"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="mb-4"
-      />
-      <Button onClick={handleEmailSignIn} className="mb-4">Zaloguj przez Email</Button>
-      <Button onClick={handleGoogleSignIn} className="mb-4">Zaloguj przez Google</Button>
-      <p>Nie masz konta? <Link href="/register" className="text-blue-500">Zarejestruj się</Link></p>
+    <div className='relative flex h-auto min-h-screen items-center justify-center overflow-x-hidden px-4 py-10 sm:px-6 lg:px-8'>
+      <div className='absolute'>
+        <AuthBackgroundShape />
+      </div>
+
+      <Card className='z-1 w-full border-none shadow-md sm:max-w-lg'>
+        <CardHeader className='gap-6'>
+          <Logo className='gap-3' />
+
+          <div>
+            <CardTitle className='mb-1.5 text-2xl'>Sign In to Instant Book Exchange</CardTitle>
+            <CardDescription className='text-base'>Your bookshelf is waiting.</CardDescription>
+          </div>
+        </CardHeader>
+
+        <CardContent>
+          <div className='space-y-4'>
+            <LoginForm onSubmit={handleSubmit} />
+
+            <p className='text-muted-foreground text-center'>
+              Don&apos;t have an account yet?{' '}
+              <a href='/register' className='text-card-foreground hover:underline'>
+                Sign Up
+              </a>
+            </p>
+
+            <div className='flex items-center gap-4'>
+              <Separator className='flex-1' />
+              <p>or</p>
+              <Separator className='flex-1' />
+            </div>
+
+            <Button variant='ghost' className='w-full' onClick={handleGoogleSignIn}>
+              Sign in with Google
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -2,73 +2,68 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import Link from 'next/link';
+import AuthBackgroundShape from '@/assets/svg/auth-background-shape';
+import Logo from '@/assets/svg/logo';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import RegisterForm from '@/components/register/register-form';
+import { Separator } from '@/components/ui/separator';
 
 export default function RegisterPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [preferences, setPreferences] = useState({ genres: [] });
-
   const handleGoogleSignIn = () => signIn('google');
-  
-  const handleEmailSignUp = async () => {
+
+  const handleSubmit = async (data: { username: string; email: string; password: string }) => {
     const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, name }),
+      body: JSON.stringify(data),
     });
-    const data = await res.json();
+    const result = await res.json();
     if (res.ok) {
-      alert('Zarejestrowano! Teraz zaloguj się.');
+      alert('Registered successfully! Please log in.');
     } else {
-      alert(data.error);
+      alert(result.error);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl mb-4">Zarejestruj się w Instant Book Exchange</h1>
-      <Input
-        type="text"
-        placeholder="Imię"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="mb-2"
-      />
-      <Input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="mb-2"
-      />
-      <Input
-        type="password"
-        placeholder="Hasło"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="mb-4"
-      />
-      <Button onClick={handleEmailSignUp} className="mb-4">Zarejestruj przez Email</Button>
-      <Button onClick={handleGoogleSignIn} className="mb-4">Zarejestruj przez Google</Button>
-      <p>Masz konto? <Link href="/login" className="text-blue-500">Zaloguj się</Link></p>
-      
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline" className="mt-4">Dodaj preferencje (opcjonalne)</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogTitle>Twoje preferencje</DialogTitle>
-          <Input
-            placeholder="Ulubione gatunki (np. fantasy, sci-fi)"
-            onChange={(e) => setPreferences({ genres: e.target.value.split(',') })}
-          />
-          <Button onClick={() => alert('Zapisano preferencje')}>Zapisz</Button>
-        </DialogContent>
-      </Dialog>
+    <div className='relative flex h-auto min-h-screen items-center justify-center overflow-x-hidden px-4 py-10 sm:px-6 lg:px-8'>
+      <div className='absolute'>
+        <AuthBackgroundShape />
+      </div>
+
+      <Card className='z-1 w-full border-none shadow-md sm:max-w-lg'>
+        <CardHeader className='gap-6'>
+          <Logo className='gap-3' />
+
+          <div>
+            <CardTitle className='mb-1.5 text-2xl'>Sign Up to Instant Book Exchange</CardTitle>
+            <CardDescription className='text-base'>Connecting readers, one book at a time.</CardDescription>
+          </div>
+        </CardHeader>
+
+        <CardContent>
+          <div className='space-y-4'>
+            <RegisterForm onSubmit={handleSubmit} />
+
+            <p className='text-muted-foreground text-center'>
+              Already have an account?{' '}
+              <a href='/login' className='text-card-foreground hover:underline'>
+                Sign in instead
+              </a>
+            </p>
+
+            <div className='flex items-center gap-4'>
+              <Separator className='flex-1' />
+              <p>or</p>
+              <Separator className='flex-1' />
+            </div>
+
+            <Button variant='ghost' className='w-full' onClick={handleGoogleSignIn}>
+              Sign in with Google
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
