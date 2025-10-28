@@ -9,6 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChevronDownIcon } from 'lucide-react';
+import { signOut } from 'next-auth/react';
 
 export const UserMenu = ({
   userName = 'John Doe',
@@ -54,7 +55,7 @@ export const UserMenu = ({
         Billing
       </DropdownMenuItem>
       <DropdownMenuSeparator />
-      <DropdownMenuItem onClick={() => onItemClick?.('logout')}>
+      <DropdownMenuItem onClick={() =>  signOut()}>
         Log out
       </DropdownMenuItem>
     </DropdownMenuContent>

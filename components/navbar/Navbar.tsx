@@ -21,6 +21,7 @@ import {Logo} from "../Logo.tsx"
 import {InfoMenu} from "./InfoMenu.tsx"
 import {NotificationMenu} from "./NotificationMenu.tsx"
 import {UserMenu} from "./UserMenu.tsx"
+import { useSession } from 'next-auth/react';
 
 export interface NavbarNavItem {
   href?: string;
@@ -69,6 +70,15 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
   ) => {
     const [isMobile, setIsMobile] = useState(false);
     const containerRef = useRef<HTMLElement>(null);
+    const {data: session } = useSession();
+    const [userData, setUserData] = useState(null);
+
+    useEffect(() => {
+      if (session) {
+    fetch('/api/user/profile').then(res => res.json()).then(setUserData);
+      }
+    }, [session]);
+
 
     useEffect(() => {
       const checkWidth = () => {
@@ -192,9 +202,9 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
             </div>
             {/* User menu */}
             <UserMenu 
-              userName={userName}
-              userEmail={userEmail}
-              userAvatar={userAvatar}
+              userName={session?.user?.name || userData?.name || 'User'}
+              userEmail={session?.user?.email || userData?.email || 'user@example.com'}
+              userAvatar={userData?.profileImage || session?.user?.image}
               onItemClick={onUserItemClick}
             />
           </div>

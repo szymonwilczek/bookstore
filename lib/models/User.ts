@@ -13,6 +13,7 @@ export interface IUser extends Document {
     genres?: string[];
   };
   createdAt: Date;
+  profileImage?: string;
 }
 
 const UserSchema: Schema = new Schema({
@@ -27,6 +28,7 @@ const UserSchema: Schema = new Schema({
   preferences: {
     genres: [{ type: String }],
   },
+  profileImage: { type: String },
 }, { timestamps: true });
 
 export default mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
