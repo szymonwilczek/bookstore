@@ -27,7 +27,7 @@ export function BookCard({
 
   return (
     <Card className="overflow-hidden min-w-[200px] h-auto">
-      <div className="aspect-square relative bg-muted max-h-48">
+      <div className="aspect-square relative max-h-36">
         <img
           src={book.image || "/placeholder.svg"}
           alt={book.title}
