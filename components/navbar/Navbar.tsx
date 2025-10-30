@@ -1,28 +1,30 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { useEffect, useState, useRef } from 'react';
-import { Button } from '@/components/ui/button';
+import * as React from "react";
+import { useEffect, useState, useRef } from "react";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from '@/components/ui/navigation-menu';
+} from "@/components/ui/navigation-menu";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
-import {HamburgerIcon} from "./HamburgerIcon.tsx"
-import {Logo} from "../Logo.tsx"
-import {InfoMenu} from "./InfoMenu.tsx"
-import {NotificationMenu} from "./NotificationMenu.tsx"
-import {UserMenu} from "./UserMenu.tsx"
-import { useSession } from 'next-auth/react';
-import { usePathname } from 'next/navigation';
+import { HamburgerIcon } from "@/components/navbar/HamburgerIcon";
+import { Logo } from "@/components/Logo";
+import { InfoMenu } from "@/components/navbar/InfoMenu";
+import { NotificationMenu } from "@/components/navbar/NotificationMenu";
+import { UserMenu } from "@/components/navbar/UserMenu";
+import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
+import { Sun, Moon } from "lucide-react";
 
 export interface NavbarNavItem {
   href?: string;
@@ -44,10 +46,10 @@ export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const defaultNavigationLinks: NavbarNavItem[] = [
-  { href: '/', label: 'Home' },
-  { href: '/transactions', label: 'Transactions' },
-  { href: '/search', label: 'Search' },
-  { href: '/profile', label: 'Profile' },
+  { href: "/", label: "Home" },
+  { href: "/transactions", label: "Transactions" },
+  { href: "/search", label: "Search" },
+  { href: "/profile", label: "Profile" },
 ];
 
 export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
@@ -55,10 +57,10 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
     {
       className,
       logo = <Logo />,
-      logoHref = '#',
+      logoHref = "#",
       navigationLinks = defaultNavigationLinks,
-      userName = 'John Doe',
-      userEmail = 'john@example.com',
+      userName = "John Doe",
+      userEmail = "john@example.com",
       userAvatar,
       notificationCount = 3,
       onNavItemClick,
@@ -71,16 +73,18 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
   ) => {
     const [isMobile, setIsMobile] = useState(false);
     const containerRef = useRef<HTMLElement>(null);
-    const {data: session } = useSession();
+    const { data: session } = useSession();
     const [userData, setUserData] = useState(null);
     const pathname = usePathname();
+    const { theme, setTheme } = useTheme();
 
     useEffect(() => {
       if (session) {
-        fetch('/api/user/profile').then(res => res.json()).then(setUserData);
+        fetch("/api/user/profile")
+          .then((res) => res.json())
+          .then(setUserData);
       }
     }, [session]);
-
 
     useEffect(() => {
       const checkWidth = () => {
@@ -103,18 +107,19 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
     }, []);
 
     // Combine refs
-    const combinedRef = React.useCallback((node: HTMLElement | null) => {
-      containerRef.current = node;
-      if (typeof ref === 'function') {
-        ref(node);
-      } else if (ref) {
-        ref.current = node;
-      }
-    }, [ref]);
+    const combinedRef = React.useCallback(
+      (node: HTMLElement | null) => {
+        containerRef.current = node;
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
+        }
+      },
+      [ref]
+    );
 
-
-
-    if (pathname === '/login' || pathname === '/register') {
+    if (pathname === "/login" || pathname === "/register") {
       return null;
     }
 
@@ -122,7 +127,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
       <header
         ref={combinedRef}
         className={cn(
-          'sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 [&_*]:no-underline',
+          "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 [&_*]:no-underline",
           className
         )}
         {...props}
@@ -150,7 +155,8 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                           <button
                             onClick={(e) => {
                               e.preventDefault();
-                              if (onNavItemClick && link.href) onNavItemClick(link.href);
+                              if (onNavItemClick && link.href)
+                                onNavItemClick(link.href);
                             }}
                             className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
                           >
@@ -169,10 +175,10 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 onClick={(e) => e.preventDefault()}
                 className="flex items-center space-x-2 text-primary hover:text-primary/90 transition-colors cursor-pointer"
               >
-                <div className="text-2xl">
-                  {logo}
-                </div>
-                <span className="hidden font-bold text-xl sm:inline-block">Instant Book Exchange</span>
+                <div className="text-2xl">{logo}</div>
+                <span className="hidden font-bold text-xl sm:inline-block">
+                  Instant Book Exchange
+                </span>
               </button>
               {/* Navigation menu */}
               {!isMobile && (
@@ -184,7 +190,8 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                           href={link.href}
                           onClick={(e) => {
                             e.preventDefault();
-                            if (onNavItemClick && link.href) onNavItemClick(link.href);
+                            if (onNavItemClick && link.href)
+                              onNavItemClick(link.href);
                           }}
                           className="text-muted-foreground hover:text-primary py-1.5 font-medium transition-colors cursor-pointer group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50"
                         >
@@ -203,15 +210,27 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
               {/* Info menu */}
               <InfoMenu onItemClick={onInfoItemClick} />
               {/* Notification */}
-              <NotificationMenu 
+              <NotificationMenu
                 notificationCount={notificationCount}
                 onItemClick={onNotificationItemClick}
               />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="h-9 w-9 cursor-pointer"
+              >
+                <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">Toggle theme</span>
+              </Button>
             </div>
             {/* User menu */}
-            <UserMenu 
-              userName={session?.user?.name || userData?.name || 'User'}
-              userEmail={session?.user?.email || userData?.email || 'user@example.com'}
+            <UserMenu
+              userName={session?.user?.name || userData?.name || "User"}
+              userEmail={
+                session?.user?.email || userData?.email || "user@example.com"
+              }
               userAvatar={userData?.profileImage || session?.user?.image}
               onItemClick={onUserItemClick}
             />
@@ -222,6 +241,6 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
   }
 );
 
-Navbar.displayName = 'Navbar';
+Navbar.displayName = "Navbar";
 
 export { Logo, HamburgerIcon, InfoMenu, NotificationMenu, UserMenu };
