@@ -36,19 +36,6 @@ export default function ProfilePage() {
       <div className="min-h-screen bg-background">
         <ProfileDashboard userData={userData} onUpdate={updateProfile} />
       </div>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="container mx-auto p-4"
-      >
-        <h1 className="text-2xl mb-4">Twój Profil: {userData?.username}</h1>
-        <div className="mb-4">
-          <p>Punkty: {userData?.points || 0}</p>
-          <p>Średnia ocena: {userData?.averageRating || 0}/5</p>
-        </div>
-        <WishlistForm onAdd={updateProfile} />
-        <OfferedBooksList onUpdate={updateProfile} />
-      </motion.div>
     </div>
   );
 }
