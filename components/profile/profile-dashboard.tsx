@@ -1,55 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { EditProfileModal } from "@/components/profile/edit-profile-modal";
-import { EditProductModal } from "@/components/profile/edit-product-modal";
-import { AddBookModal } from "@/components/profile/add-book-modal";
-import {
-  User,
-  Mail,
-  Phone,
-  MapPin,
-  Package,
-  DollarSign,
-  TrendingUp,
-  Edit,
-  MoreVertical,
-  ChevronLeft,
-  ChevronRight,
-  Plus,
-} from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
-  Carousel,
-  CarouselApi,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
-import { BookCard } from "@/components/profile/book-card";
-import { EditBookModal } from "./edit-book-modal";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useState, useEffect, useMemo } from "react"; // Dodano useMemo
+import { EditProfileModal } from "@/components/profile/modals/edit-profile-modal";
+import { EditProductModal } from "@/components/profile/modals/edit-product-modal";
+import { AddBookModal } from "@/components/profile/modals/add-book-modal";
+import { EditBookModal } from "./modals/edit-book-modal";
 import { OnboardingBookSearch } from "@/components/profile/onboarding-book-search";
-import { Label } from "@/components/ui/label";
+import { StatsSection } from "./sections/stats-section";
+import { ProfileInfoSection } from "./sections/profile-info-section";
+import { TransactionHistory } from "./sections/transactions-history";
+import { OfferedBooksSection } from "./sections/offered-books-section";
+import { WishlistSection } from "./sections/wishlist-section";
+import { OnboardingModal } from "./modals/onboarding-modal";
+import { DeleteConfirmModal } from "./modals/delete-confirm-modal";
+import { useProfileData } from "./hooks/useProfileData";
+import { useOnboarding } from "./hooks/useOnboarding";
+import { Package, DollarSign, User, TrendingUp, Edit } from "lucide-react";
 
 interface BookBase {
   id: string;
@@ -114,15 +80,6 @@ export function ProfileDashboard({
   userData,
   onUpdate,
 }: ProfileDashboardProps) {
-  const [profile, setProfile] = useState<UserProfile>({
-    username: "",
-    email: "",
-    phone: "",
-    location: "",
-    avatar: "",
-    bio: "",
-  });
-
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isAddBookModalOpen, setIsAddBookModalOpen] = useState(false);
@@ -132,10 +89,24 @@ export function ProfileDashboard({
   const [selectedBookToDelete, setSelectedBookToDelete] = useState<Book | null>(
     null
   );
-  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  const [selectedBooks, setSelectedBooks] = useState<BookBase[]>([]);
   const [isAddBookOpen, setIsAddBookOpen] = useState(false);
+
+  const {
+    userData: fetchedUserData,
+    books,
+    wishlistBooks,
+    onUpdate: fetchData,
+  } = useProfileData();
+  const {
+    selectedGenres,
+    selectedBooks,
+    handleGenreChange,
+    handleAddBook,
+    handleOnboardingSubmit,
+    handleOnboardingSkip,
+  } = useOnboarding(fetchedUserData, fetchData);
+
+  const currentUserData = fetchedUserData || userData;
 
   const genres = [
     "Fantasy",
@@ -155,24 +126,23 @@ export function ProfileDashboard({
     "Journalism",
   ];
 
-  useEffect(() => {
-    if (userData && !userData.hasCompletedOnboarding) {
-      setIsOnboardingOpen(true);
-    }
-  }, [userData]);
+  // Użyj useMemo dla derived state zamiast efektów
+  const profile = useMemo(
+    () => ({
+      username: currentUserData?.username || "",
+      email: currentUserData?.email || "",
+      phone: currentUserData?.phone || "",
+      location: currentUserData?.location || "",
+      avatar: currentUserData?.profileImage || "",
+      bio: currentUserData?.bio || "",
+    }),
+    [currentUserData]
+  );
 
-  useEffect(() => {
-    if (userData) {
-      setProfile({
-        username: userData.username || "",
-        email: userData.email || "",
-        phone: userData.phone || "",
-        location: userData.location || "",
-        avatar: userData.profileImage || "",
-        bio: userData.bio || "",
-      });
-    }
-  }, [userData]);
+  const isOnboardingOpen = useMemo(
+    () => !!(currentUserData && !currentUserData.hasCompletedOnboarding),
+    [currentUserData]
+  );
 
   const [transactions] = useState<Transaction[]>([
     {
@@ -217,45 +187,13 @@ export function ProfileDashboard({
     },
   ]);
 
-  const [books, setBooks] = useState<Book[]>([]);
-  const [wishlistBooks, setWishlistBooks] = useState<BookBase[]>([]);
-
-  useEffect(() => {
-    if (userData?.offeredBooks) {
-      setBooks(
-        userData.offeredBooks?.map((book) => ({
-          id: book._id,
-          title: book.title,
-          author: book.author,
-          image: book.imageUrl,
-          createdAt: new Date(book.createdAt).toISOString(),
-          status: book.status === "available" ? "active" : "inactive",
-        })) || []
-      );
-    }
-  }, [userData]);
-
-  useEffect(() => {
-    if (userData?.wishlist) {
-      setWishlistBooks(
-        userData.wishlist?.map((book) => ({
-          id: book._id,
-          title: book.title,
-          author: book.author,
-          image: book.imageUrl,
-          createdAt: new Date(book.createdAt).toISOString(),
-        })) || []
-      );
-    }
-  }, [userData]);
-
   const totalBooksOffered = books.length;
   const totalExchanges = transactions.filter(
     (t) => t.status === "completed"
   ).length;
   const newUsersThisMonth = 12;
   const booksExchangedUser = books.length;
-  const averageRatingUser = userData?.averageRating || 0;
+  const averageRatingUser = currentUserData?.averageRating || 0;
   const booksInWishlistUser = wishlistBooks.length;
   const pendingExchanges = transactions.filter(
     (t) => t.status === "pending"
@@ -343,14 +281,10 @@ export function ProfileDashboard({
       method: "PUT",
       body: formData,
     });
-    onUpdate();
+    fetchData();
   };
 
-  const handleProductUpdate = (updatedProduct: Book) => {
-    setBooks(
-      books.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
-    );
-  };
+  const handleProductUpdate = (updatedProduct: Book) => {};
 
   const handleEditBook = (book: Book) => {
     setSelectedBook(book);
@@ -366,8 +300,7 @@ export function ProfileDashboard({
   };
 
   const handleUpdateBook = async (updatedBook: Book) => {
-    setBooks(books.map((b) => (b.id === updatedBook.id ? updatedBook : b)));
-    onUpdate();
+    fetchData();
   };
 
   const handleDeleteWishlistBook = (bookId: string) => {
@@ -389,7 +322,7 @@ export function ProfileDashboard({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bookId: selectedBookToDelete.id }),
       });
-      onUpdate();
+      fetchData();
       setIsDeleteConfirmOpen(false);
       setSelectedBookToDelete(null);
     }
@@ -410,345 +343,50 @@ export function ProfileDashboard({
     }
   };
 
-  const handleGenreChange = (genre: string, checked: boolean) => {
-    if (checked) {
-      setSelectedGenres([...selectedGenres, genre]);
-    } else {
-      setSelectedGenres(selectedGenres.filter((g) => g !== genre));
-    }
-  };
-
-  const handleAddBook = (book: BookBase) => {
-    setSelectedBooks([...selectedBooks, book]);
-    setIsAddBookOpen(false);
-  };
-
-  const handleOnboardingSubmit = async () => {
-    await fetch("/api/user/onboarding", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        genres: selectedGenres,
-        books: selectedBooks.map((b) => ({
-          title: b.title,
-          author: b.author,
-          image: b.image,
-          isbn: b.isbn,
-        })),
-      }),
-    });
-    setIsOnboardingOpen(false);
-    onUpdate();
-  };
-
-  const handleOnboardingSkip = async () => {
-    await fetch("/api/user/onboarding", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ genres: [], books: [] }),
-    });
-    setIsOnboardingOpen(false);
-    onUpdate();
-  };
-
   return (
     <div className="container mx-auto p-4 md:p-6 lg:p-8 space-y-6">
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-balance">
-          Hello, {userData?.username || "You!"}!
+          Hello, {currentUserData?.username || "You!"}!
         </h1>
         <p className="text-muted-foreground text-pretty">
           Manage your profile, track transactions, and monitor your products
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Platform Stats
-            </CardTitle>
-            {(() => {
-              const IconComponent = platformStats[0].icon;
-              return (
-                <IconComponent className="h-4 w-4 text-muted-foreground" />
-              );
-            })()}
-          </CardHeader>
-          <CardContent>
-            <Carousel
-              className="w-full"
-              opts={{ loop: true }}
-              plugins={[Autoplay({ delay: 7500 })]}
-              setApi={setPlatformApi}
-            >
-              <CarouselContent>
-                {platformStats.map((stat, index) => (
-                  <CarouselItem key={index}>
-                    <div className="flex flex-col items-center justify-center p-4">
-                      <div className="text-2xl font-bold">{stat.value}</div>
-                      <p className="text-xs text-muted-foreground text-center">
-                        {stat.title}
-                      </p>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-2" />
-              <CarouselNext className="right-2" />
-            </Carousel>
-          </CardContent>
-        </Card>
+      <StatsSection
+        platformStats={platformStats}
+        userStats={userStats}
+        activityStats={activityStats}
+        onPlatformApiChange={setPlatformApi}
+        onUserApiChange={setUserApi}
+        onActivityApiChange={setActivityApi}
+      />
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Your Stats</CardTitle>
-            {(() => {
-              const IconComponent = userStats[0].icon;
-              return (
-                <IconComponent className="h-4 w-4 text-muted-foreground" />
-              );
-            })()}
-          </CardHeader>
-          <CardContent>
-            <Carousel
-              className="w-full"
-              opts={{ loop: true }}
-              plugins={[Autoplay({ delay: 7500 })]}
-              setApi={setUserApi}
-            >
-              <CarouselContent>
-                {userStats.map((stat, index) => (
-                  <CarouselItem key={index}>
-                    <div className="flex flex-col items-center justify-center p-4">
-                      <div className="text-2xl font-bold">{stat.value}</div>
-                      <p className="text-xs text-muted-foreground text-center">
-                        {stat.title}
-                      </p>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-2" />
-              <CarouselNext className="right-2" />
-            </Carousel>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Activity Stats
-            </CardTitle>
-            {(() => {
-              const IconComponent = activityStats[0].icon;
-              return (
-                <IconComponent className="h-4 w-4 text-muted-foreground" />
-              );
-            })()}
-          </CardHeader>
-          <CardContent>
-            <Carousel
-              className="w-full"
-              opts={{ loop: true }}
-              plugins={[Autoplay({ delay: 7500 })]}
-              setApi={setActivityApi}
-            >
-              <CarouselContent>
-                {activityStats.map((stat, index) => (
-                  <CarouselItem key={index}>
-                    <div className="flex flex-col items-center justify-center p-4">
-                      <div className="text-2xl font-bold">{stat.value}</div>
-                      <p className="text-xs text-muted-foreground text-center">
-                        {stat.title}
-                      </p>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-2" />
-              <CarouselNext className="right-2" />
-            </Carousel>
-          </CardContent>
-        </Card>
-      </div>
       <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-1">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Profile Information</CardTitle>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsProfileModalOpen(true)}
-              >
-                <Edit className="h-4 w-4" />
-                <span className="sr-only">Edit profile</span>
-              </Button>
-            </div>
-            <CardDescription>Your seller account details</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex flex-col items-center gap-4">
-              <Avatar className="h-24 w-24">
-                <AvatarImage
-                  src={profile.avatar || "/placeholder.svg"}
-                  alt={profile.username}
-                />
-                <AvatarFallback>
-                  {profile.username
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </AvatarFallback>
-              </Avatar>
-              <div className="text-center">
-                <h3 className="text-xl font-semibold">{profile.username}</h3>
-                <p className="text-sm text-muted-foreground">{profile.bio}</p>
-              </div>
-            </div>
+        <ProfileInfoSection
+          userData={currentUserData}
+          profile={profile}
+          onEditProfile={() => setIsProfileModalOpen(true)}
+        />
 
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 text-sm">
-                <Mail className="h-4 w-4 text-muted-foreground" />
-                <span className="text-foreground">{profile.email}</span>
-              </div>
-              <div className="flex items-center gap-3 text-sm">
-                <Phone className="h-4 w-4 text-muted-foreground" />
-                <span className="text-foreground">{profile.phone}</span>
-              </div>
-              <div className="flex items-center gap-3 text-sm">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                <span className="text-foreground">{profile.location}</span>
-              </div>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {userData?.preferences?.genres?.map((genre) => (
-                  <Badge key={genre} variant="secondary">
-                    {genre}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Transaction History</CardTitle>
-            <CardDescription>Recent sales and order status</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {transactions.map((transaction) => (
-                <div
-                  key={transaction.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg border bg-card"
-                >
-                  <div className="space-y-1 flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{transaction.product}</p>
-                      <Badge
-                        className={getStatusColor(transaction.status)}
-                        variant="secondary"
-                      >
-                        {transaction.status}
-                      </Badge>
-                    </div>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <User className="h-3 w-3" />
-                        {transaction.buyer}
-                      </span>
-                      <span className="hidden sm:inline">•</span>
-                      <span>{transaction.date}</span>
-                      <span className="hidden sm:inline">•</span>
-                      <span className="text-foreground font-mono">
-                        {transaction.id}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="text-lg font-semibold">
-                    ${transaction.amount.toFixed(2)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        <TransactionHistory
+          transactions={transactions}
+          getStatusColor={getStatusColor}
+        />
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Offered Books</CardTitle>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsAddBookModalOpen(true)}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Book
-            </Button>
-          </div>
-          <CardDescription>Manage your offered books</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Carousel
-            className="w-full"
-            opts={{ loop: false }}
-            plugins={[Autoplay({ delay: 7500 })]}
-          >
-            <CarouselContent>
-              {books.map((book) => (
-                <CarouselItem
-                  key={book.id}
-                  className="basis-1/2 md:basis-1/3 lg:basis-1/4"
-                >
-                  <BookCard
-                    isReadOnly={false}
-                    book={book}
-                    onEdit={handleEditBook}
-                    onDelete={handleDeleteBook}
-                  />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-2" />
-            <CarouselNext className="right-2" />
-          </Carousel>
-        </CardContent>
-      </Card>
+      <OfferedBooksSection
+        books={books}
+        onAddBook={() => setIsAddBookModalOpen(true)}
+        onEditBook={handleEditBook}
+        onDeleteBook={handleDeleteBook}
+      />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Wishlist</CardTitle>
-          <CardDescription>Books you want to receive</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Carousel
-            className="w-full"
-            opts={{ loop: false }}
-            plugins={[Autoplay({ delay: 7500 })]}
-          >
-            <CarouselContent>
-              {wishlistBooks.map((book) => (
-                <CarouselItem
-                  key={book.id}
-                  className="basis-1/2 md:basis-1/3 lg:basis-1/4"
-                >
-                  <BookCard
-                    book={book}
-                    isReadOnly={false}
-                    onDelete={handleDeleteWishlistBook}
-                  />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-2" />
-            <CarouselNext className="right-2" />
-          </Carousel>
-        </CardContent>
-      </Card>
+      <WishlistSection
+        wishlistBooks={wishlistBooks}
+        onDeleteWishlistBook={handleDeleteWishlistBook}
+      />
 
       <EditProfileModal
         profile={profile}
@@ -767,7 +405,7 @@ export function ProfileDashboard({
       <AddBookModal
         open={isAddBookModalOpen}
         onOpenChange={setIsAddBookModalOpen}
-        onSave={onUpdate}
+        onSave={fetchData}
       />
       <EditBookModal
         book={selectedBook}
@@ -776,90 +414,24 @@ export function ProfileDashboard({
         onSave={handleUpdateBook}
       />
 
-      <Dialog open={isDeleteConfirmOpen} onOpenChange={setIsDeleteConfirmOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete &quot;
-              {selectedBookToDelete?.title}&quot;? This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsDeleteConfirmOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={confirmDeleteBook}>
-              Delete
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <DeleteConfirmModal
+        open={isDeleteConfirmOpen}
+        onOpenChange={setIsDeleteConfirmOpen}
+        bookTitle={selectedBookToDelete?.title || ""}
+        onConfirm={confirmDeleteBook}
+      />
 
-      <Dialog open={isOnboardingOpen} onOpenChange={setIsOnboardingOpen}>
-        <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Witaj! Uzupełnij swój profil</DialogTitle>
-            <DialogDescription>
-              Wybierz ulubione gatunki i książki, które chcesz otrzymać.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Ulubione gatunki</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-4">
-                  {genres.map((genre) => (
-                    <div key={genre} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={genre}
-                        checked={selectedGenres.includes(genre)}
-                        onCheckedChange={(checked) =>
-                          handleGenreChange(genre, checked as boolean)
-                        }
-                      />
-                      <Label htmlFor={genre}>{genre}</Label>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>
-                  Książki, które chcesz otrzymać (opcjonalne)
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Button onClick={() => setIsAddBookOpen(true)}>
-                  Dodaj książkę
-                </Button>
-                <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                  {selectedBooks.map((book) => (
-                    <BookCard key={book.id} book={book} isReadOnly={true} />
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          <DialogFooter>
-            <Button variant="link" onClick={handleOnboardingSkip}>
-              Pomiń
-            </Button>
-            <Button
-              onClick={handleOnboardingSubmit}
-              disabled={selectedGenres.length === 0}
-            >
-              OK
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <OnboardingModal
+        open={isOnboardingOpen}
+        onOpenChange={() => {}}
+        genres={genres}
+        selectedGenres={selectedGenres}
+        selectedBooks={selectedBooks}
+        onGenreChange={handleGenreChange}
+        onAddBook={() => setIsAddBookOpen(true)}
+        onSubmit={handleOnboardingSubmit}
+        onSkip={handleOnboardingSkip}
+      />
 
       <OnboardingBookSearch
         open={isAddBookOpen}
