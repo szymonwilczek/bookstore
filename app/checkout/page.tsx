@@ -101,7 +101,7 @@ export default function CheckoutPage() {
   const handleSubmit = async () => {
     const invalid = exchanges.find((ex) => !ex.exchangeLocation);
     if (invalid) {
-      alert("Proszę wypełnić lokalizację wymiany dla wszystkich książek");
+      alert("Please fill in the exchange location for all books");
       return;
     }
 
@@ -121,7 +121,7 @@ export default function CheckoutPage() {
       router.push("/transactions?success=true");
     } catch (error) {
       console.error("Checkout error:", error);
-      alert("Wystąpił błąd podczas składania ofert");
+      alert("An error occurred while submitting offers");
     } finally {
       setLoading(false);
     }
@@ -136,20 +136,20 @@ export default function CheckoutPage() {
       <div className="mb-6">
         <Button variant="ghost" onClick={() => router.back()} className="mb-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Powrót
+          Back
         </Button>
-        <h1 className="text-3xl font-bold mb-2">Wymiana książek</h1>
+        <h1 className="text-3xl font-bold mb-2">Books Exchange</h1>
         <p className="text-muted-foreground">
-          Przeciągnij swoje książki do obszaru wymiany lub zostaw puste, jeśli
-          nie chcesz oferować książek w zamian.
+          Drag your books to the exchange area or leave it blank if you
+          don&apos;t want to offer books in exchange.
         </p>
       </div>
 
       <Card className="p-4 mb-6">
         <div className="flex flex-col md:flex-row gap-4 items-end">
           <div className="flex-1">
-            <Label htmlFor="globalLocation">
-              Lokalizacja wymiany (zastosuj dla wszystkich)
+            <Label htmlFor="globalLocation" className="mb-1">
+              Exchange location (apply to all)
             </Label>
             <Input
               id="globalLocation"
@@ -160,7 +160,7 @@ export default function CheckoutPage() {
             />
           </div>
           <Button onClick={applyGlobalLocation} variant="outline">
-            Zastosuj dla wszystkich
+            Apply to all
           </Button>
         </div>
       </Card>
@@ -190,11 +190,11 @@ export default function CheckoutPage() {
       <Card className="p-6 mt-6 sticky bottom-4 bg-background/95 backdrop-blur">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h3 className="font-semibold text-lg mb-2">Podsumowanie</h3>
+            <h3 className="font-semibold text-lg mb-2">Summary</h3>
             <div className="space-y-1 text-sm text-muted-foreground">
-              <p>Liczba ofert wymiany: {exchanges.length}</p>
+              <p>Exchange offers: {exchanges.length}</p>
               <p>
-                Oferowanych książek:{" "}
+                Offered books:{" "}
                 {exchanges.reduce((acc, ex) => acc + ex.offeredBooks.length, 0)}
               </p>
             </div>
@@ -208,10 +208,10 @@ export default function CheckoutPage() {
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Składanie ofert...
+                Submitting offers...
               </>
             ) : (
-              "Złóż oferty wymiany"
+              "Submit offers"
             )}
           </Button>
         </div>
