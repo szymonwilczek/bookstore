@@ -77,6 +77,24 @@ interface Transaction {
   buyer: string;
 }
 
+interface TransactionFromAPI {
+  _id: string;
+  initiator: {
+    email: string;
+    username?: string;
+  };
+  receiver: {
+    email: string;
+    username?: string;
+  };
+  requestedBook?: {
+    title: string;
+  };
+  offeredBooks?: unknown[];
+  createdAt: string;
+  status: string;
+}
+
 interface ProfileDashboardProps {
   userData: UserData;
   onUpdate: () => void;
@@ -154,40 +172,39 @@ export function ProfileDashboard({
     [currentUserData]
   );
 
-  const [transactions] = useState<Transaction[]>([
-    {
-      id: "TXN001",
-      product: "Wireless Headphones Pro",
-      amount: 299.99,
-      date: "2025-10-25",
-      status: "completed",
-      buyer: "John Smith",
-    },
-    {
-      id: "TXN002",
-      product: "Smart Watch Series 5",
-      amount: 449.99,
-      date: "2025-10-24",
-      status: "completed",
-      buyer: "Sarah Williams",
-    },
-    {
-      id: "TXN003",
-      product: "USB-C Hub Adapter",
-      amount: 79.99,
-      date: "2025-10-23",
-      status: "pending",
-      buyer: "Mike Davis",
-    },
-    {
-      id: "TXN004",
-      product: "Mechanical Keyboard",
-      amount: 159.99,
-      date: "2025-10-22",
-      status: "completed",
-      buyer: "Emma Brown",
-    },
-  ]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const res = await fetch("/api/transactions/user");
+        const data: TransactionFromAPI[] = await res.json();
+
+        // mapowanie transakcji z API na uzywany format
+        const mappedTransactions = data.map((t) => {
+          const isInitiator = t.initiator.email === currentUserData?.email;
+          const otherUser = isInitiator ? t.receiver : t.initiator;
+
+          return {
+            id: t._id,
+            product: t.requestedBook?.title || "Unknown Book",
+            amount: t.offeredBooks?.length || 0,
+            date: new Date(t.createdAt).toLocaleDateString("pl-PL"),
+            status: t.status,
+            buyer: otherUser.username || otherUser.email,
+          };
+        });
+
+        setTransactions(mappedTransactions);
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      }
+    };
+
+    if (currentUserData?.email) {
+      fetchTransactions();
+    }
+  }, [currentUserData?.email]);
 
   const totalBooksOffered = books.length;
   const totalExchanges = transactions.filter(
@@ -375,10 +392,7 @@ export function ProfileDashboard({
           onEditProfile={() => setIsProfileModalOpen(true)}
         />
 
-        <TransactionHistory
-          transactions={transactions}
-          getStatusColor={getStatusColor}
-        />
+        <TransactionHistory userEmail={currentUserData?.email} />
       </div>
 
       <OfferedBooksSection
