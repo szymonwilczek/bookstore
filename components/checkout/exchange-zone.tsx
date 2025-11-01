@@ -25,35 +25,6 @@ export function ExchangeZone({
 
   return (
     <div className="space-y-4">
-      {/* Książka którą chcesz otrzymać */}
-      <Card className="p-4 bg-primary/5 border-primary/20">
-        <div className="flex items-center gap-2 mb-3">
-          <Badge variant="default">Otrzymasz</Badge>
-        </div>
-        <div className="flex gap-3">
-          <img
-            src={requestedBook.imageUrl || "/placeholder-book.png"}
-            alt={requestedBook.title}
-            className="w-20 h-28 object-cover rounded"
-          />
-          <div className="flex-1">
-            <h4 className="font-semibold line-clamp-2">
-              {requestedBook.title}
-            </h4>
-            <p className="text-sm text-muted-foreground">
-              {requestedBook.author}
-            </p>
-            <Badge variant="secondary" className="mt-2">
-              {requestedBook.condition === "new"
-                ? "Nowy"
-                : requestedBook.condition === "used"
-                  ? "Używany"
-                  : "Uszkodzony"}
-            </Badge>
-          </div>
-        </div>
-      </Card>
-
       <div className="flex justify-center">
         <ArrowRightLeft className="h-6 w-6 text-muted-foreground" />
       </div>
@@ -70,16 +41,16 @@ export function ExchangeZone({
       >
         <div className="flex items-center gap-2 mb-3">
           <Badge variant="outline">
-            Oferujesz{" "}
+            You&apos;re offering{" "}
             {offeredBooks.length > 0 ? `(${offeredBooks.length})` : ""}
           </Badge>
         </div>
 
         {offeredBooks.length === 0 ? (
           <div className="flex items-center justify-center h-32 text-sm text-muted-foreground text-center">
-            Przeciągnij tutaj swoje książki
+            Drag your books here
             <br />
-            lub zostaw puste
+            or leave empty
           </div>
         ) : (
           <div className="space-y-2">
@@ -113,6 +84,35 @@ export function ExchangeZone({
           </div>
         )}
       </div>
+
+      {/* Książka którą chcesz otrzymać */}
+      <Card className="p-4 bg-primary/5 border-primary/20">
+        <div className="flex items-center gap-2 mb-3">
+          <Badge variant="default">You&apos;ll receive</Badge>
+        </div>
+        <div className="flex gap-3">
+          <img
+            src={requestedBook.imageUrl || "/placeholder-book.png"}
+            alt={requestedBook.title}
+            className="w-20 h-28 object-cover rounded"
+          />
+          <div className="flex-1">
+            <h4 className="font-semibold line-clamp-2">
+              {requestedBook.title}
+            </h4>
+            <p className="text-sm text-muted-foreground">
+              {requestedBook.author}
+            </p>
+            <Badge variant="secondary" className="mt-2">
+              {requestedBook.condition === "new"
+                ? "New"
+                : requestedBook.condition === "used"
+                  ? "Used"
+                  : "Damaged"}
+            </Badge>
+          </div>
+        </div>
+      </Card>
     </div>
   );
 }

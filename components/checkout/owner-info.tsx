@@ -1,7 +1,6 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MapPin, Star, Package } from "lucide-react";
 
@@ -13,7 +12,7 @@ interface OwnerInfoProps {
 export function OwnerInfo({ owner }: OwnerInfoProps) {
   return (
     <Card className="p-4">
-      <div className="flex items-start gap-4 mb-4">
+      <div className="flex items-start gap-4">
         <Avatar className="h-16 w-16">
           <AvatarImage src={owner.profileImage} alt={owner.username} />
           <AvatarFallback>
@@ -41,7 +40,7 @@ export function OwnerInfo({ owner }: OwnerInfoProps) {
 
         <div className="flex items-center gap-2 text-sm">
           <Package className="h-4 w-4 text-muted-foreground" />
-          <span>{owner.points || 0} punktów</span>
+          <span>{owner.points || 0} points</span>
         </div>
       </div>
 

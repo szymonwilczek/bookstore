@@ -40,31 +40,31 @@ export function TransactionCard({
 
   const statusConfig = {
     pending: {
-      label: "Oczekuje",
+      label: "Pending",
       color: "bg-yellow-500",
       variant: "secondary" as const,
     },
     accepted: {
-      label: "Zaakceptowana",
+      label: "Accepted",
       color: "bg-green-500",
       variant: "default" as const,
     },
     rejected: {
-      label: "Odrzucona",
+      label: "Rejected",
       color: "bg-red-500",
       variant: "destructive" as const,
     },
     completed: {
-      label: "Zakończona",
+      label: "Completed",
       color: "bg-blue-500",
       variant: "outline" as const,
     },
   };
 
   const deliveryMethodLabels = {
-    personal: { label: "Odbiór osobisty", icon: User },
-    paczkomat: { label: "Paczkomat InPost", icon: Package },
-    courier: { label: "Kurier", icon: Truck },
+    personal: { label: "Personal pickup", icon: User },
+    paczkomat: { label: "Książkomat Parcel", icon: Package },
+    courier: { label: "Courier", icon: Truck },
   };
 
   const status = statusConfig[transaction.status as keyof typeof statusConfig];
@@ -94,7 +94,7 @@ export function TransactionCard({
       alert("Dziękujemy za opinię!");
     } catch (error) {
       console.error("Error submitting review:", error);
-      alert("Nie udało się wysłać opinii");
+      alert("Failed to submit review");
     }
   };
 
@@ -140,7 +140,7 @@ export function TransactionCard({
               {/* Książka requestowana */}
               <div className="space-y-2">
                 <p className="text-sm font-medium text-muted-foreground">
-                  {isReceiver ? "Twoja książka" : "Chcesz otrzymać"}
+                  {isReceiver ? "Your book" : "You want to receive"}
                 </p>
                 <div className="flex gap-3 p-3 bg-muted/50 rounded-lg">
                   <img
@@ -165,11 +165,11 @@ export function TransactionCard({
               {/* Książki oferowane */}
               <div className="space-y-2">
                 <p className="text-sm font-medium text-muted-foreground">
-                  {isReceiver ? "W zamian oferuje" : "Twoja oferta"}
+                  {isReceiver ? "In exchange for" : "Your offer"}
                 </p>
                 {transaction.offeredBooks.length === 0 ? (
                   <div className="flex items-center justify-center h-28 bg-muted/30 rounded-lg text-sm text-muted-foreground">
-                    Bez wymiany
+                    No exchange
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -225,7 +225,7 @@ export function TransactionCard({
                     onClick={() => onStatusUpdate(transaction._id, "accepted")}
                   >
                     <CheckCircle2 className="mr-2 h-4 w-4" />
-                    Zaakceptuj
+                    Accept
                   </Button>
                   <Button
                     size="sm"
@@ -233,7 +233,7 @@ export function TransactionCard({
                     onClick={() => onStatusUpdate(transaction._id, "rejected")}
                   >
                     <XCircle className="mr-2 h-4 w-4" />
-                    Odrzuć
+                    Reject
                   </Button>
                 </>
               )}
@@ -241,7 +241,7 @@ export function TransactionCard({
               {transaction.status === "accepted" && (
                 <Button size="sm" variant="outline" onClick={handleComplete}>
                   <CheckCircle2 className="mr-2 h-4 w-4" />
-                  Oznacz jako zakończoną
+                  Mark as completed
                 </Button>
               )}
 
@@ -252,13 +252,13 @@ export function TransactionCard({
                   onClick={() => setReviewModalOpen(true)}
                 >
                   <Star className="mr-2 h-4 w-4" />
-                  Zobacz opinię
+                  See reviews
                 </Button>
               )}
 
               <Button size="sm" variant="ghost">
                 <MessageCircle className="mr-2 h-4 w-4" />
-                Wyślij wiadomość
+                Send message
               </Button>
             </div>
           </div>

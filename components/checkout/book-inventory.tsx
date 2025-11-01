@@ -48,10 +48,10 @@ function DraggableBook({ book, isOffered }: { book: any; isOffered: boolean }) {
           </p>
           <Badge variant="outline" className="text-xs mt-1">
             {book.condition === "new"
-              ? "Nowy"
+              ? "New"
               : book.condition === "used"
-                ? "Używany"
-                : "Uszkodzony"}
+                ? "Used"
+                : "Damaged"}
           </Badge>
         </div>
       </div>
@@ -67,7 +67,8 @@ export function BookInventory({ books, offeredBooks }: BookInventoryProps) {
   if (books.length === 0) {
     return (
       <div className="text-center py-12 text-muted-foreground text-sm">
-        Nie masz jeszcze żadnych książek do oferowania.
+        You don&apos;t have any books to offer yet. Add them through profile
+        dashboard.
       </div>
     );
   }
