@@ -6,29 +6,26 @@ import User from "@/lib/models/User";
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { bookId: string } }
+  { params }: { params: Promise<{ bookId: string }> }
 ) {
   try {
     const session = await auth();
-    if (!session) {
+    if (!session)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
 
     await connectToDB();
 
+    const { bookId } = await params;
+
     const user = await User.findOne({ email: session.user.email });
-    if (!user) {
+    if (!user)
       return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
 
     const cart = await Cart.findOne({ user: user._id });
-    if (!cart) {
+    if (!cart)
       return NextResponse.json({ error: "Cart not found" }, { status: 404 });
-    }
 
-    cart.items = cart.items.filter(
-      (item) => item.book.toString() !== params.bookId
-    );
+    cart.items = cart.items.filter((item) => item.book.toString() !== bookId);
     await cart.save();
 
     await cart.populate({

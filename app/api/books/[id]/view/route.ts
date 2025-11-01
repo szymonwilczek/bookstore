@@ -4,12 +4,14 @@ import Book from "@/lib/models/Book";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectToDB();
 
-    const book = await Book.findById(params.id);
+    const { id } = await params;
+
+    const book = await Book.findById(id);
     if (!book) {
       return NextResponse.json({ error: "Book not found" }, { status: 404 });
     }

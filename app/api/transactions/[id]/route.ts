@@ -31,7 +31,7 @@ interface PopulatedTransaction {
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await auth();
   if (!session)
@@ -40,7 +40,9 @@ export async function PUT(
   const { status } = await req.json();
   await connectToDB();
 
-  const transaction = (await Transaction.findById(params.id).populate(
+  const { id } = await params;
+
+  const transaction = (await Transaction.findById(id).populate(
     "initiator receiver requestedBook offeredBooks"
   )) as PopulatedTransaction | null;
 
@@ -126,14 +128,17 @@ export async function PUT(
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await auth();
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await connectToDB();
-  const transaction = await Transaction.findById(params.id).populate(
+
+  const { id } = await params;
+
+  const transaction = await Transaction.findById(id).populate(
     "requestedBook offeredBooks initiator receiver"
   );
 
