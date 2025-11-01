@@ -1,0 +1,44 @@
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/app/api/auth/[...nextauth]/auth";
+import connectToDB from "@/lib/db/connect";
+import Message from "@/lib/models/Message";
+import Conversation from "@/lib/models/Conversation";
+import User from "@/lib/models/User";
+
+export async function GET(req: NextRequest) {
+  try {
+    const session = await auth();
+
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    await connectToDB();
+
+    const user = await User.findOne({ email: session.user.email });
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const conversations = await Conversation.find({
+      participants: user._id,
+      deletedBy: { $ne: user._id },
+    }).select("_id");
+
+    const conversationIds = conversations.map((c) => c._id);
+
+    const count = await Message.countDocuments({
+      conversation: { $in: conversationIds },
+      sender: { $ne: user._id },
+      readBy: { $ne: user._id },
+    });
+
+    return NextResponse.json({ count });
+  } catch (error) {
+    console.error("Error counting unread messages:", error);
+    return NextResponse.json(
+      { error: "Failed to count unread messages" },
+      { status: 500 }
+    );
+  }
+}
