@@ -84,7 +84,7 @@ export default function TransactionsPage() {
     return (
       <div className="container mx-auto p-4 max-w-6xl">
         <div className="flex justify-center items-center h-[50vh]">
-          <p className="text-muted-foreground">Ładowanie...</p>
+          <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
@@ -122,9 +122,9 @@ export default function TransactionsPage() {
   return (
     <div className="container mx-auto p-4 max-w-6xl">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">Moje transakcje</h1>
+        <h1 className="text-3xl font-bold mb-2">My transactions</h1>
         <p className="text-muted-foreground">
-          Zarządzaj swoimi ofertami wymiany książek
+          Manage your book exchange offers
         </p>
       </div>
 
@@ -132,7 +132,7 @@ export default function TransactionsPage() {
         <Alert className="mb-6 border-green-500 bg-green-50 dark:bg-green-950">
           <CheckCircle2 className="h-4 w-4 text-green-600" />
           <AlertDescription className="text-green-600">
-            Oferty wymiany zostały pomyślnie złożone!
+            The exchange offers have been successfully submitted!
           </AlertDescription>
         </Alert>
       )}
@@ -140,7 +140,7 @@ export default function TransactionsPage() {
       <Tabs defaultValue="received" className="w-full">
         <TabsList className="grid w-full grid-cols-3 max-w-2xl">
           <TabsTrigger value="received" className="relative">
-            Otrzymane
+            Received
             {pendingReceived > 0 && (
               <Badge
                 variant="destructive"
@@ -150,9 +150,9 @@ export default function TransactionsPage() {
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="sent">Wysłane</TabsTrigger>
+          <TabsTrigger value="sent">Sent</TabsTrigger>
           <TabsTrigger value="completed">
-            Zakończone
+            Completed
             {completedTransactions.length > 0 && (
               <Badge
                 variant="outline"
@@ -167,12 +167,12 @@ export default function TransactionsPage() {
         <TabsContent value="received" className="mt-6">
           {loading ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">Ładowanie...</p>
+              <p className="text-muted-foreground">Loading...</p>
             </div>
           ) : receivedTransactions.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">
-                Nie masz jeszcze żadnych otrzymanych ofert
+                You have not received any offers yet.
               </p>
             </div>
           ) : (
@@ -192,12 +192,12 @@ export default function TransactionsPage() {
         <TabsContent value="sent" className="mt-6">
           {loading ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">Ładowanie...</p>
+              <p className="text-muted-foreground">Loading...</p>
             </div>
           ) : sentTransactions.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">
-                Nie wysłałeś jeszcze żadnych ofert
+                You haven&apos;t sent any offers yet.
               </p>
             </div>
           ) : (
@@ -217,12 +217,12 @@ export default function TransactionsPage() {
         <TabsContent value="completed" className="mt-6">
           {loading ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">Ładowanie...</p>
+              <p className="text-muted-foreground">Loading...</p>
             </div>
           ) : completedTransactions.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">
-                Nie masz jeszcze żadnych zakończonych transakcji
+                You don&apos;t have any completed transactions yet.
               </p>
             </div>
           ) : (
