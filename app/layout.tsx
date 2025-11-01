@@ -5,6 +5,7 @@ import { Navbar } from "@/components/navbar/Navbar";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { CartProvider } from "@/lib/context/cart-context";
+import { SocketProvider } from "@/lib/context/socket-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,10 +39,12 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <CartProvider>
-              <Navbar />
-              {children}
-            </CartProvider>
+            <SocketProvider>
+              <CartProvider>
+                <Navbar />
+                {children}
+              </CartProvider>
+            </SocketProvider>
           </ThemeProvider>
         </SessionProvider>
       </body>
