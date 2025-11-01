@@ -21,6 +21,7 @@ import { Logo } from "@/components/Logo";
 import { InfoMenu } from "@/components/navbar/InfoMenu";
 import { NotificationMenu } from "@/components/navbar/NotificationMenu";
 import { UserMenu } from "@/components/navbar/UserMenu";
+import { CartSheet } from "@/components/navbar/CartSheet";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -219,6 +220,9 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 notificationCount={notificationCount}
                 onItemClick={onNotificationItemClick}
               />
+              {/* Cart - tylko dla zalogowanych */}
+              {session && <CartSheet />}
+              {/* Theme toggle */}
               <Button
                 variant="ghost"
                 size="icon"
@@ -248,4 +252,4 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
 
 Navbar.displayName = "Navbar";
 
-export { Logo, HamburgerIcon, InfoMenu, NotificationMenu, UserMenu };
+export { Logo, HamburgerIcon, InfoMenu, NotificationMenu, UserMenu, CartSheet };
