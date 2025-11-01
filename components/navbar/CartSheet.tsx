@@ -84,7 +84,7 @@ export function CartSheet() {
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <ShoppingCart className="h-5 w-5" />
-            Koszyk ({cartCount})
+            Cart ({cartCount})
           </SheetTitle>
         </SheetHeader>
 
@@ -92,15 +92,15 @@ export function CartSheet() {
           <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] gap-4">
             <ShoppingCart className="h-16 w-16 text-muted-foreground" />
             <p className="text-muted-foreground text-center">
-              Twój koszyk jest pusty
+              Something feels empty here... Add something!
             </p>
             <Button variant="outline" onClick={() => setOpen(false)}>
-              Przeglądaj książki
+              Browse books
             </Button>
           </div>
         ) : (
           <div className="flex flex-col h-[calc(100vh-120px)] mt-6">
-            <ScrollArea className="flex-1 pr-4">
+            <ScrollArea className="flex-1 px-4">
               <div className="space-y-6">
                 {groupedByOwner.map((ownerBooks, idx) => {
                   const owner = ownerBooks[0].book.owner;
@@ -112,7 +112,7 @@ export function CartSheet() {
                       <div className="flex items-center gap-2 pb-2 border-b">
                         <div className="flex-1">
                           <p className="font-semibold text-sm">
-                            {owner.username}
+                            From: {owner.username}
                           </p>
                           {owner.location && (
                             <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -123,7 +123,7 @@ export function CartSheet() {
                         </div>
                         <Badge variant="secondary">
                           {ownerBooks.length}{" "}
-                          {ownerBooks.length === 1 ? "książka" : "książki"}
+                          {ownerBooks.length === 1 ? "book" : "books"}
                         </Badge>
                       </div>
 
@@ -146,10 +146,10 @@ export function CartSheet() {
                             </p>
                             <Badge variant="outline" className="text-xs mt-1">
                               {item.book.condition === "new"
-                                ? "Nowy"
+                                ? "New"
                                 : item.book.condition === "used"
-                                  ? "Używany"
-                                  : "Uszkodzony"}
+                                  ? "Used"
+                                  : "Damaged"}
                             </Badge>
                           </div>
                           <Button
@@ -169,15 +169,13 @@ export function CartSheet() {
               </div>
             </ScrollArea>
 
-            <div className="border-t pt-4 mt-4 space-y-3">
+            <div className="border-t pt-4 px-4 mt-4 space-y-3">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">
-                  Liczba transakcji:
-                </span>
+                <span className="text-muted-foreground">Transactions:</span>
                 <span className="font-semibold">{groupedByOwner.length}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Liczba książek:</span>
+                <span className="text-muted-foreground">Books:</span>
                 <span className="font-semibold">{cartCount}</span>
               </div>
               <Button
@@ -186,7 +184,7 @@ export function CartSheet() {
                 onClick={handleCheckout}
                 disabled={loading}
               >
-                Przejdź do wymiany
+                Go to exchange
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
