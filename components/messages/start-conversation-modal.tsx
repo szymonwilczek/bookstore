@@ -77,7 +77,7 @@ export function StartConversationModal({
       router.push(`/messages?conversation=${convData.conversation._id}`);
     } catch (error) {
       console.error("Error starting conversation:", error);
-      alert("Nie udało się wysłać wiadomości. Spróbuj ponownie.");
+      alert("Failed to send message. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -87,9 +87,9 @@ export function StartConversationModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Wyślij wiadomość do {recipientName}</DialogTitle>
+          <DialogTitle>Send message to {recipientName}</DialogTitle>
           <DialogDescription>
-            Rozpocznij konwersację o książce
+            Start a conversation about the book
           </DialogDescription>
         </DialogHeader>
 
@@ -111,7 +111,7 @@ export function StartConversationModal({
 
           {/* Message Input */}
           <div className="space-y-2">
-            <Label htmlFor="message">Wiadomość</Label>
+            <Label htmlFor="message">Message</Label>
             <Textarea
               id="message"
               placeholder="Napisz wiadomość..."
@@ -121,7 +121,7 @@ export function StartConversationModal({
               maxLength={2000}
             />
             <p className="text-xs text-muted-foreground">
-              {message.length}/2000 znaków
+              {message.length}/2000 characters
             </p>
           </div>
         </div>
@@ -132,10 +132,10 @@ export function StartConversationModal({
             onClick={() => onOpenChange(false)}
             disabled={loading}
           >
-            Anuluj
+            Cancel
           </Button>
           <Button onClick={handleSubmit} disabled={!message.trim() || loading}>
-            {loading ? "Wysyłanie..." : "Wyślij wiadomość"}
+            {loading ? "Sending..." : "Send message"}
           </Button>
         </DialogFooter>
       </DialogContent>

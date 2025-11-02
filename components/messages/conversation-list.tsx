@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Search, MoreVertical, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { pl } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 
@@ -80,7 +80,7 @@ export function ConversationList({
     <div className="flex h-full flex-col">
       {/* Header */}
       <div className="border-b p-4">
-        <h2 className="text-xl font-semibold">Wiadomości</h2>
+        <h2 className="text-xl font-semibold">Messages</h2>
       </div>
 
       {/* Search */}
@@ -88,7 +88,7 @@ export function ConversationList({
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Szukaj konwersacji..."
+            placeholder="Search for conversation"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9"
@@ -145,7 +145,7 @@ export function ConversationList({
                           <span className="font-bold">
                             {otherParticipant._id !==
                             conversation.lastMessage.sender
-                              ? "Ty"
+                              ? "You"
                               : participantName}
                             :
                           </span>{" "}
@@ -186,7 +186,7 @@ export function ConversationList({
                             }}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Usuń konwersację
+                            Delete conversation
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -201,7 +201,7 @@ export function ConversationList({
                           new Date(conversation.lastMessage.createdAt),
                           {
                             addSuffix: true,
-                            locale: pl,
+                            locale: enUS,
                           }
                         )}
                       </span>

@@ -232,7 +232,7 @@ export default function MessagesPage() {
           <div className="flex h-full items-center justify-center">
             <div className="text-center">
               <p className="text-xl font-medium text-muted-foreground">
-                Wybierz konwersację aby rozpocząć
+                Select a conversation to begin
               </p>
             </div>
           </div>

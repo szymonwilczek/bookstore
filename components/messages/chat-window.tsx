@@ -401,13 +401,13 @@ export function ChatWindow({ conversation, currentUserId }: ChatWindowProps) {
           <div className="p-4">
             {loading ? (
               <div className="flex h-full items-center justify-center">
-                <p className="text-muted-foreground">Ładowanie wiadomości...</p>
+                <p className="text-muted-foreground">Loading messages...</p>
               </div>
             ) : messages.length === 0 ? (
               <div className="flex h-full items-center justify-center">
                 <div className="text-center">
                   <p className="text-muted-foreground">
-                    Rozpocznij konwersację o książce
+                    Start a conversation about the book
                   </p>
                   <p className="text-sm font-semibold">
                     {conversation.book.title}
@@ -501,8 +501,8 @@ export function ChatWindow({ conversation, currentUserId }: ChatWindowProps) {
                 })}
 
                 {typingUser && (
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span>{typingUser} pisze...</span>
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <span>{typingUser} is typing...</span>
                   </div>
                 )}
 
