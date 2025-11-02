@@ -14,11 +14,13 @@ interface Attachment {
 
 interface MessageInputProps {
   conversationId: string;
+  userName: string;
   onSendMessage: (content: string, attachments?: Attachment[]) => void;
 }
 
 export function MessageInput({
   conversationId,
+  userName,
   onSendMessage,
 }: MessageInputProps) {
   const { socket } = useSocket();
@@ -104,7 +106,7 @@ export function MessageInput({
       socket.emit("typing-start", {
         conversationId,
         userId: "current-user-id",
-        userName: "You",
+        userName: userName,
       });
 
       if (typingTimeoutRef.current) {
