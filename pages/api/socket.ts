@@ -38,10 +38,10 @@ export default function handler(
       console.log("Client connected:", socket.id);
 
       // uzytkownik dolacza ze swoim id
-      socket.on("join", (userId: string) => {
-        console.log(`User ${userId} joined`);
-        socket.join(`user:${userId}`);
-        userSockets.set(userId, socket.id);
+      socket.on("join", (userEmail: string) => {
+        console.log(`User ${userEmail} joined`);
+        socket.join(`user:${userEmail}`);
+        userSockets.set(userEmail, socket.id);
       });
 
       // dolaczanie do konkretnej konwersacji
@@ -63,9 +63,15 @@ export default function handler(
         "send-message",
         (data: {
           conversationId: string;
+          participantEmails: string[];
           message: {
             _id: string;
-            sender: { _id: string; name: string; image?: string };
+            sender: {
+              _id: string;
+              name?: string;
+              email: string;
+              image?: string;
+            };
             content: string;
             attachments?: Array<{ type: string; url: string; name: string }>;
             createdAt: Date;
@@ -74,10 +80,21 @@ export default function handler(
           };
         }) => {
           console.log(`Message sent to conversation ${data.conversationId}`);
-          // wysylanie do wszystkich w konwersacji oprocz nadawcy
+          console.log(`Participant emails:`, data.participantEmails);
+
           socket
             .to(`conversation:${data.conversationId}`)
             .emit("new-message", data.message);
+
+          data.participantEmails.forEach((participantEmail) => {
+            console.log(
+              `Emitting to user:${participantEmail} for conversation list update`
+            );
+            io.to(`user:${participantEmail}`).emit("conversation-update", {
+              ...data.message,
+              conversationId: data.conversationId,
+            });
+          });
         }
       );
 

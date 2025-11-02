@@ -30,7 +30,7 @@ interface Conversation {
   book: {
     _id: string;
     title: string;
-    coverImage?: string;
+    imageUrl?: string;
   };
   lastMessage?: {
     content: string;
@@ -121,82 +121,92 @@ export function ConversationList({
                 <div
                   key={conversation._id}
                   className={cn(
-                    "group flex cursor-pointer items-center gap-3 rounded-lg p-3 transition-colors hover:bg-accent",
+                    "group flex flex-col cursor-pointer rounded-lg p-3 transition-colors hover:bg-accent",
                     isActive && "bg-accent"
                   )}
                   onClick={() => onSelectConversation(conversation._id)}
                 >
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src={otherParticipant.image} />
-                    <AvatarFallback>
-                      {participantName.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+                  {/* Górna część - avatar, info, badge */}
+                  <div className="flex items-start gap-3">
+                    <Avatar className="h-14 w-12 rounded-lg">
+                      <AvatarImage src={conversation.book.imageUrl} />
+                      <AvatarFallback>
+                        {conversation.book.title.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
 
-                  <div className="flex-1 overflow-hidden">
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="truncate font-medium">{participantName}</p>
+                    <div className="flex-1 overflow-hidden">
+                      <p className="truncate font-medium">
+                        {conversation.book.title}
+                      </p>
+
                       {conversation.lastMessage && (
-                        <span className="text-xs text-muted-foreground">
-                          {formatDistanceToNow(
-                            new Date(conversation.lastMessage.createdAt),
-                            {
-                              addSuffix: true,
-                              locale: pl,
-                            }
-                          )}
-                        </span>
+                        <p className="truncate text-sm text-muted-foreground mt-1">
+                          <span className="font-bold">
+                            {otherParticipant._id !==
+                            conversation.lastMessage.sender
+                              ? "Ty"
+                              : participantName}
+                            :
+                          </span>{" "}
+                          {conversation.lastMessage.content}
+                        </p>
                       )}
                     </div>
 
-                    <p className="truncate text-sm text-muted-foreground">
-                      {conversation.book.title}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      {conversation.unreadCount > 0 && (
+                        <Badge
+                          variant="default"
+                          className="h-5 min-w-5 rounded-full px-1"
+                        >
+                          {conversation.unreadCount}
+                        </Badge>
+                      )}
 
-                    {conversation.lastMessage && (
-                      <p className="truncate text-sm text-muted-foreground">
-                        {conversation.lastMessage.content}
-                      </p>
-                    )}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger
+                          asChild
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 opacity-0 group-hover:opacity-100"
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            className="text-destructive"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onDeleteConversation(conversation._id);
+                            }}
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Usuń konwersację
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   </div>
 
-                  <div className="flex flex-col items-end gap-2">
-                    {conversation.unreadCount > 0 && (
-                      <Badge
-                        variant="default"
-                        className="h-5 min-w-5 rounded-full px-1"
-                      >
-                        {conversation.unreadCount}
-                      </Badge>
-                    )}
-
-                    <DropdownMenu>
-                      <DropdownMenuTrigger
-                        asChild
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 opacity-0 group-hover:opacity-100"
-                        >
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                          className="text-destructive"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onDeleteConversation(conversation._id);
-                          }}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Usuń konwersację
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
+                  {/* Dolna część - timestamp w prawym dolnym rogu */}
+                  {conversation.lastMessage && (
+                    <div className="flex justify-end -mt-1">
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        {formatDistanceToNow(
+                          new Date(conversation.lastMessage.createdAt),
+                          {
+                            addSuffix: true,
+                            locale: pl,
+                          }
+                        )}
+                      </span>
+                    </div>
+                  )}
                 </div>
               );
             })

@@ -20,7 +20,7 @@ interface Message {
     name?: string;
     username?: string;
     email: string;
-    image?: string;
+    profileImage?: string;
   };
   content: string;
   attachments?: Array<{
@@ -40,12 +40,12 @@ interface Conversation {
     name?: string;
     username?: string;
     email: string;
-    image?: string;
+    profileImage?: string;
   }>;
   book: {
     _id: string;
     title: string;
-    coverImage?: string;
+    imageUrl?: string;
     author: string;
   };
 }
@@ -153,6 +153,11 @@ export function ChatWindow({ conversation, currentUserId }: ChatWindowProps) {
     socket.on("new-message", (message: Message) => {
       console.log("New message received via socket:", message);
       setMessages((prev) => {
+        const exists = prev.some((m) => m._id === message._id);
+        if (exists) {
+          console.log("Message already exists, skipping");
+          return prev;
+        }
         console.log("Adding message to list, current count:", prev.length);
         return [...prev, message];
       });
@@ -306,6 +311,7 @@ export function ChatWindow({ conversation, currentUserId }: ChatWindowProps) {
           console.log("Emitting via socket to conversation:", conversation._id);
           socket.emit("send-message", {
             conversationId: conversation._id,
+            participantEmails: conversation.participants.map((p) => p.email),
             message: data.message,
           });
         } else {
@@ -355,7 +361,7 @@ export function ChatWindow({ conversation, currentUserId }: ChatWindowProps) {
       {/* Header */}
       <div className="flex items-center gap-3 border-b p-4 flex-shrink-0">
         <Avatar>
-          <AvatarImage src={otherParticipant?.image} />
+          <AvatarImage src={otherParticipant?.profileImage} />
           <AvatarFallback>
             {otherParticipantName.charAt(0).toUpperCase()}
           </AvatarFallback>
@@ -364,11 +370,11 @@ export function ChatWindow({ conversation, currentUserId }: ChatWindowProps) {
         <div className="flex-1">
           <p className="font-semibold">{otherParticipantName}</p>
           <div className="flex items-center gap-2">
-            {conversation.book.coverImage && (
+            {conversation.book.imageUrl && (
               <img
-                src={conversation.book.coverImage}
+                src={conversation.book.imageUrl}
                 alt={conversation.book.title}
-                className="h-4 w-3 object-cover"
+                className="h-4 w-3 object-cover rounded"
               />
             )}
             <p className="text-sm text-muted-foreground">
@@ -427,7 +433,7 @@ export function ChatWindow({ conversation, currentUserId }: ChatWindowProps) {
                     >
                       {!isOwn && (
                         <Avatar className="h-8 w-8">
-                          <AvatarImage src={message.sender.image} />
+                          <AvatarImage src={message.sender.profileImage} />
                           <AvatarFallback>
                             {senderName.charAt(0).toUpperCase()}
                           </AvatarFallback>

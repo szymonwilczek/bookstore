@@ -6,6 +6,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ConversationList } from "@/components/messages/conversation-list";
 import { ChatWindow } from "@/components/messages/chat-window";
 import { useSocket } from "@/lib/context/socket-context";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
 interface Conversation {
   _id: string;
@@ -34,6 +37,7 @@ export default function MessagesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { socket, isConnected } = useSocket();
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConversationId, setActiveConversationId] = useState<
@@ -63,14 +67,62 @@ export default function MessagesPage() {
   useEffect(() => {
     if (!socket || !isConnected) return;
 
-    socket.on("new-message", () => {
-      fetchConversations();
-    });
+    socket.on(
+      "conversation-update",
+      (message: {
+        _id: string;
+        conversationId: string;
+        content: string;
+        sender: {
+          _id: string;
+          email: string;
+          name?: string;
+          username?: string;
+        };
+        createdAt: Date;
+      }) => {
+        console.log("Received new-message in page.tsx:", message);
+        console.log("Current conversations:", conversations);
+        console.log("Message conversationId:", message.conversationId);
+        console.log("Session user email:", session?.user?.email);
+        console.log("Message sender email:", message.sender?.email);
+
+        // aktualizacja lokalna zamiast fetchowania
+        setConversations((prev) =>
+          prev
+            .map((conv) => {
+              if (conv._id === message.conversationId) {
+                const isFromOther =
+                  message.sender?.email !== session?.user?.email;
+
+                return {
+                  ...conv,
+                  lastMessage: {
+                    content: message.content,
+                    sender: message.sender?._id || message.sender,
+                    createdAt: message.createdAt,
+                  },
+                  unreadCount: isFromOther
+                    ? conv.unreadCount + 1
+                    : conv.unreadCount,
+                  updatedAt: new Date(message.createdAt),
+                };
+              }
+              return conv;
+            })
+            .sort(
+              (a, b) =>
+                new Date(b.updatedAt).getTime() -
+                new Date(a.updatedAt).getTime()
+            )
+        );
+      }
+    );
 
     return () => {
       socket.off("new-message");
     };
-  }, [socket, isConnected]);
+  }, [socket, isConnected, session?.user?.email]);
 
   const fetchConversations = async () => {
     try {
@@ -89,6 +141,11 @@ export default function MessagesPage() {
   const handleSelectConversation = (conversationId: string) => {
     setActiveConversationId(conversationId);
     router.push(`/messages?conversation=${conversationId}`, { scroll: false });
+  };
+
+  const handleBackToList = () => {
+    setActiveConversationId(null);
+    router.push("/messages");
   };
 
   const handleDeleteConversation = async (conversationId: string) => {
@@ -123,9 +180,40 @@ export default function MessagesPage() {
     (c) => c._id === activeConversationId
   );
 
+  if (isMobile) {
+    return (
+      <div className="flex h-[calc(100vh-64px)] flex-col overflow-hidden">
+        {activeConversation ? (
+          <div className="flex h-full flex-col">
+            <div className="flex items-center gap-2 border-b p-3">
+              <Button variant="ghost" size="icon" onClick={handleBackToList}>
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <span className="font-semibold">Wiadomości</span>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <ChatWindow
+                conversation={activeConversation}
+                currentUserId={session?.user?.id || ""}
+              />
+            </div>
+          </div>
+        ) : (
+          <ConversationList
+            conversations={conversations}
+            activeConversationId={activeConversationId}
+            onSelectConversation={handleSelectConversation}
+            onDeleteConversation={handleDeleteConversation}
+          />
+        )}
+      </div>
+    );
+  }
+
+  // Desktop
   return (
-    <div className="flex h-[calc(100vh-64px)] overflow-y-hidden">
-      <div className="w-xs min-w-[200px] border-r">
+    <div className="flex h-[calc(100vh-64px)] overflow-hidden">
+      <div className="w-xs min-w-[250px] border-r">
         <ConversationList
           conversations={conversations}
           activeConversationId={activeConversationId}
@@ -141,7 +229,7 @@ export default function MessagesPage() {
             currentUserId={session?.user?.id || ""}
           />
         ) : (
-          <div className="flex h-full items-center justify-center overflow-y-hidden">
+          <div className="flex h-full items-center justify-center">
             <div className="text-center">
               <p className="text-xl font-medium text-muted-foreground">
                 Wybierz konwersację aby rozpocząć

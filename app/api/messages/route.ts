@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
     conversation.updatedAt = new Date();
     await conversation.save();
 
-    await message.populate("sender", "username email profileImage");
+    await message.populate("sender", "_id username name email profileImage");
 
     return NextResponse.json({ message });
   } catch (error) {
