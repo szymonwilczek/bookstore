@@ -12,6 +12,13 @@ import { format, isToday, isYesterday } from "date-fns";
 import { pl } from "date-fns/locale";
 import { Check, CheckCheck, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ImageViewerModal } from "./image-viewer-modal";
+
+interface Attachment {
+  type: "image" | "document";
+  url: string;
+  name: string;
+}
 
 interface Message {
   _id: string;
@@ -116,6 +123,15 @@ export function ChatWindow({ conversation, currentUserId }: ChatWindowProps) {
     }
     return null;
   });
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  const handleImageClick = (images: string[], index: number) => {
+    setSelectedImages(images);
+    setSelectedImageIndex(index);
+    setImageModalOpen(true);
+  };
 
   const otherParticipant = conversation.participants.find(
     (p) => p.email !== session?.user?.email
@@ -276,18 +292,17 @@ export function ChatWindow({ conversation, currentUserId }: ChatWindowProps) {
     }
   };
 
-  const handleSendMessage = async (content: string, attachments?: File[]) => {
+  const handleSendMessage = async (
+    content: string,
+    attachments?: Attachment[]
+  ) => {
     if (!content.trim() && (!attachments || attachments.length === 0)) return;
 
     try {
-      if (attachments && attachments.length > 0) {
-        alert("Upload plików nie jest jeszcze zaimplementowany");
-        return;
-      }
-
       console.log("Sending message:", {
         conversationId: conversation._id,
         content,
+        attachments: attachments?.length || 0,
       });
 
       const res = await fetch("/api/messages", {
@@ -296,7 +311,7 @@ export function ChatWindow({ conversation, currentUserId }: ChatWindowProps) {
         body: JSON.stringify({
           conversationId: conversation._id,
           content,
-          attachments: [],
+          attachments: attachments || [],
         }),
       });
 
@@ -320,11 +335,11 @@ export function ChatWindow({ conversation, currentUserId }: ChatWindowProps) {
       } else {
         const error = await res.json();
         console.error("Error response:", error);
-        alert("Nie udało się wysłać wiadomości");
+        alert("Failed to send message");
       }
     } catch (error) {
       console.error("Error sending message:", error);
-      alert("Błąd podczas wysyłania wiadomości");
+      alert("Error sending message");
     }
   };
 
@@ -460,28 +475,66 @@ export function ChatWindow({ conversation, currentUserId }: ChatWindowProps) {
 
                           {message.attachments &&
                             message.attachments.length > 0 && (
-                              <div className="mt-2 space-y-2">
-                                {message.attachments.map((attachment, idx) => (
-                                  <div key={idx}>
-                                    {attachment.type === "image" ? (
-                                      <img
-                                        src={attachment.url}
-                                        alt={attachment.name}
-                                        className="max-h-64 rounded"
-                                      />
-                                    ) : (
-                                      <a
-                                        href={attachment.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-2 hover:underline"
-                                      >
-                                        <FileText className="h-4 w-4" />
-                                        {attachment.name}
-                                      </a>
+                              <div
+                                className={cn(
+                                  "mt-2",
+                                  message.content && "space-y-2"
+                                )}
+                              >
+                                {message.attachments.filter(
+                                  (a) => a.type === "image"
+                                ).length > 0 && (
+                                  <div
+                                    className={cn(
+                                      "grid gap-2",
+                                      message.attachments.filter(
+                                        (a) => a.type === "image"
+                                      ).length === 1 && "grid-cols-1",
+                                      message.attachments.filter(
+                                        (a) => a.type === "image"
+                                      ).length === 2 && "grid-cols-2",
+                                      message.attachments.filter(
+                                        (a) => a.type === "image"
+                                      ).length >= 3 && "grid-cols-2"
                                     )}
+                                  >
+                                    {message.attachments
+                                      .filter((a) => a.type === "image")
+                                      .map((attachment, idx) => (
+                                        <img
+                                          key={idx}
+                                          src={attachment.url}
+                                          alt={attachment.name}
+                                          onClick={() =>
+                                            handleImageClick(
+                                              message
+                                                .attachments!.filter(
+                                                  (a) => a.type === "image"
+                                                )
+                                                .map((a) => a.url),
+                                              idx
+                                            )
+                                          }
+                                          className="w-full h-48 object-cover rounded cursor-pointer hover:opacity-90 transition-opacity"
+                                        />
+                                      ))}
                                   </div>
-                                ))}
+                                )}
+
+                                {message.attachments
+                                  .filter((a) => a.type === "document")
+                                  .map((attachment, idx) => (
+                                    <a
+                                      key={idx}
+                                      href={attachment.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex items-center gap-2 hover:underline"
+                                    >
+                                      <FileText className="h-4 w-4" />
+                                      {attachment.name}
+                                    </a>
+                                  ))}
                               </div>
                             )}
                         </div>
@@ -513,13 +566,18 @@ export function ChatWindow({ conversation, currentUserId }: ChatWindowProps) {
         </ScrollArea>
       </div>
 
-      {/* Input - dodaj flex-shrink-0 */}
       <div className="flex-shrink-0">
         <MessageInput
           conversationId={conversation._id}
           onSendMessage={handleSendMessage}
         />
       </div>
+      <ImageViewerModal
+        images={selectedImages}
+        initialIndex={selectedImageIndex}
+        isOpen={imageModalOpen}
+        onClose={() => setImageModalOpen(false)}
+      />
     </div>
   );
 }

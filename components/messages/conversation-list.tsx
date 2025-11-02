@@ -36,6 +36,11 @@ interface Conversation {
     content: string;
     sender: string;
     createdAt: Date;
+    attachments?: Array<{
+      type: "image" | "document";
+      url: string;
+      name: string;
+    }>;
   };
   unreadCount: number;
   updatedAt: Date;
@@ -149,7 +154,13 @@ export function ConversationList({
                               : participantName}
                             :
                           </span>{" "}
-                          {conversation.lastMessage.content}
+                          {conversation.lastMessage.attachments &&
+                          conversation.lastMessage.attachments.length > 0 &&
+                          !conversation.lastMessage.content ? (
+                            <span>📷 Photo</span>
+                          ) : (
+                            conversation.lastMessage.content
+                          )}
                         </p>
                       )}
                     </div>
