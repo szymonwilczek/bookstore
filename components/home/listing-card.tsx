@@ -84,7 +84,7 @@ export function ListingCard({
           <img
             src={book.imageUrl || "/placeholder-book.png"}
             alt={book.title}
-            className="w-20 h-auto object-cover flex-shrink-0 rounded-sm"
+            className="w-20 h-28 object-cover flex-shrink-0 rounded-sm"
           />
 
           <div className="flex-1 flex flex-col">
@@ -112,7 +112,7 @@ export function ListingCard({
             </div>
 
             <div className="flex-1 mb-3">
-              <p className="text-sm line-clamp-5 text-muted-foreground">
+              <p className="text-sm line-clamp-2 text-muted-foreground">
                 {book.description || "Brak opisu"}
               </p>
             </div>
@@ -165,7 +165,7 @@ export function ListingCard({
           <img
             src={book.imageUrl || "/placeholder-book.png"}
             alt={book.title}
-            className="w-full h-40 object-cover rounded-sm mb-4"
+            className="w-full h-40 object-contain rounded-sm mb-4"
           />
 
           <div className="flex items-center gap-2 mb-2">
