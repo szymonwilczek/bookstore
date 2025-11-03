@@ -22,6 +22,9 @@ interface UserData {
     imageUrl?: string;
     createdAt: string;
     status: string;
+    isActive?: boolean;
+    condition?: "new" | "used" | "damaged";
+    ownerNote?: string;
   }[];
 }
 
@@ -35,6 +38,8 @@ interface BookBase {
 
 interface Book extends BookBase {
   status: "active" | "inactive";
+  condition?: "new" | "used" | "damaged";
+  ownerNote?: string;
 }
 
 export function useProfileData() {
@@ -43,13 +48,13 @@ export function useProfileData() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/user/profile');
+        const response = await fetch("/api/user/profile");
         if (response.ok) {
           const data = await response.json();
           setUserData(data);
         }
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       }
     };
     fetchData();
@@ -63,7 +68,15 @@ export function useProfileData() {
         author: book.author,
         image: book.imageUrl,
         createdAt: new Date(book.createdAt).toISOString(),
-        status: book.status === "available" ? "active" : "inactive",
+        status: (book.isActive !== undefined
+          ? book.isActive
+            ? "active"
+            : "inactive"
+          : book.status === "available"
+            ? "active"
+            : "inactive") as "active" | "inactive",
+        condition: book.condition,
+        ownerNote: book.ownerNote,
       })) as Book[];
     }
     return [];
@@ -85,13 +98,13 @@ export function useProfileData() {
   const onUpdate = () => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/user/profile');
+        const response = await fetch("/api/user/profile");
         if (response.ok) {
           const data = await response.json();
           setUserData(data);
         }
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       }
     };
     fetchData();

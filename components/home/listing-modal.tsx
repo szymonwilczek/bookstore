@@ -79,9 +79,18 @@ export function ListingModal({
         {book.description && (
           <div>
             <h4 className="text-sm font-medium text-muted-foreground mb-1">
-              Opis
+              Opis książki
             </h4>
             <p className="text-sm">{book.description}</p>
+          </div>
+        )}
+
+        {book.ownerNote && (
+          <div>
+            <h4 className="text-sm font-medium text-muted-foreground mb-1">
+              Notatka właściciela
+            </h4>
+            <p className="text-sm italic">{book.ownerNote}</p>
           </div>
         )}
 

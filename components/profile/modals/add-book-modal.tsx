@@ -49,7 +49,7 @@ interface SearchBook {
 interface AddBookModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: () => void; // tylko odswiezenie = bez parametrow
+  onSave: () => void;
   type?: "offered" | "wishlist";
 }
 
@@ -79,6 +79,8 @@ export function AddBookModal({
     description: "",
     image: "",
     isbn: "",
+    condition: "used",
+    ownerNote: "",
   });
   const [searchType, setSearchType] = useState<"general" | "title" | "author">(
     "general"
@@ -90,7 +92,6 @@ export function AddBookModal({
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // wyszukiwanie ksiazek (local kolekcja + Google Books)
   useEffect(() => {
     const updateResults = async () => {
       if (debouncedQuery.length <= 2) {
@@ -99,13 +100,11 @@ export function AddBookModal({
       }
 
       try {
-        // priorytet: local kolekcja (Book)
         const localResponse = await fetch(
           `/api/books/search?q=${encodeURIComponent(debouncedQuery)}`
         );
         const localBooks = localResponse.ok ? await localResponse.json() : [];
 
-        // potem Google Books
         const buildQuery = (q: string, type: string) => {
           switch (type) {
             case "author":
@@ -125,7 +124,6 @@ export function AddBookModal({
           ? await googleResponse.json()
           : [];
 
-        // polaczenie wynikow
         const combined = [
           ...localBooks.map((b: BookBase) => ({
             ...b,
@@ -155,6 +153,8 @@ export function AddBookModal({
       description: book.description || "",
       image: book.image || "",
       isbn: book.isbn || "",
+      condition: "used",
+      ownerNote: "",
     });
   };
 
@@ -163,6 +163,7 @@ export function AddBookModal({
     try {
       const endpoint =
         type === "wishlist" ? "/api/user/wishlist" : "/api/user/offered-books";
+
       if (isCreating || (selectedBook && selectedBook.source === "google")) {
         await fetch(endpoint, {
           method: "POST",
@@ -173,13 +174,19 @@ export function AddBookModal({
             description: formData.description,
             imageUrl: formData.image,
             isbn: formData.isbn,
+            condition: formData.condition,
+            ownerNote: formData.ownerNote,
           }),
         });
       } else if (selectedBook && selectedBook.source === "local") {
         await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ bookId: selectedBook.id }),
+          body: JSON.stringify({
+            bookId: selectedBook.id,
+            condition: formData.condition,
+            ownerNote: formData.ownerNote,
+          }),
         });
       }
       onSave();
@@ -201,6 +208,8 @@ export function AddBookModal({
       description: "",
       image: "",
       isbn: "",
+      condition: "used",
+      ownerNote: "",
     });
     onOpenChange(false);
   };
@@ -387,6 +396,41 @@ export function AddBookModal({
                 </div>
               </>
             )}
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="condition" className="text-right">
+                Condition
+              </Label>
+              <Select
+                value={formData.condition}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, condition: value })
+                }
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="new">Nowy</SelectItem>
+                  <SelectItem value="used">Używany</SelectItem>
+                  <SelectItem value="damaged">Uszkodzony</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="ownerNote" className="text-right">
+                Notatka
+              </Label>
+              <Textarea
+                id="ownerNote"
+                value={formData.ownerNote}
+                onChange={(e) =>
+                  setFormData({ ...formData, ownerNote: e.target.value })
+                }
+                placeholder="np. okładka uszkodzona, oddaję bo mama kazała..."
+                className="col-span-3"
+              />
+            </div>
           </div>
           <DialogFooter>
             {isCreating && (
