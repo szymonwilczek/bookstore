@@ -26,7 +26,7 @@ import { CartSheet } from "@/components/navbar/CartSheet";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import { Sun, Moon, MessageCircle } from "lucide-react";
+import { Sun, Moon, MessageCircle, LogIn } from "lucide-react";
 
 export interface NavbarNavItem {
   href?: string;
@@ -259,14 +259,13 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                   )}
                 </Button>
               )}
-              {/* Notification */}
-              <NotificationMenu
-                notificationCount={notificationCount}
-                onItemClick={onNotificationItemClick}
-              />
-              {/* Cart - tylko dla zalogowanych */}
+              {session && (
+                <NotificationMenu
+                  notificationCount={notificationCount}
+                  onItemClick={onNotificationItemClick}
+                />
+              )}
               {session && <CartSheet />}
-              {/* Theme toggle */}
               <Button
                 variant="ghost"
                 size="icon"
@@ -278,15 +277,26 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 <span className="sr-only">Toggle theme</span>
               </Button>
             </div>
-            {/* User menu */}
-            <UserMenu
-              userName={session?.user?.name || userData?.name || "User"}
-              userEmail={
-                session?.user?.email || userData?.email || "user@example.com"
-              }
-              userAvatar={userData?.profileImage || session?.user?.image}
-              onItemClick={onUserItemClick}
-            />
+            {session ? (
+              <UserMenu
+                userName={session?.user?.name || userData?.name || "User"}
+                userEmail={
+                  session?.user?.email || userData?.email || "user@example.com"
+                }
+                userAvatar={userData?.profileImage || session?.user?.image}
+                onItemClick={onUserItemClick}
+              />
+            ) : (
+              <Button
+                onClick={() => router.push("/login")}
+                variant="default"
+                size="sm"
+                className="gap-2"
+              >
+                <LogIn className="h-4 w-4" />
+                LOG IN
+              </Button>
+            )}
           </div>
         </div>
       </header>
