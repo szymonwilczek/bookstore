@@ -1,5 +1,10 @@
 import mongoose, { Document, Schema } from "mongoose";
 
+export interface UserSettings {
+  hideEmail: boolean;
+  hideWishlist: boolean;
+}
+
 export interface IUser extends Document {
   email: string;
   username: string;
@@ -21,6 +26,8 @@ export interface IUser extends Document {
   github?: string;
   twitter?: string;
   website?: string;
+  settings: UserSettings;
+  blockedUsers: mongoose.Types.ObjectId[];
 }
 
 const UserSchema: Schema = new Schema(
@@ -44,6 +51,11 @@ const UserSchema: Schema = new Schema(
     github: { type: String },
     twitter: { type: String },
     website: { type: String },
+    settings: {
+      hideEmail: { type: Boolean, default: false },
+      hideWishlist: { type: Boolean, default: false },
+    },
+    blockedUsers: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
 );
