@@ -126,3 +126,14 @@
     transition: color 0.2s ease-in-out;
   }
 }
+@keyframes sheenSlide {
+  0% {
+    transform: translate(100%, 100%);
+  }
+  20% {
+    transform: translate(-100%, -100%);
+  }
+  100% {
+    transform: translate(-100%, -100%);
+  }
+}
