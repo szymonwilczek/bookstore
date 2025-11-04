@@ -415,9 +415,9 @@ export function ProfileDashboard({
 
       <div className="grid gap-6 lg:grid-cols-3">
         <ProfileInfoSection
-          userData={currentUserData}
-          profile={profile}
+          profileData={profile}
           onEditProfile={() => setIsProfileModalOpen(true)}
+          isPublicView={false}
         />
 
         <TransactionHistory userEmail={currentUserData?.email} />
@@ -434,12 +434,13 @@ export function ProfileDashboard({
       />
 
       <WishlistSection
-        wishlistBooks={wishlistBooks}
-        onDeleteWishlistBook={handleDeleteWishlistBook}
-        onAddBook={() => {
+        wishlist={wishlistBooks}
+        onRemoveFromWishlist={handleDeleteWishlistBook}
+        onAddToWishlist={() => {
           setModalType("wishlist");
           setIsAddBookModalOpen(true);
         }}
+        isPublicView={false}
       />
 
       <EditProfileModal
