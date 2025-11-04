@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -43,11 +43,41 @@ export function ReviewModal({
   const [hoveredRating, setHoveredRating] = useState(0);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const otherUser =
     transaction.initiator.email === transaction.receiver.email
       ? transaction.receiver
       : transaction.initiator;
+
+  useEffect(() => {
+    const loadExistingReview = async () => {
+      if (!open) return;
+
+      try {
+        const res = await fetch(
+          `/api/reviews?transactionId=${transaction._id}`
+        );
+        if (res.ok) {
+          const existingReview = await res.json();
+          if (existingReview) {
+            setRating(existingReview.rating);
+            setComment(existingReview.comment || "");
+            setIsEditing(true);
+          } else {
+            // brak opinii - reset do pustego formularza
+            setRating(0);
+            setComment("");
+            setIsEditing(false);
+          }
+        }
+      } catch (error) {
+        console.error("Error loading existing review:", error);
+      }
+    };
+
+    loadExistingReview();
+  }, [open, transaction._id]);
 
   const handleSubmit = async () => {
     if (rating === 0) {
@@ -58,8 +88,6 @@ export function ReviewModal({
     setLoading(true);
     try {
       await onSubmit(rating, comment);
-      setRating(0);
-      setComment("");
       onOpenChange(false);
     } catch (error) {
       console.error("Error submitting review:", error);
@@ -72,9 +100,13 @@ export function ReviewModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Oceń wymianę</DialogTitle>
+          <DialogTitle>
+            {isEditing ? "Edytuj opinię" : "Oceń wymianę"}
+          </DialogTitle>
           <DialogDescription>
-            Jak oceniasz wymianę z {otherUser.username || otherUser.email}?
+            {isEditing
+              ? `Zmień swoją opinię o wymianie z ${otherUser.username || otherUser.email}`
+              : `Jak oceniasz wymianę z ${otherUser.username || otherUser.email}?`}
           </DialogDescription>
         </DialogHeader>
 
@@ -129,7 +161,11 @@ export function ReviewModal({
             Anuluj
           </Button>
           <Button onClick={handleSubmit} disabled={loading || rating === 0}>
-            {loading ? "Wysyłanie..." : "Wyślij opinię"}
+            {loading
+              ? "Wysyłanie..."
+              : isEditing
+                ? "Zaktualizuj opinię"
+                : "Wyślij opinię"}
           </Button>
         </DialogFooter>
       </DialogContent>

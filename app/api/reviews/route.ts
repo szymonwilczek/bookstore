@@ -1,33 +1,88 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/app/api/auth/[...nextauth]/auth';
-import connectToDB from '@/lib/db/connect';
-import Review from '@/lib/models/Review';
-import Transaction from '@/lib/models/Transaction';
-import User from '@/lib/models/User';
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/app/api/auth/[...nextauth]/auth";
+import connectToDB from "@/lib/db/connect";
+import Review from "@/lib/models/Review";
+import Transaction from "@/lib/models/Transaction";
+import User from "@/lib/models/User";
 
+// pobierz istniejaca opinie dla transakcji
+export async function GET(req: NextRequest) {
+  const session = await auth();
+  if (!session)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { searchParams } = new URL(req.url);
+  const transactionId = searchParams.get("transactionId");
+
+  if (!transactionId) {
+    return NextResponse.json(
+      { error: "Transaction ID required" },
+      { status: 400 }
+    );
+  }
+
+  await connectToDB();
+
+  const reviewer = await User.findOne({ email: session.user.email });
+  if (!reviewer) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
+  const existingReview = await Review.findOne({
+    transactionId,
+    reviewer: reviewer._id,
+  });
+
+  return NextResponse.json(existingReview || null);
+}
+
+// stworz lub zaktualizuj opinie
 export async function POST(req: NextRequest) {
   const session = await auth();
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!session)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { transactionId, rating, comment } = await req.json();
   await connectToDB();
 
-  const transaction = await Transaction.findById(transactionId).populate('initiator receiver');
+  const transaction =
+    await Transaction.findById(transactionId).populate("initiator receiver");
   const reviewer = await User.findOne({ email: session.user.email });
 
-  const reviewedUser = transaction.initiator._id.equals(reviewer._id) ? transaction.receiver : transaction.initiator;
+  if (!reviewer) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
 
-  const review = await Review.create({
+  const reviewedUser = transaction.initiator._id.equals(reviewer._id)
+    ? transaction.receiver
+    : transaction.initiator;
+
+  const existingReview = await Review.findOne({
     transactionId,
     reviewer: reviewer._id,
-    reviewedUser: reviewedUser._id,
-    rating,
-    comment,
   });
 
-  // aktualizacja oceny
+  let review;
+  if (existingReview) {
+    // UPDATE
+    existingReview.rating = rating;
+    existingReview.comment = comment;
+    await existingReview.save();
+    review = existingReview;
+  } else {
+    // CREATE
+    review = await Review.create({
+      transactionId,
+      reviewer: reviewer._id,
+      reviewedUser: reviewedUser._id,
+      rating,
+      comment,
+    });
+  }
+
   const reviews = await Review.find({ reviewedUser: reviewedUser._id });
-  const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+  const avgRating =
+    reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
   reviewedUser.averageRating = avgRating;
   await reviewedUser.save();
 
