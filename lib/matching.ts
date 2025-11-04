@@ -1,6 +1,15 @@
 import connectToDB from "./db/connect";
 import User from "./models/User";
 
+interface OfferedBook {
+  _id: string;
+  title: string;
+  author: string;
+  imageUrl?: string;
+  isActive?: boolean;
+  status: string;
+}
+
 export async function getMatchingOffers(userEmail: string) {
   await connectToDB();
   const user = await User.findOne({ email: userEmail }).populate("wishlist");
@@ -12,15 +21,19 @@ export async function getMatchingOffers(userEmail: string) {
 
   // szukanie uzytkownikow ktorych oferowane ksiazki pasuja do wishlisty
   const matchingUsers = await User.find({
-    _id: { $ne: user._id }, // wykluczanie siebie
+    _id: { $ne: user._id },
     offeredBooks: { $exists: true, $ne: [] },
   }).populate("offeredBooks");
 
   const matches = [];
   for (const otherUser of matchingUsers) {
-    for (const offeredBook of otherUser.offeredBooks) {
+    for (const offeredBook of otherUser.offeredBooks as OfferedBook[]) {
+      const isBookActive = offeredBook.isActive !== false;
+      const isBookAvailable = offeredBook.status === "available";
+
       if (
-        offeredBook.isActive &&
+        isBookActive &&
+        isBookAvailable &&
         userWishlistTitles.includes(offeredBook.title.toLowerCase())
       ) {
         matches.push({
@@ -32,10 +45,5 @@ export async function getMatchingOffers(userEmail: string) {
     }
   }
 
-  // jesli malo wynikow to dodae dopasowania po autorze/gatunku (TODO: ulepszyc, jest uproszczone)
-  if (matches.length < 5) {
-    // TODO
-  }
-
-  return matches.slice(0, 10); // top 10
+  return matches.slice(0, 10);
 }
