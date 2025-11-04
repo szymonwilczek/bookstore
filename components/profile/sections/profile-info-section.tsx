@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -9,149 +12,251 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { AchievementBadge } from "@/components/achievements/achievement-badge";
 import {
   Edit,
-  Mail,
-  Phone,
   MapPin,
+  Phone,
   Github,
   Twitter,
   Globe,
+  Trophy,
 } from "lucide-react";
 
-interface UserData {
-  username?: string;
-  email?: string;
+interface UserProfile {
+  username: string;
+  email: string;
   phone?: string;
   location?: string;
-  profileImage?: string;
+  avatar?: string;
   bio?: string;
-  preferences?: {
-    genres?: string[];
-  };
   github?: string;
   twitter?: string;
   website?: string;
 }
 
-interface UserProfile {
-  username: string;
-  email: string;
-  phone: string;
-  location: string;
-  avatar: string;
-  bio: string;
+interface ProfileInfoSectionProps {
+  profileData?: UserProfile;
+  onEditProfile: () => void;
+  isPublicView?: boolean;
+  userId?: string;
 }
 
-interface ProfileInfoSectionProps {
-  userData: UserData;
-  profile: UserProfile;
-  onEditProfile: () => void;
+interface Achievement {
+  _id: string;
+  icon: string;
+  name: string;
+  description: string;
+  tier: "bronze" | "silver" | "gold" | "platinum";
+  points: number;
+  unlocked: boolean;
+  unlockedAt?: string;
 }
 
 export function ProfileInfoSection({
-  userData,
-  profile,
+  profileData,
   onEditProfile,
+  isPublicView = false,
+  userId,
 }: ProfileInfoSectionProps) {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [loadingAchievements, setLoadingAchievements] = useState(true);
+  const [mongoUserId, setMongoUserId] = useState<string | null>(null);
+
+  // MongoDB user ID
+  useEffect(() => {
+    const fetchUserId = async () => {
+      if (userId) {
+        setMongoUserId(userId);
+        return;
+      }
+
+      if (!session?.user?.email) return;
+
+      try {
+        const res = await fetch("/api/user/profile");
+        if (!res.ok) throw new Error("Failed to fetch profile");
+        const profile = await res.json();
+        setMongoUserId(profile._id);
+      } catch (error) {
+        console.error("Error fetching user ID:", error);
+      }
+    };
+
+    fetchUserId();
+  }, [session?.user?.email, userId]);
+
+  // pobieranie achievements
+  useEffect(() => {
+    const fetchAchievements = async () => {
+      if (!mongoUserId) return;
+
+      try {
+        setLoadingAchievements(true);
+        const res = await fetch(`/api/achievements/user/${mongoUserId}`);
+        if (!res.ok) throw new Error("Failed to fetch achievements");
+        const data = await res.json();
+
+        const allAchievements: Achievement[] = [];
+        data.series?.forEach((serie: { tiers: Achievement[] }) => {
+          allAchievements.push(...serie.tiers);
+        });
+
+        // tylko odblokowane osiagniecia posortowane po dacie
+        const unlocked = allAchievements
+          .filter((a) => a.unlocked)
+          .sort(
+            (a, b) =>
+              new Date(b.unlockedAt || 0).getTime() -
+              new Date(a.unlockedAt || 0).getTime()
+          )
+          .slice(0, 5); // top 5
+
+        setAchievements(unlocked);
+      } catch (error) {
+        console.error("Error fetching achievements:", error);
+      } finally {
+        setLoadingAchievements(false);
+      }
+    };
+
+    fetchAchievements();
+  }, [mongoUserId]);
+
+  if (!profileData) {
+    return (
+      <Card className="lg:col-span-1">
+        <CardContent className="p-6">
+          <p className="text-muted-foreground">Ładowanie profilu...</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="lg:col-span-1">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Profile Information</CardTitle>
-          <Button variant="ghost" size="icon" onClick={onEditProfile}>
-            <Edit className="h-4 w-4" />
-            <span className="sr-only">Edit profile</span>
-          </Button>
+          <CardTitle>Informacje o profilu</CardTitle>
+          {!isPublicView && (
+            <Button variant="ghost" size="icon" onClick={onEditProfile}>
+              <Edit className="h-4 w-4" />
+              <span className="sr-only">Edytuj profil</span>
+            </Button>
+          )}
         </div>
-        <CardDescription>Your seller account details</CardDescription>
+        <CardDescription>
+          {isPublicView ? "Profil publiczny" : "Szczegóły Twojego konta"}
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex flex-col items-center gap-4">
           <Avatar className="h-24 w-24">
             <AvatarImage
-              src={profile.avatar || "/placeholder.svg"}
-              alt={profile.username}
+              src={profileData.avatar || "/placeholder.svg"}
+              alt={profileData.username}
             />
             <AvatarFallback>
-              {profile.username
-                .split(" ")
+              {profileData.username
+                ?.split(" ")
                 .map((n) => n[0])
-                .join("")}
+                .join("") || "?"}
             </AvatarFallback>
           </Avatar>
           <div className="text-center">
-            <h3 className="text-xl font-semibold">{profile.username}</h3>
-            <p className="text-sm text-muted-foreground">{profile.bio}</p>
+            <h3 className="text-lg font-semibold">{profileData.username}</h3>
+            <p className="text-sm text-muted-foreground">{profileData.email}</p>
           </div>
         </div>
 
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 text-sm">
-            <Mail className="h-4 w-4 text-muted-foreground" />
-            <span className="text-foreground">{profile.email}</span>
-          </div>
-          <div className="flex items-center gap-3 text-sm">
-            <Phone className="h-4 w-4 text-muted-foreground" />
-            <span className="text-foreground">{profile.phone}</span>
-          </div>
-          <div className="flex items-center gap-3 text-sm">
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-            <span className="text-foreground">{profile.location}</span>
-          </div>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {userData?.preferences?.genres?.map((genre) => (
-              <Badge key={genre} variant="secondary">
-                {genre}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        {(userData?.github || userData?.twitter || userData?.website) && (
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium">Social Links</h4>
-            <div className="flex gap-2">
-              {userData?.github && (
-                <Button variant="ghost" size="icon" asChild>
-                  <a
-                    href={userData.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Github className="h-4 w-4" />
-                    <span className="sr-only">GitHub</span>
-                  </a>
-                </Button>
-              )}
-              {userData?.twitter && (
-                <Button variant="ghost" size="icon" asChild>
-                  <a
-                    href={userData.twitter}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Twitter className="h-4 w-4" />
-                    <span className="sr-only">Twitter</span>
-                  </a>
-                </Button>
-              )}
-              {userData?.website && (
-                <Button variant="ghost" size="icon" asChild>
-                  <a
-                    href={userData.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Globe className="h-4 w-4" />
-                    <span className="sr-only">Website</span>
-                  </a>
-                </Button>
-              )}
+        {!loadingAchievements && achievements.length > 0 && (
+          <div className="space-y-3 pt-4 border-t">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-medium flex items-center gap-2">
+                <Trophy className="h-4 w-4 text-yellow-500" />
+                Osiągnięcia ({achievements.length})
+              </h4>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => router.push("/achievements")}
+              >
+                Zobacz wszystkie
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {achievements.map((achievement) => (
+                <AchievementBadge
+                  key={achievement._id}
+                  achievement={achievement}
+                  size="md"
+                />
+              ))}
             </div>
           </div>
         )}
+
+        <div className="space-y-3 pt-4 border-t">
+          {profileData.bio && (
+            <div>
+              <p className="text-sm text-muted-foreground">Bio</p>
+              <p className="text-sm">{profileData.bio}</p>
+            </div>
+          )}
+
+          {profileData.location && (
+            <div className="flex items-center gap-2 text-sm">
+              <MapPin className="h-4 w-4 text-muted-foreground" />
+              <span>{profileData.location}</span>
+            </div>
+          )}
+
+          {profileData.phone && (
+            <div className="flex items-center gap-2 text-sm">
+              <Phone className="h-4 w-4 text-muted-foreground" />
+              <span>{profileData.phone}</span>
+            </div>
+          )}
+
+          {(profileData.github ||
+            profileData.twitter ||
+            profileData.website) && (
+            <div className="flex gap-2 pt-2">
+              {profileData.github && (
+                <a
+                  href={profileData.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <Github className="h-5 w-5" />
+                </a>
+              )}
+              {profileData.twitter && (
+                <a
+                  href={profileData.twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <Twitter className="h-5 w-5" />
+                </a>
+              )}
+              {profileData.website && (
+                <a
+                  href={profileData.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <Globe className="h-5 w-5" />
+                </a>
+              )}
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
