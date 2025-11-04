@@ -27,21 +27,20 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
 
-    // parametry
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
-    const sortBy = searchParams.get("sortBy") || "date"; // 'date' | 'popularity'
+    const sortBy = searchParams.get("sortBy") || "date";
     const genres = searchParams.get("genres")?.split(",").filter(Boolean) || [];
     const conditions =
       searchParams.get("conditions")?.split(",").filter(Boolean) || [];
     const locations =
       searchParams.get("locations")?.split(",").filter(Boolean) || [];
-    const dateRange = searchParams.get("dateRange"); // '7' | '30' | '90'
+    const dateRange = searchParams.get("dateRange");
     const search = searchParams.get("search") || "";
 
     const query: BookQuery = { status: "available" };
 
-    // wykluczenie wlasnych ksiazek (dla zalogowanych)
+    // wykluczenie wlasnych ksiazek
     if (session?.user?.email) {
       const currentUser = await User.findOne({ email: session.user.email });
       if (currentUser) {
@@ -74,18 +73,29 @@ export async function GET(req: NextRequest) {
     const sort: SortOptions =
       sortBy === "popularity" ? { viewCount: -1 } : { createdAt: -1 };
 
-    const books = await Book.find(query)
+    // wszystkie offeredBooks IDs
+    const allUsers = await User.find({}, "offeredBooks");
+    const offeredBookIds = allUsers.flatMap((user) => user.offeredBooks);
+
+    const baseBooks = await Book.find(query)
       .sort(sort)
-      .skip((page - 1) * limit)
-      .limit(limit)
       .populate("owner", "username email location profileImage");
 
-    const total = await Book.countDocuments(query);
+    // tylko ksiazki z offeredBooks
+    const booksInOffered = baseBooks.filter((book) =>
+      offeredBookIds.some((id) => id.toString() === book._id.toString())
+    );
 
-    // filtrowanie po lokalizacji (owner.location)
-    let filteredBooks = books;
+    // paginacja po filtrowaniu
+    const paginatedBooks = booksInOffered.slice(
+      (page - 1) * limit,
+      page * limit
+    );
+
+    // filtrowanie po lokalizacji
+    let filteredBooks = paginatedBooks;
     if (locations.length > 0) {
-      filteredBooks = books.filter((book) => {
+      filteredBooks = paginatedBooks.filter((book) => {
         const owner = book.owner as { location?: string };
         return owner && owner.location && locations.includes(owner.location);
       });
@@ -94,12 +104,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       books: filteredBooks,
       pagination: {
-        total: locations.length > 0 ? filteredBooks.length : total,
+        total: booksInOffered.length,
         page,
         limit,
-        totalPages: Math.ceil(
-          (locations.length > 0 ? filteredBooks.length : total) / limit
-        ),
+        totalPages: Math.ceil(booksInOffered.length / limit),
       },
     });
   } catch (error) {
