@@ -6,14 +6,7 @@ import User from "@/lib/models/User";
 import Book from "@/lib/models/Book";
 import type { Types } from "mongoose";
 
-interface PopulatedParticipant {
-  _id: Types.ObjectId;
-  username?: string;
-  email: string;
-  profileImage?: string;
-}
-
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const session = await auth();
     if (!session?.user?.email) {

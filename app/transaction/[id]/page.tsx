@@ -8,7 +8,6 @@ import ReviewForm from '@/components/ReviewForm';
 export default function TransactionPage() {
   const { id } = useParams();
   const [transaction, setTransaction] = useState(null);
-  const [status, setStatus] = useState('');
 
   useEffect(() => {
     fetch(`/api/transactions/${id}`).then(res => res.json()).then(setTransaction);
@@ -22,7 +21,6 @@ export default function TransactionPage() {
     });
     const updated = await res.json();
     setTransaction(updated);
-    setStatus(newStatus);
   };
 
   if (!transaction) return <div>Loading...</div>;

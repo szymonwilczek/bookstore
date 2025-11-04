@@ -1,16 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import confetti from "canvas-confetti";
-
-interface Achievement {
-  _id: string;
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  tier: string;
-  points: number;
-}
 
 export function useAchievements(userId?: string) {
   const { toast } = useToast();

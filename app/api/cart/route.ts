@@ -4,7 +4,7 @@ import connectToDB from "@/lib/db/connect";
 import Cart from "@/lib/models/Cart";
 import User from "@/lib/models/User";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const session = await auth();
     if (!session) {

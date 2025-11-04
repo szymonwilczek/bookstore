@@ -7,7 +7,7 @@ import { OfferedBooksSection } from "./sections/offered-books-section";
 import { WishlistSection } from "./sections/wishlist-section";
 import { ReviewsSection } from "./sections/reviews-section";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Ban, TrendingUp, User, Star } from "lucide-react";
+import { Ban, TrendingUp, User, Star } from "lucide-react";
 import { StartConversationModal } from "@/components/messages/start-conversation-modal";
 import {
   Dialog,

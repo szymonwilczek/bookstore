@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import connectToDB from "@/lib/db/connect";
 import Achievement from "@/lib/models/Achievement";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   await connectToDB();
 
   const achievements = await Achievement.find({ isActive: true })

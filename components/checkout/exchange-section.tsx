@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { MapPin, Star, Package, Truck, User } from "lucide-react";
+import { Package, Truck, User } from "lucide-react";
 import { BookInventory } from "@/components/checkout/book-inventory";
 import { ExchangeZone } from "@/components/checkout/exchange-zone";
 import { OwnerInfo } from "@/components/checkout/owner-info";

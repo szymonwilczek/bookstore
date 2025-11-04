@@ -1,7 +1,6 @@
 'use client';
 import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import AuthBackgroundShape from '@/assets/svg/auth-background-shape';
 import Logo from '@/assets/svg/logo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

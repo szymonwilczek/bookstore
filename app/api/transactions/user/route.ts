@@ -1,6 +1,4 @@
-// /home/wolfie/Dokumenty/GitHub/bookstore/app/api/transactions/user/route.ts
-
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import connectToDB from "@/lib/db/connect";
 import Transaction from "@/lib/models/Transaction";
@@ -9,7 +7,7 @@ import Book from "@/lib/models/Book";
 import BookSnapshot from "@/lib/models/BookSnapshot";
 import mongoose from "mongoose";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const session = await auth();
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

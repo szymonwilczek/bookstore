@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import connectToDB from "@/lib/db/connect";
 import Notification from "@/lib/models/Notification";
 import User from "@/lib/models/User";
 
-export async function POST(req: NextRequest) {
+export async function POST() {
   try {
     const session = await auth();
 

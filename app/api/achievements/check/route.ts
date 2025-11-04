@@ -6,7 +6,6 @@ import UserAchievement from "@/lib/models/UserAchievement";
 import User from "@/lib/models/User";
 import Transaction from "@/lib/models/Transaction";
 import Review from "@/lib/models/Review";
-import mongoose from "mongoose";
 
 type EventType =
   | "transaction_completed"

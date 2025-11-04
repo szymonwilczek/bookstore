@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import connectToDB from "@/lib/db/connect";
 import Message from "@/lib/models/Message";
 import Conversation from "@/lib/models/Conversation";
 import User from "@/lib/models/User";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const session = await auth();
 

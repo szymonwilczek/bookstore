@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { EditProfileModal } from "@/components/profile/modals/edit-profile-modal";
-import { EditProductModal } from "@/components/profile/modals/edit-product-modal";
 import { AddBookModal } from "@/components/profile/modals/add-book-modal";
 import { EditBookModal } from "./modals/edit-book-modal";
 import { OnboardingBookSearch } from "@/components/profile/onboarding-book-search";
@@ -106,15 +105,12 @@ interface TransactionFromAPI {
 
 interface ProfileDashboardProps {
   userData: UserData;
-  onUpdate: () => void;
 }
 
 export function ProfileDashboard({
   userData,
-  onUpdate,
 }: ProfileDashboardProps) {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isAddBookModalOpen, setIsAddBookModalOpen] = useState(false);
   const [isEditBookModalOpen, setIsEditBookModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
@@ -227,9 +223,6 @@ export function ProfileDashboard({
   const pendingExchanges = transactions.filter(
     (t) => t.status === "pending"
   ).length;
-  const [currentPlatformIndex, setCurrentPlatformIndex] = useState(0);
-  const [currentUserIndex, setCurrentUserIndex] = useState(0);
-  const [currentActivityIndex, setCurrentActivityIndex] = useState(0);
   const averageExchangeTime = "2.5 days";
   const wishlistMatches = 8;
 
@@ -259,40 +252,6 @@ export function ProfileDashboard({
     { title: "Wishlist Matches", value: wishlistMatches, icon: Edit },
   ];
 
-  const [platformApi, setPlatformApi] = useState<CarouselApi>();
-  const [userApi, setUserApi] = useState<CarouselApi>();
-  const [activityApi, setActivityApi] = useState<CarouselApi>();
-
-  useEffect(() => {
-    if (platformApi) {
-      const updateIndex = () =>
-        setCurrentPlatformIndex(platformApi.selectedScrollSnap());
-      updateIndex();
-      platformApi.on("select", updateIndex);
-      return () => platformApi.off("select", updateIndex);
-    }
-  }, [platformApi]);
-
-  useEffect(() => {
-    if (userApi) {
-      const updateIndex = () =>
-        setCurrentUserIndex(userApi.selectedScrollSnap());
-      updateIndex();
-      userApi.on("select", updateIndex);
-      return () => userApi.off("select", updateIndex);
-    }
-  }, [userApi]);
-
-  useEffect(() => {
-    if (activityApi) {
-      const updateIndex = () =>
-        setCurrentActivityIndex(activityApi.selectedScrollSnap());
-      updateIndex();
-      activityApi.on("select", updateIndex);
-      return () => activityApi.off("select", updateIndex);
-    }
-  }, [activityApi]);
-
   const handleProfileUpdate = async (updatedProfile: UserProfile) => {
     const formData = new FormData();
     formData.append("username", updatedProfile.username);
@@ -316,8 +275,6 @@ export function ProfileDashboard({
     fetchData();
   };
 
-  const handleProductUpdate = (updatedProduct: Book) => {};
-
   const handleEditBook = (book: Book) => {
     setSelectedBook(book);
     setIsEditBookModalOpen(true);
@@ -331,7 +288,7 @@ export function ProfileDashboard({
     }
   };
 
-  const handleUpdateBook = async (updatedBook: Book) => {
+  const handleUpdateBook = async () => {
     fetchData();
   };
 
@@ -378,21 +335,6 @@ export function ProfileDashboard({
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "completed":
-      case "active":
-        return "bg-accent text-accent-foreground";
-      case "pending":
-        return "bg-chart-5 text-primary-foreground";
-      case "cancelled":
-      case "inactive":
-        return "bg-muted text-muted-foreground";
-      default:
-        return "bg-secondary text-secondary-foreground";
-    }
-  };
-
   return (
     <div className="container mx-auto p-4 md:p-6 lg:p-8 space-y-6">
       <div className="flex flex-col gap-2">
@@ -408,9 +350,6 @@ export function ProfileDashboard({
         platformStats={platformStats}
         userStats={userStats}
         activityStats={activityStats}
-        onPlatformApiChange={setPlatformApi}
-        onUserApiChange={setUserApi}
-        onActivityApiChange={setActivityApi}
       />
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -449,14 +388,6 @@ export function ProfileDashboard({
         onOpenChange={setIsProfileModalOpen}
         onSave={handleProfileUpdate}
       />
-      {selectedBook && (
-        <EditProductModal
-          book={selectedBook}
-          open={isProductModalOpen}
-          onOpenChange={setIsProductModalOpen}
-          onSave={handleProductUpdate}
-        />
-      )}
       <AddBookModal
         open={isAddBookModalOpen}
         onOpenChange={setIsAddBookModalOpen}

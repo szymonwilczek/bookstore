@@ -1,15 +1,10 @@
 "use client";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import WishlistForm from "@/components/WishlistForm";
-import OfferedBooksList from "@/components/OfferedBooksList";
-import { motion } from "framer-motion";
 import { ProfileDashboard } from "@/components/profile/profile-dashboard";
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
-  const router = useRouter();
   const [userData, setUserData] = useState(null);
 
   const updateProfile = async () => {

@@ -6,7 +6,7 @@ import User from "@/lib/models/User";
 import Book from "@/lib/models/Book";
 import type { Types } from "mongoose";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const session = await auth();
     if (!session?.user?.email) {

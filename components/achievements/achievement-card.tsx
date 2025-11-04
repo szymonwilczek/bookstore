@@ -5,9 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Lock, Check, Target } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 
 interface AchievementCardProps {
   achievement: {

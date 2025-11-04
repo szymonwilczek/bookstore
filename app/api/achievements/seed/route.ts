@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import connectToDB from "@/lib/db/connect";
 import Achievement from "@/lib/models/Achievement";
 
@@ -484,7 +484,7 @@ const achievements = [
   },
 ];
 
-export async function POST(req: NextRequest) {
+export async function POST() {
   try {
     await connectToDB();
 
