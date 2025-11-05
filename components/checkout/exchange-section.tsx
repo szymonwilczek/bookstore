@@ -157,10 +157,10 @@ export function ExchangeSection({
                 onChange={(e) => onLocationChange(e.target.value)}
                 placeholder={
                   deliveryMethod === "personal"
-                    ? "e.g. Gliwice, Silesian University of Technology"
+                    ? "Gliwice, Silesian University of Technology"
                     : deliveryMethod === "paczkomat"
-                      ? "e.g. RADZ01M"
-                      : "e.g. ul. Antka Rozpylacza 1, Warszawa"
+                      ? "RADZ01M"
+                      : "ul. Antka Rozpylacza 1, Warszawa"
                 }
                 className="mt-1"
               />
