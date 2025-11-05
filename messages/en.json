@@ -1,3 +1,162 @@
 {
-  "test": "This is English"
+  "common": {
+    "search": "Search",
+    "clear": "Clear",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success!",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit"
+  },
+
+  "login": {
+    "title": "Sign In to Instant Book Exchange",
+    "subtitle": "Your bookshelf is waiting.",
+    "emailLabel": "Email Address",
+    "emailHint": "Enter your email address",
+    "passwordLabel": "Password",
+    "rememberMe": "Remember me",
+    "signIn": "Sign In",
+    "dontHaveAccount": "Don't have an account yet? <signUpLink>Sign Up</signUpLink>",
+    "or": "or",
+    "google": "Sign in with Google"
+  },
+
+  "register": {
+    "title": "Sign Up to Instant Book Exchange",
+    "subtitle": "Connecting readers, one book at a time.",
+    "usernameLabel": "Username",
+    "usernameHint": "Enter your username",
+    "emailLabel": "Email Address",
+    "emailHint": "Enter your email address",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm Password",
+    "privacyPolicy": "I agree to <privacyPolicyLink>privacy policy & terms</privacyPolicyLink>",
+    "signUp": "Sign Up to Instant Book Exchange",
+    "alreadyHaveAccount": "Already have an account? <signInLink>Sign In instead</signInLink>",
+    "or": "or",
+    "google": "Sign in with Google"
+  },
+
+  "nav": {
+    "home": "Home",
+    "profile": "Profile",
+    "messages": "Messages",
+    "transactions": "Transactions",
+    "achievements": "Achievements",
+    "cart": "Cart",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "settings": "Settings"
+  },
+
+  "filters": {
+    "title": "Filters",
+    "clear": "Clear all",
+    "genres": "Genres",
+    "condition": "Book condition",
+    "location": "Location",
+    "dateAdded": "Date added",
+    "conditions": {
+      "new": "New",
+      "used": "Used",
+      "damaged": "Damaged"
+    },
+    "dateRanges": {
+      "placeholder": "Choose range",
+      "last7": "Last 7 days",
+      "last30": "Last 30 days",
+      "last90": "Last 90 days"
+    }
+  },
+
+  "books": {
+    "addBook": "Add Book",
+    "editBook": "Edit Book",
+    "deleteBook": "Delete Book",
+    "searchBook": "Search Book",
+    "title": "Title",
+    "author": "Author",
+    "isbn": "ISBN",
+    "description": "Description",
+    "condition": "Condition",
+    "ownerNote": "Owner's note",
+    "notePlaceholder": "e.g., cover damaged, giving away because mom told me to...",
+    "createNew": "I don't see my book here",
+    "noBooks": "No books found",
+    "offeredBooks": "Offered Books",
+    "wishlist": "Wishlist"
+  },
+
+  "profile": {
+    "title": "Profile",
+    "editProfile": "Edit Profile",
+    "username": "Username",
+    "email": "Email",
+    "phone": "Phone",
+    "location": "Location",
+    "bio": "Bio",
+    "preferences": "Preferences",
+    "stats": {
+      "points": "Points",
+      "rating": "Rating",
+      "exchanges": "Exchanges"
+    }
+  },
+
+  "messages": {
+    "title": "Messages",
+    "newMessage": "New Message",
+    "noMessages": "No messages yet",
+    "sendMessage": "Send message",
+    "typePlaceholder": "Type a message..."
+  },
+
+  "transactions": {
+    "title": "Transactions",
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "completed": "Completed"
+    },
+    "offeredBook": "Offered book",
+    "requestedBook": "Requested book"
+  },
+
+  "auth": {
+    "loginTitle": "Login",
+    "registerTitle": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "loginButton": "Log in",
+    "registerButton": "Sign up",
+    "orContinueWith": "Or continue with"
+  },
+
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "passwordMismatch": "Passwords do not match",
+    "unauthorized": "You are not authorized",
+    "notFound": "Not found",
+    "serverError": "Server error occurred"
+  },
+
+  "validation": {
+    "minLength": "Minimum {count} characters",
+    "maxLength": "Maximum {count} characters",
+    "email": "Invalid email format"
+  }
 }
