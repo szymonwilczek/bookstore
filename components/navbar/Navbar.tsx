@@ -20,7 +20,6 @@ import { cn } from "@/lib/utils";
 import { HamburgerIcon } from "@/components/navbar/HamburgerIcon";
 import { Logo } from "@/components/Logo";
 import { InfoMenu } from "@/components/navbar/InfoMenu";
-import { NotificationMenu } from "@/components/navbar/NotificationMenu";
 import { UserMenu } from "@/components/navbar/UserMenu";
 import { CartSheet } from "@/components/navbar/CartSheet";
 import { useSession } from "next-auth/react";
@@ -36,10 +35,8 @@ export interface NavbarNavItem {
 export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
   logo?: React.ReactNode;
   navigationLinks?: NavbarNavItem[];
-  notificationCount?: number;
   onNavItemClick?: (href: string) => void;
   onInfoItemClick?: (item: string) => void;
-  onNotificationItemClick?: (item: string) => void;
   onUserItemClick?: (item: string) => void;
 }
 
@@ -55,10 +52,8 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
       className,
       logo = <Logo />,
       navigationLinks = defaultNavigationLinks,
-      notificationCount = 3,
       onNavItemClick,
       onInfoItemClick,
-      onNotificationItemClick,
       onUserItemClick,
       ...props
     },
@@ -250,12 +245,6 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                   )}
                 </Button>
               )}
-              {session && (
-                <NotificationMenu
-                  notificationCount={notificationCount}
-                  onItemClick={onNotificationItemClick}
-                />
-              )}
               {session && <CartSheet />}
               <Button
                 variant="ghost"
@@ -297,4 +286,4 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
 
 Navbar.displayName = "Navbar";
 
-export { Logo, HamburgerIcon, InfoMenu, NotificationMenu, UserMenu, CartSheet };
+export { Logo, HamburgerIcon, InfoMenu, UserMenu, CartSheet };
