@@ -13,8 +13,16 @@ export async function POST(req: NextRequest) {
   if (!session)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { title, author, isbn, imageUrl, description, condition, ownerNote } =
-    await req.json();
+  const {
+    title,
+    author,
+    isbn,
+    imageUrl,
+    description,
+    condition,
+    ownerNote,
+    genres,
+  } = await req.json();
   await connectToDB();
 
   const user = await User.findOne({ email: session.user.email });
@@ -30,6 +38,7 @@ export async function POST(req: NextRequest) {
     owner: user._id,
     condition: condition || "used",
     ownerNote,
+    genres: genres || [],
   });
   user.offeredBooks.push(book._id);
   await user.save();

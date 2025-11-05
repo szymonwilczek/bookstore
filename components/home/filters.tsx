@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -26,19 +27,19 @@ interface FiltersProps {
   setFilters: (filters: any) => void;
 }
 
-const genres = [
-  "Fantasy",
-  "Sci-Fi",
-  "Romance",
-  "Thriller",
-  "Mystery",
-  "Horror",
-  "Non-Fiction",
-];
 const conditions = ["new", "used", "damaged"];
 const locations = ["Warszawa", "Kraków", "Gdańsk", "Wrocław", "Poznań"];
 
 export function Filters({ filters, setFilters }: FiltersProps) {
+  const [availableGenres, setAvailableGenres] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch("/api/books/genres")
+      .then((res) => res.json())
+      .then((data) => setAvailableGenres(data.genres || []))
+      .catch(console.error);
+  }, []);
+
   const handleReset = () => {
     setFilters({
       genres: [],
@@ -51,9 +52,9 @@ export function Filters({ filters, setFilters }: FiltersProps) {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="font-semibold">Filtry</h3>
+        <h3 className="font-semibold">Filters</h3>
         <Button variant="ghost" size="sm" onClick={handleReset}>
-          Wyczyść
+          Clear
         </Button>
       </div>
       <Accordion type="single" collapsible>
@@ -61,7 +62,7 @@ export function Filters({ filters, setFilters }: FiltersProps) {
           <AccordionTrigger>Gatunki</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-2">
-              {genres.map((g) => (
+              {availableGenres.map((g) => (
                 <div key={g} className="flex items-center space-x-2">
                   <Checkbox
                     id={`genre-${g}`}

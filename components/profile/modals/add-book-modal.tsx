@@ -44,6 +44,7 @@ interface SearchBook {
   description?: string;
   image?: string;
   isbn?: string;
+  genres?: string[];
   source: "local" | "google";
 }
 
@@ -61,6 +62,7 @@ interface BookBase {
   description?: string;
   image?: string;
   isbn?: string;
+  genres?: string[];
 }
 
 export function AddBookModal({
@@ -82,6 +84,7 @@ export function AddBookModal({
     isbn: "",
     condition: "used",
     ownerNote: "",
+    genres: [] as string[],
   });
   const [searchType, setSearchType] = useState<"general" | "title" | "author">(
     "general"
@@ -156,6 +159,7 @@ export function AddBookModal({
       isbn: book.isbn || "",
       condition: "used",
       ownerNote: "",
+      genres: book.genres || [],
     });
   };
 
@@ -177,6 +181,7 @@ export function AddBookModal({
             isbn: formData.isbn,
             condition: formData.condition,
             ownerNote: formData.ownerNote,
+            genres: formData.genres,
           }),
         });
       } else if (selectedBook && selectedBook.source === "local") {
@@ -211,6 +216,7 @@ export function AddBookModal({
       isbn: "",
       condition: "used",
       ownerNote: "",
+      genres: [],
     });
     onOpenChange(false);
   };
@@ -294,6 +300,8 @@ export function AddBookModal({
                                 />
                                 <div className="flex items-center gap-2">
                                   <Image
+                                    width={100}
+                                    height={100}
                                     src={book.image || "/placeholder.svg"}
                                     alt={book.title}
                                     className="w-8 h-8 object-cover"

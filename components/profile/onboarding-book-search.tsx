@@ -42,6 +42,7 @@ interface SearchBook {
   description?: string;
   image?: string;
   isbn?: string;
+  genres?: string[];
   source: "local" | "google";
 }
 
@@ -51,6 +52,7 @@ interface ApiBook {
   author?: string;
   image?: string;
   isbn?: string;
+  genres?: string[];
 }
 
 interface OnboardingBookSearchProps {

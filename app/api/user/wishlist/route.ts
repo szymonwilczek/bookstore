@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { bookId, title, author, isbn, imageUrl, description } = body;
+  const { bookId, title, author, isbn, imageUrl, description, genres } = body;
 
   await connectToDB();
 
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     owner: user._id,
     status: "available",
     condition: "used",
-    genres: [],
+    genres: genres || [],
     viewCount: 0,
   });
 

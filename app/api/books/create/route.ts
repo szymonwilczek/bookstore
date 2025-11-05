@@ -27,6 +27,7 @@ export async function POST(request: NextRequest) {
       imageUrl: body.image,
       owner: user._id,
       status: "available",
+      genres: body.genres || [],
     });
 
     const savedBook = await book.save();
