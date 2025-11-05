@@ -13,8 +13,11 @@ import {
 import RegisterForm from "@/components/register/register-form";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function RegisterPage() {
+  const t = useTranslations("register");
+
   const handleGoogleSignIn = () =>
     signIn("google", { callbackUrl: "/profile" });
 
@@ -51,11 +54,9 @@ export default function RegisterPage() {
           <Logo className="gap-3" />
 
           <div>
-            <CardTitle className="mb-1.5 text-2xl">
-              Sign Up to Instant Book Exchange
-            </CardTitle>
+            <CardTitle className="mb-1.5 text-2xl">{t("title")}</CardTitle>
             <CardDescription className="text-base">
-              Connecting readers, one book at a time.
+              {t("subtitle")}
             </CardDescription>
           </div>
         </CardHeader>
@@ -65,18 +66,21 @@ export default function RegisterPage() {
             <RegisterForm onSubmit={handleSubmit} />
 
             <p className="text-muted-foreground text-center">
-              Already have an account?{" "}
-              <Link
-                href="/login"
-                className="text-card-foreground hover:underline"
-              >
-                Sign in instead
-              </Link>
+              {t.rich("alreadyHaveAccount", {
+                signInLink: (chunks) => (
+                  <Link
+                    href="/login"
+                    className="text-card-foreground hover:underline"
+                  >
+                    {chunks}
+                  </Link>
+                ),
+              })}
             </p>
 
             <div className="flex items-center gap-4">
               <Separator className="flex-1" />
-              <p>or</p>
+              <p>{t("or")}</p>
               <Separator className="flex-1" />
             </div>
 
@@ -85,7 +89,7 @@ export default function RegisterPage() {
               className="w-full"
               onClick={handleGoogleSignIn}
             >
-              Sign in with Google
+              {t("google")}
             </Button>
           </div>
         </CardContent>

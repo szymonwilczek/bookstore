@@ -12,9 +12,12 @@ import {
 } from "@/components/ui/card";
 import LoginForm from "@/components/login/login-form";
 import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 
 export default function LoginPage() {
+  const t = useTranslations("login");
+
   const handleSubmit = async (data: {
     email: string;
     password: string;
@@ -47,11 +50,9 @@ export default function LoginPage() {
           <Logo className="gap-3" />
 
           <div>
-            <CardTitle className="mb-1.5 text-2xl">
-              Sign In to Instant Book Exchange
-            </CardTitle>
+            <CardTitle className="mb-1.5 text-2xl">{t("title")}</CardTitle>
             <CardDescription className="text-base">
-              Your bookshelf is waiting.
+              {t("subtitle")}
             </CardDescription>
           </div>
         </CardHeader>
@@ -61,18 +62,21 @@ export default function LoginPage() {
             <LoginForm onSubmit={handleSubmit} />
 
             <p className="text-muted-foreground text-center">
-              Don&apos;t have an account yet?{" "}
-              <Link
-                href="/register"
-                className="text-card-foreground hover:underline"
-              >
-                Sign Up
-              </Link>
+              {t.rich("dontHaveAccount", {
+                signUpLink: (chunks) => (
+                  <Link
+                    href="/register"
+                    className="text-card-foreground hover:underline"
+                  >
+                    {chunks}
+                  </Link>
+                ),
+              })}
             </p>
 
             <div className="flex items-center gap-4">
               <Separator className="flex-1" />
-              <p>or</p>
+              <p>{t("or")}</p>
               <Separator className="flex-1" />
             </div>
 
@@ -81,7 +85,7 @@ export default function LoginPage() {
               className="w-full"
               onClick={handleGoogleSignIn}
             >
-              Sign in with Google
+              {t("google")}
             </Button>
           </div>
         </CardContent>
