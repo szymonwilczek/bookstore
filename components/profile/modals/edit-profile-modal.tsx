@@ -120,7 +120,7 @@ export function EditProfileModal({
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => handleChange("phone", e.target.value)}
-                placeholder="+1 (555) 123-4567"
+                placeholder="+1 123 456 789"
               />
             </div>
             <div className="grid gap-2">
