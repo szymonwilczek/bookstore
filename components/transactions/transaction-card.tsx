@@ -167,6 +167,8 @@ export function TransactionCard({
                 </p>
                 <div className="flex gap-3 p-3 bg-muted/50 rounded-lg">
                   <Image
+                    width={150}
+                    height={200}
                     src={requestedBook.imageUrl || "/placeholder-book.png"}
                     alt={requestedBook.title}
                     className="w-16 h-24 object-cover rounded"
@@ -199,6 +201,8 @@ export function TransactionCard({
                         className="flex gap-3 p-3 bg-muted/50 rounded-lg"
                       >
                         <Image
+                          width={150}
+                          height={200}
                           src={book.imageUrl || "/placeholder-book.png"}
                           alt={book.title}
                           className="w-16 h-24 object-cover rounded"
