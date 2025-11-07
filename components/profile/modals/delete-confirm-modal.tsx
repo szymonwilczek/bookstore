@@ -30,7 +30,9 @@ export function DeleteConfirmModal({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t("confirmDeletion")}</DialogTitle>
-          <DialogDescription>{t("confirmDeletionSubtitle")}</DialogDescription>
+          <DialogDescription>
+            {t("confirmDeletionSubtitle", { bookTitle: bookTitle })}
+          </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
