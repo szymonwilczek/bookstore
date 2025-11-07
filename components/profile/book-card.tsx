@@ -130,55 +130,55 @@ export function BookCard({
                 {t("bookDelete")}
               </Button>
             )}
-
-            {showPromoteActions && !isReadOnly && (
-              <>
-                {!isPromoted && onPromote && (
-                  <Button
-                    variant="default"
-                    size="sm"
-                    className="w-full mt-2 bg-yellow-600 hover:bg-yellow-700"
-                    onClick={() => onPromote(book.id)}
-                    disabled={!canPromote}
-                  >
-                    <Coins className="mr-2 h-4 w-4" />
-                    Promote (100 pts)
-                  </Button>
-                )}
-
-                {isPromoted && (
-                  <div className="mt-2 space-y-2">
-                    <div className="text-xs text-center text-muted-foreground">
-                      ⭐ Promoted for {daysRemaining} more days
-                    </div>
-
-                    {onExtend && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full"
-                        onClick={() => onExtend(book.id)}
-                        disabled={!canPromote}
-                      >
-                        Extend (100 pts)
-                      </Button>
-                    )}
-
-                    {onCancel && promotedSameDay && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full text-red-600 hover:text-red-700"
-                        onClick={() => onCancel(book.id)}
-                      >
-                        Cancel (refund 100 pts)
-                      </Button>
-                    )}
-                  </div>
-                )}
-              </>
-            )}
           </div>
+
+          {showPromoteActions && !isReadOnly && (
+            <div className="flex w-full mt-2">
+              {!isPromoted && onPromote && (
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="w-full cursor-pointer hover:bg-accent hover:text-accent-foreground"
+                  onClick={() => onPromote(book.id)}
+                  disabled={!canPromote}
+                >
+                  <Coins className="mr-2 h-4 w-4" />
+                  Promote (100 pts)
+                </Button>
+              )}
+
+              {isPromoted && (
+                <div className="flex flex-col justify-center items-center space-y-2 w-full">
+                  <div className="text-xs text-center text-muted-foreground w-full">
+                    ⭐ Promoted for {daysRemaining} more days
+                  </div>
+
+                  {onExtend && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => onExtend(book.id)}
+                      disabled={!canPromote}
+                    >
+                      Extend (100 pts)
+                    </Button>
+                  )}
+
+                  {onCancel && promotedSameDay && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full text-red-600 hover:text-red-700"
+                      onClick={() => onCancel(book.id)}
+                    >
+                      Cancel (refund 100 pts)
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </CardContent>
       )}
     </Card>
