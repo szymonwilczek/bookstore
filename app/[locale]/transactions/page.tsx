@@ -41,7 +41,7 @@ export default function TransactionsPage() {
       return;
     }
 
-    if (searchParams.get("success") === "true") {
+    if (searchParams && searchParams.get("success") === "true") {
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 5000);
     }
@@ -181,7 +181,7 @@ export default function TransactionsPage() {
                 <TransactionCard
                   key={transaction._id}
                   transaction={transaction}
-                  userEmail={userEmail}
+                  userEmail={userEmail || ""}
                   onStatusUpdate={handleStatusUpdate}
                 />
               ))}
@@ -206,7 +206,7 @@ export default function TransactionsPage() {
                 <TransactionCard
                   key={transaction._id}
                   transaction={transaction}
-                  userEmail={userEmail}
+                  userEmail={userEmail || ""}
                   onStatusUpdate={handleStatusUpdate}
                 />
               ))}
@@ -231,7 +231,7 @@ export default function TransactionsPage() {
                 <TransactionCard
                   key={transaction._id}
                   transaction={transaction}
-                  userEmail={userEmail}
+                  userEmail={userEmail || ""}
                   onStatusUpdate={handleStatusUpdate}
                 />
               ))}
