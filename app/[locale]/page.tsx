@@ -9,6 +9,21 @@ import { useTranslations } from "next-intl";
 import { PromotedSection } from "@/components/home/promoted-section";
 import { ListingModal } from "@/components/home/listing-modal";
 
+interface PromotedBook {
+  _id: string;
+  title: string;
+  author?: string;
+  imageUrl?: string;
+  condition: string;
+  owner: {
+    username: string;
+    email: string;
+    location?: string;
+    profileImage?: string;
+  };
+  promotedUntil: string;
+}
+
 export default function HomePage() {
   const { data: session } = useSession();
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,7 +41,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [promotedBooks, setPromotedBooks] = useState([]);
   const [promotedLoading, setPromotedLoading] = useState(false);
-  const [selectedBook, setSelectedBook] = useState(null);
+  const [selectedBook, setSelectedBook] = useState<PromotedBook | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const t = useTranslations();
 
@@ -138,6 +153,7 @@ export default function HomePage() {
       {selectedBook && (
         <ListingModal
           book={selectedBook}
+          owner={selectedBook.owner}
           open={modalOpen}
           onOpenChange={setModalOpen}
         />
