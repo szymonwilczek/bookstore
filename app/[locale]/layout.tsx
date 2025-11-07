@@ -10,6 +10,7 @@ import { Navbar } from "@/components/navbar/Navbar";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { DailyLoginTracker } from "@/components/DailyLoginTracker";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,6 +50,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <SessionProvider>
             <DailyLoginTracker />
+            <Toaster />
             <ThemeProvider
               attribute="class"
               defaultTheme="system"

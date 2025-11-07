@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import confetti from "canvas-confetti";
 
 export function useAchievements(userId?: string) {
-  const { toast } = useToast();
   const [checking, setChecking] = useState(false);
 
   const triggerConfetti = () => {
@@ -56,10 +55,8 @@ export function useAchievements(userId?: string) {
         triggerConfetti();
 
         for (const achievement of data.newlyUnlocked) {
-          toast({
-            title: "🎉 Achievement Unlocked!",
-            description: `${achievement.icon} ${achievement.name} - ${achievement.description} (+${achievement.points} points)`,
-            duration: 5000,
+          toast(`🎉 ${achievement.name}`, {
+            description: `${achievement.icon} ${achievement.description} (+${achievement.points} points)`,
           });
 
           if (data.newlyUnlocked.length > 1) {
