@@ -14,13 +14,15 @@ interface Conversation {
   _id: string;
   participants: Array<{
     _id: string;
-    name: string;
-    image?: string;
+    name?: string;
+    username?: string;
+    email: string;
+    profileImage?: string;
   }>;
   book: {
     _id: string;
     title: string;
-    coverImage?: string;
+    imageUrl?: string;
     author: string;
   };
   lastMessage?: {
@@ -58,9 +60,11 @@ export default function MessagesPage() {
   }, [session?.user?.id]);
 
   useEffect(() => {
-    const conversationId = searchParams.get("conversation");
-    if (conversationId) {
-      setActiveConversationId(conversationId);
+    if (searchParams) {
+      const conversationId = searchParams.get("conversation");
+      if (conversationId) {
+        setActiveConversationId(conversationId);
+      }
     }
   }, [searchParams]);
 
@@ -99,7 +103,7 @@ export default function MessagesPage() {
                   ...conv,
                   lastMessage: {
                     content: message.content,
-                    sender: message.sender?._id || message.sender,
+                    sender: message.sender._id,
                     createdAt: message.createdAt,
                   },
                   unreadCount: isFromOther
