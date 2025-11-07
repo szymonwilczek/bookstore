@@ -1,10 +1,16 @@
 import connectToDB from "@/lib/db/connect";
-import Achievement from "@/lib/models/Achievement";
+import Achievement, { IAchievement } from "@/lib/models/Achievement";
 import UserAchievement from "@/lib/models/UserAchievement";
 import User from "@/lib/models/User";
 import Transaction from "@/lib/models/Transaction";
 import Review from "@/lib/models/Review";
 import Book from "@/lib/models/Book";
+
+interface ProgressUpdate {
+  achievementId: string;
+  progress: number;
+  target: number;
+}
 
 export async function checkAchievements(userId: string) {
   await connectToDB();
@@ -12,28 +18,30 @@ export async function checkAchievements(userId: string) {
   const user = await User.findById(userId);
   if (!user) return { newlyUnlocked: [], progressUpdates: [] };
 
-  const allAchievements = await Achievement.find({ isActive: true }).lean();
+  const allAchievements = (await Achievement.find({
+    isActive: true,
+  }).lean()) as IAchievement[];
   const userAchievements = await UserAchievement.find({ userId }).lean();
 
   const newlyUnlocked = [];
-  const progressUpdates = [];
+  const progressUpdates: ProgressUpdate[] = [];
 
   // === STATYSTYKI UŻYTKOWNIKA ===
 
-  // 1. COMPLETED TRANSACTIONS 
+  // 1. COMPLETED TRANSACTIONS
   const completedTransactions = await Transaction.countDocuments({
     $or: [{ initiator: userId }, { receiver: userId }],
     status: "completed",
   });
 
-  // 2. FREE GIVEAWAYS 
+  // 2. FREE GIVEAWAYS
   const freeGiveaways = await Transaction.countDocuments({
     receiver: userId,
     status: "completed",
     offeredBooks: { $size: 0 },
   });
 
-  // 3. REVIEWS RECEIVED 
+  // 3. REVIEWS RECEIVED
   const reviews = await Review.find({ reviewedUser: userId }).lean();
   const positiveReviews = reviews.filter((r) => r.rating >= 4).length;
   const avgRating =
@@ -41,14 +49,14 @@ export async function checkAchievements(userId: string) {
       ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
       : 0;
 
-  // 4. DETAILED REVIEWS WRITTEN 
+  // 4. DETAILED REVIEWS WRITTEN
   const detailedReviewsWritten = await Review.countDocuments({
     reviewer: userId,
     comment: { $exists: true, $ne: "" },
     $expr: { $gte: [{ $strLenCP: "$comment" }, 50] }, // komentarz >= 50 znaków
   });
 
-  // 5. BOOKS ADDED 
+  // 5. BOOKS ADDED
   const totalBooksAdded = await Book.countDocuments({
     owner: userId,
   });
