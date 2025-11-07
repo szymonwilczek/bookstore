@@ -30,10 +30,23 @@ interface Book {
 }
 
 interface OfferedBooksSectionProps {
-  books: Book[];
+  books: Array<{
+    _id: string;
+    title: string;
+    author?: string;
+    imageUrl?: string;
+    createdAt: string;
+    status: "active" | "inactive";
+    condition?: string;
+    promotedUntil?: string;
+    promotedAt?: string;
+  }>;
   onAddBook: () => void;
-  onEditBook: (book: Book) => void;
+  onEditBook: (book: unknown) => void;
   onDeleteBook: (bookId: string) => void;
+  onPromote?: (bookId: string) => void;
+  userPoints?: number;
+  isPublicView?: boolean;
 }
 
 export function OfferedBooksSection({
@@ -41,6 +54,9 @@ export function OfferedBooksSection({
   onAddBook,
   onEditBook,
   onDeleteBook,
+  onPromote,
+  userPoints,
+  isPublicView,
 }: OfferedBooksSectionProps) {
   const needsCarousel = books.length > 4;
   const t = useTranslations("profile");
@@ -71,10 +87,25 @@ export function OfferedBooksSection({
                   className="basis-1/2 md:basis-1/3 lg:basis-1/4"
                 >
                   <BookCard
-                    isReadOnly={false}
-                    book={book}
-                    onEdit={onEditBook}
-                    onDelete={onDeleteBook}
+                    key={book._id}
+                    book={{
+                      id: book._id,
+                      title: book.title,
+                      author: book.author,
+                      image: book.imageUrl,
+                      createdAt: book.createdAt,
+                      status: book.status,
+                      promotedUntil: book.promotedUntil,
+                      promotedAt: book.promotedAt,
+                    }}
+                    isReadOnly={isPublicView}
+                    onEdit={isPublicView ? undefined : () => onEditBook(book)}
+                    onDelete={
+                      isPublicView ? undefined : () => onDeleteBook(book._id)
+                    }
+                    onPromote={isPublicView ? undefined : onPromote}
+                    userPoints={userPoints}
+                    showPromoteActions={!isPublicView}
                   />
                 </CarouselItem>
               ))}
@@ -87,10 +118,25 @@ export function OfferedBooksSection({
             {books.map((book, index) => (
               <div key={index} className="flex-shrink-0 w-xs max-w-xs">
                 <BookCard
-                  isReadOnly={false}
-                  book={book}
-                  onEdit={onEditBook}
-                  onDelete={onDeleteBook}
+                  key={book._id}
+                  book={{
+                    id: book._id,
+                    title: book.title,
+                    author: book.author,
+                    image: book.imageUrl,
+                    createdAt: book.createdAt,
+                    status: book.status,
+                    promotedUntil: book.promotedUntil,
+                    promotedAt: book.promotedAt,
+                  }}
+                  isReadOnly={isPublicView}
+                  onEdit={isPublicView ? undefined : () => onEditBook(book)}
+                  onDelete={
+                    isPublicView ? undefined : () => onDeleteBook(book._id)
+                  }
+                  onPromote={isPublicView ? undefined : onPromote}
+                  userPoints={userPoints}
+                  showPromoteActions={!isPublicView}
                 />
               </div>
             ))}
