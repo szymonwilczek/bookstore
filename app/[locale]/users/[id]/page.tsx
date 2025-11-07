@@ -48,7 +48,10 @@ export default function UserProfilePage() {
         setLoading(true);
         setError(null);
 
-        const res = await fetch(`/api/user/profile/${params.id}`);
+        const id = params?.id;
+        if (!id) return;
+
+        const res = await fetch(`/api/user/profile/${id}`);
 
         if (!res.ok) {
           const data = await res.json();
@@ -64,10 +67,10 @@ export default function UserProfilePage() {
       }
     };
 
-    if (params.id) {
+    if (params?.id) {
       fetchProfile();
     }
-  }, [params.id]);
+  }, [params?.id]);
 
   // jesli to wlasny profil to redirect do /profile
   useEffect(() => {
