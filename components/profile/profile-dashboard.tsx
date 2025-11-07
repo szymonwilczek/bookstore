@@ -12,7 +12,7 @@ import { OfferedBooksSection } from "./sections/offered-books-section";
 import { WishlistSection } from "./sections/wishlist-section";
 import { OnboardingModal } from "./modals/onboarding-modal";
 import { DeleteConfirmModal } from "./modals/delete-confirm-modal";
-import { useProfileData } from "./hooks/useProfileData";
+import { useProfileData, UserData } from "./hooks/useProfileData";
 import { useOnboarding } from "./hooks/useOnboarding";
 import { Package, DollarSign, User, TrendingUp, Edit } from "lucide-react";
 import {
@@ -42,39 +42,12 @@ interface Book extends BookBase {
   status: "active" | "inactive";
 }
 
-interface UserData {
-  username?: string;
-  email?: string;
-  phone?: string;
-  location?: string;
-  profileImage?: string;
-  bio?: string;
-  averageRating?: number;
-  hasCompletedOnboarding?: boolean;
-  preferences?: {
-    genres?: string[];
-  };
-  wishlist?: BookBase[];
-  offeredBooks?: {
-    _id: string;
-    title: string;
-    author?: string;
-    imageUrl?: string;
-    createdAt: string;
-    status: string;
-  }[];
-  github?: string;
-  twitter?: string;
-  linkedin?: string;
-  points?: number;
-}
-
 interface UserProfile {
   username: string;
   email: string;
   phone: string;
   location: string;
-  avatar: string;
+  avatar: string | File;
   bio: string;
   github?: string;
   twitter?: string;
@@ -222,7 +195,7 @@ export function ProfileDashboard({
             product: transaction.requestedBook?.title || t("unknownBook"),
             amount: transaction.offeredBooks?.length || 0,
             date: new Date(transaction.createdAt).toLocaleDateString("pl-PL"),
-            status: transaction.status,
+            status: transaction.status as "completed" | "pending" | "cancelled",
             buyer: otherUser.username || otherUser.email,
           };
         });
@@ -318,8 +291,25 @@ export function ProfileDashboard({
     fetchData();
   };
 
-  const handleEditBook = (book: Book) => {
-    setSelectedBook(book);
+  const handleEditBook = (book: {
+    _id: string;
+    title: string;
+    author?: string;
+    imageUrl?: string;
+    createdAt: string;
+    status: "active" | "inactive";
+    condition?: string;
+    promotedUntil?: string;
+    promotedAt?: string;
+  }) => {
+    setSelectedBook({
+      id: book._id,
+      title: book.title,
+      author: book.author,
+      image: book.imageUrl,
+      createdAt: book.createdAt,
+      status: book.status,
+    });
     setIsEditBookModalOpen(true);
   };
 
@@ -338,7 +328,7 @@ export function ProfileDashboard({
   const handleDeleteWishlistBook = (bookId: string) => {
     const book = wishlistBooks.find((b) => b.id === bookId);
     if (book) {
-      setSelectedBookToDelete(book);
+      setSelectedBookToDelete(book as Book);
       setIsDeleteConfirmOpen(true);
     }
   };

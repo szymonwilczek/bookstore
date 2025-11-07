@@ -28,6 +28,7 @@ import { useTheme } from "next-themes";
 import { Sun, Moon, MessageCircle, LogIn } from "lucide-react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { PointsDisplay } from "./PointsDisplay";
+import { IUser } from "@/lib/models/User";
 
 export interface NavbarNavItem {
   href?: string;
@@ -64,7 +65,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
     const [isMobile, setIsMobile] = useState(false);
     const containerRef = useRef<HTMLElement>(null);
     const { data: session } = useSession();
-    const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState<IUser | null>(null);
     const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
     const pathname = usePathname();
     const { theme, setTheme } = useTheme();
@@ -263,11 +264,13 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
             <LanguageSwitcher />
             {session ? (
               <UserMenu
-                userName={session?.user?.name || userData?.name || "User"}
+                userName={session?.user?.name || userData?.username || "User"}
                 userEmail={
                   session?.user?.email || userData?.email || "user@example.com"
                 }
-                userAvatar={userData?.profileImage || session?.user?.image}
+                userAvatar={
+                  userData?.profileImage || session?.user?.image || undefined
+                }
                 onItemClick={onUserItemClick}
               />
             ) : (

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 
-interface UserData {
+export interface UserData {
   username?: string;
   email?: string;
   phone?: string;
@@ -26,13 +26,20 @@ interface UserData {
     condition?: "new" | "used" | "damaged";
     ownerNote?: string;
   }[];
+  github?: string;
+  twitter?: string;
+  linkedin?: string;
+  website?: string;
+  points?: number;
 }
 
 interface BookBase {
+  _id?: string;
   id: string;
   title: string;
   author?: string;
   image?: string;
+  imageUrl?: string;
   createdAt: string;
 }
 
