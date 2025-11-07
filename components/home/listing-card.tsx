@@ -280,7 +280,7 @@ export function ListingCard({
           coverImage: book.imageUrl,
         }}
         recipientId={owner._id}
-        recipientName={owner.username || owner.name}
+        recipientName={owner.username || owner.name || "Unknown"}
       />
     </>
   );

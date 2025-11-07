@@ -10,10 +10,11 @@ import { Badge } from "../ui/badge";
 interface PromotedBook {
   _id: string;
   title: string;
-  author?: string;
+  author: string;
   imageUrl?: string;
-  condition: string;
+  condition: "new" | "used" | "damaged";
   owner: {
+    _id: string;
     username: string;
     email: string;
     location?: string;

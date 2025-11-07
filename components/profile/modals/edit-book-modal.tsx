@@ -78,7 +78,9 @@ export function EditBookModal({
         <DialogHeader>
           <DialogTitle>{t("editBook")}</DialogTitle>
           <DialogDescription>
-            {t("editBookSubtitle", { bookTitle: book?.title })}
+            {t("editBookSubtitle", {
+              bookTitle: book?.title ?? "Unknown Book",
+            })}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
