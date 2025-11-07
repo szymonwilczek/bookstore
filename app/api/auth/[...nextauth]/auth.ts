@@ -1,9 +1,18 @@
-import NextAuth from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import connectToDB from '@/lib/db/connect';
-import User from '@/lib/models/User';
-import bcrypt from 'bcryptjs';
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import connectToDB from "@/lib/db/connect";
+import User from "@/lib/models/User";
+import bcrypt from "bcryptjs";
+
+declare module "next-auth" {
+  interface Session {
+    rememberMe?: boolean;
+  }
+  interface User {
+    rememberMe?: boolean;
+  }
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -12,23 +21,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
     CredentialsProvider({
-      name: 'credentials',
+      name: "credentials",
       credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
-        rememberMe: { label: 'Remember me', type: 'checkbox' },
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+        rememberMe: { label: "Remember me", type: "checkbox" },
       },
       async authorize(credentials) {
         await connectToDB();
-        const user = await User.findOne({ email: credentials?.email }).select('+password');
+        const user = await User.findOne({ email: credentials?.email }).select(
+          "+password"
+        );
         if (user && user.password) {
-          const isValid = await bcrypt.compare(credentials!.password, user.password);
+          const isValid = await bcrypt.compare(
+            credentials!.password as string,
+            user.password
+          );
           if (isValid) {
-            return { 
-              id: user._id.toString(), 
-              email: user.email, 
-              name: user.username, 
-              rememberMe: credentials?.rememberMe === 'true' 
+            return {
+              id: user._id.toString(),
+              email: user.email,
+              name: user.username,
+              rememberMe: credentials?.rememberMe === "true",
             };
           }
         }
@@ -38,7 +52,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account }) {
-      if (account?.provider === 'google') {
+      if (account?.provider === "google") {
         await connectToDB();
         const existingUser = await User.findOne({ email: user.email });
         if (!existingUser) {
@@ -63,15 +77,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async session({ session, token }) {
       session.user.id = token.id as string;
       session.rememberMe = token.rememberMe as boolean;
-      if (session.rememberMe) {
-        session.maxAge = 30 * 24 * 60 * 60; // 30 dni
-      } else {
-        session.maxAge = 24 * 60 * 60; // 1 dzień
-      }
       return session;
     },
   },
   pages: {
-    signIn: '/login',
+    signIn: "/login",
   },
 });
