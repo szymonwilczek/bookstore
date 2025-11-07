@@ -4,12 +4,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
+import { IBook } from "@/lib/models/Book";
+
+interface GoogleBook {
+  id: string;
+  volumeInfo: {
+    title: string;
+    authors?: string[];
+    industryIdentifiers?: Array<{ identifier: string }>;
+    imageLinks?: { thumbnail: string };
+    categories?: string[];
+  };
+}
 
 export default function WishlistForm() {
   const { data: session } = useSession();
   const [query, setQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
+  const [searchResults, setSearchResults] = useState<GoogleBook[]>([]);
+  const [wishlist, setWishlist] = useState<IBook[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -35,7 +47,7 @@ export default function WishlistForm() {
     setLoading(false);
   };
 
-  const addToWishlist = async (book) => {
+  const addToWishlist = async (book: GoogleBook) => {
     await fetch("/api/user/wishlist", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -53,7 +65,7 @@ export default function WishlistForm() {
     setWishlist(data.wishlist || []);
   };
 
-  const removeFromWishlist = async (bookId) => {
+  const removeFromWishlist = async (bookId: string) => {
     await fetch("/api/user/wishlist", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -78,7 +90,7 @@ export default function WishlistForm() {
       </Button>
       <div className="mt-4">
         <h3>Wyniki wyszukiwania:</h3>
-        {searchResults.map((book) => (
+        {searchResults.map((book: GoogleBook) => (
           <motion.div
             key={book.id}
             initial={{ x: -100 }}
@@ -97,7 +109,7 @@ export default function WishlistForm() {
       </div>
       <div className="mt-4">
         <h3>Twoja Wishlista:</h3>
-        {wishlist.map((book) => (
+        {wishlist.map((book: IBook) => (
           <motion.div
             key={book._id}
             initial={{ opacity: 0 }}

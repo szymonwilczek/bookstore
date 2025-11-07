@@ -4,12 +4,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
+import { IBook } from "@/lib/models/Book";
+
+interface GoogleBook {
+  id: string;
+  volumeInfo: {
+    title: string;
+    authors?: string[];
+    industryIdentifiers?: Array<{ identifier: string }>;
+    imageLinks?: { thumbnail: string };
+    categories?: string[];
+  };
+}
 
 export default function OfferedBooksList() {
   const { data: session } = useSession();
   const [query, setQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [offeredBooks, setOfferedBooks] = useState([]);
+  const [searchResults, setSearchResults] = useState<GoogleBook[]>([]);
+  const [offeredBooks, setOfferedBooks] = useState<IBook[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -35,7 +47,7 @@ export default function OfferedBooksList() {
     setLoading(false);
   };
 
-  const addToOffered = async (book) => {
+  const addToOffered = async (book: GoogleBook) => {
     await fetch("/api/user/offered-books", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -53,7 +65,7 @@ export default function OfferedBooksList() {
     setOfferedBooks(data.offeredBooks || []);
   };
 
-  const removeFromOffered = async (bookId) => {
+  const removeFromOffered = async (bookId: string) => {
     await fetch("/api/user/offered-books", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -78,7 +90,7 @@ export default function OfferedBooksList() {
       </Button>
       <div className="mt-4">
         <h3>Wyniki wyszukiwania:</h3>
-        {searchResults.map((book) => (
+        {searchResults.map((book: GoogleBook) => (
           <motion.div
             key={book.id}
             initial={{ x: -100 }}
@@ -97,7 +109,7 @@ export default function OfferedBooksList() {
       </div>
       <div className="mt-4">
         <h3>Twoje Oferowane Książki:</h3>
-        {offeredBooks.map((book) => (
+        {offeredBooks.map((book: IBook) => (
           <motion.div
             key={book._id}
             initial={{ opacity: 0 }}
