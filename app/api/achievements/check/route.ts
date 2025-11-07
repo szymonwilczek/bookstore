@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import connectToDB from "@/lib/db/connect";
-import Achievement from "@/lib/models/Achievement";
 import UserAchievement from "@/lib/models/UserAchievement";
 import User from "@/lib/models/User";
 import Transaction from "@/lib/models/Transaction";
 import Review from "@/lib/models/Review";
+import Achievement, { IAchievement } from "@/lib/models/Achievement";
 
 type EventType =
   | "transaction_completed"
@@ -26,8 +26,15 @@ export async function POST(req: NextRequest) {
 
   await connectToDB();
 
-  const targetUserId =
-    userId || (await User.findOne({ email: session.user.email }))._id;
+  const userEmail = session.user?.email;
+  if (!userEmail) {
+    return NextResponse.json(
+      { error: "User email not found" },
+      { status: 401 }
+    );
+  }
+
+  const targetUserId = userId || (await User.findOne({ email: userEmail }))._id;
 
   if (!targetUserId) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -39,7 +46,9 @@ export async function POST(req: NextRequest) {
   }
 
   // wszystkie aktywne osiagniecia
-  const allAchievements = await Achievement.find({ isActive: true }).lean();
+  const allAchievements = (await Achievement.find({
+    isActive: true,
+  }).lean()) as IAchievement[];
 
   // aktualne osiagniecia uzytkownika
   const userAchievements = await UserAchievement.find({
@@ -49,7 +58,7 @@ export async function POST(req: NextRequest) {
   const newlyUnlocked = [];
   const progressUpdates = [];
 
-  // obliczenie statystyk uzytkownika 
+  // obliczenie statystyk uzytkownika
   const completedTransactions = await Transaction.countDocuments({
     $or: [{ initiator: targetUserId }, { receiver: targetUserId }],
     status: "completed",

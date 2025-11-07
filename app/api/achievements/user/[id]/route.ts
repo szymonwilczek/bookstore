@@ -1,22 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectToDB from "@/lib/db/connect";
-import Achievement from "@/lib/models/Achievement";
+import Achievement, { IAchievement } from "@/lib/models/Achievement";
 import UserAchievement from "@/lib/models/UserAchievement";
 import mongoose from "mongoose";
 
 const tierOrder = ["bronze", "silver", "gold", "platinum"];
 
-interface AchievementWithProgress {
-  _id: mongoose.Types.ObjectId;
-  id: string;
-  seriesId: string;
-  seriesName: string;
-  category: string;
-  tier: string;
+interface AchievementWithProgress extends IAchievement {
   progress: number;
   unlocked: boolean;
   unlockedAt?: Date;
-  [key: string]: unknown;
 }
 
 interface SeriesGroup {
@@ -40,7 +33,9 @@ export async function GET(
 
   await connectToDB();
 
-  const allAchievements = await Achievement.find({ isActive: true }).lean();
+  const allAchievements = (await Achievement.find({
+    isActive: true,
+  }).lean()) as IAchievement[];
   const userAchievements = await UserAchievement.find({
     userId: id,
   })
