@@ -1,13 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { User, ArrowRightLeft, Calendar } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -83,97 +76,83 @@ export function TransactionHistory({ userEmail }: TransactionHistoryProps) {
       pending: t("pending"),
       accepted: t("accepted"),
       rejected: t("rejected"),
-      completed: t("comleted"),
+      completed: t("completed"),
     };
     return labels[status] || status;
   };
 
   if (loading) {
     return (
-      <Card className="lg:col-span-2">
-        <CardHeader>
-          <CardTitle>{t("transactionHistory")}</CardTitle>
-          <CardDescription>{t("transactionSubtitle")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex justify-center py-8">
-            <p className="text-muted-foreground">{t("loading")}</p>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex justify-center py-8">
+        <p className="text-muted-foreground">{t("loading")}</p>
+      </div>
     );
   }
 
   return (
-    <Card className="lg:col-span-2">
-      <CardHeader>
-        <CardTitle>{t("transactionHistory")}</CardTitle>
-        <CardDescription>{t("transactioNSubtitle")}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        {transactions.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-muted-foreground">{t("noTransactionsFound")}</p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {transactions.map((transaction) => {
-              const isInitiator = transaction.initiator.email === userEmail;
-              const otherUser = isInitiator
-                ? transaction.receiver
-                : transaction.initiator;
+    <>
+      {transactions.length === 0 ? (
+        <div className="text-center py-8">
+          <p className="text-muted-foreground">{t("noTransactionsFound")}</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {transactions.map((transaction) => {
+            const isInitiator = transaction.initiator.email === userEmail;
+            const otherUser = isInitiator
+              ? transaction.receiver
+              : transaction.initiator;
 
-              return (
-                <div
-                  key={transaction._id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
-                >
-                  <div className="space-y-2 flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <p className="font-medium line-clamp-1">
-                        {transaction.requestedBook?.title || t("unknownBook")}
-                      </p>
-                      <Badge
-                        className={getStatusColor(transaction.status)}
-                        variant="outline"
-                      >
-                        {getStatusLabel(transaction.status)}
-                      </Badge>
-                    </div>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <ArrowRightLeft className="h-3 w-3" />
-                        {isInitiator ? t("sentTo") : t("receivedFrom")}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <User className="h-3 w-3" />
-                        {otherUser.username || otherUser.email}
-                      </span>
-                      <span className="hidden sm:inline">•</span>
-                      <span className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        {new Date(transaction.createdAt).toLocaleDateString(
-                          "pl-PL"
-                        )}
-                      </span>
-                    </div>
+            return (
+              <div
+                key={transaction._id}
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+              >
+                <div className="space-y-2 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="font-medium line-clamp-1">
+                      {transaction.requestedBook?.title || t("unknownBook")}
+                    </p>
+                    <Badge
+                      className={getStatusColor(transaction.status)}
+                      variant="outline"
+                    >
+                      {getStatusLabel(transaction.status)}
+                    </Badge>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    {transaction.offeredBooks &&
-                    transaction.offeredBooks.length > 0
-                      ? `${transaction.offeredBooks.length} ${
-                          transaction.offeredBooks.length === 1
-                            ? t("book")
-                            : t("books")
-                        }`
-                      : t("noExchange")}
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-muted-foreground">
+                    <span className="flex items-center gap-1">
+                      <ArrowRightLeft className="h-3 w-3" />
+                      {isInitiator ? t("sentTo") : t("receivedFrom")}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <User className="h-3 w-3" />
+                      {otherUser.username || otherUser.email}
+                    </span>
+                    <span className="hidden sm:inline">•</span>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      {new Date(transaction.createdAt).toLocaleDateString(
+                        "pl-PL"
+                      )}
+                    </span>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+                <div className="text-sm text-muted-foreground">
+                  {transaction.offeredBooks &&
+                  transaction.offeredBooks.length > 0
+                    ? `${transaction.offeredBooks.length} ${
+                        transaction.offeredBooks.length === 1
+                          ? t("book")
+                          : t("books")
+                      }`
+                    : t("noExchange")}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </>
   );
 }
