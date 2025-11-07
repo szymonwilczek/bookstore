@@ -4,6 +4,9 @@ import connectToDB from "@/lib/db/connect";
 import Review from "@/lib/models/Review";
 import Transaction from "@/lib/models/Transaction";
 import User from "@/lib/models/User";
+import PointsHistory from "@/lib/models/PointsHistory";
+
+const REVIEW_POINTS = 2;
 
 // pobierz istniejaca opinie dla transakcji
 export async function GET(req: NextRequest) {
@@ -77,6 +80,20 @@ export async function POST(req: NextRequest) {
       reviewedUser: reviewedUser._id,
       rating,
       comment,
+    });
+
+    // dodanie puntkow za recenzje
+    reviewer.points = (reviewer.points || 0) + REVIEW_POINTS;
+    await reviewer.save();
+
+    // zapisanie historii punktow
+    await PointsHistory.create({
+      user: reviewer._id,
+      amount: REVIEW_POINTS,
+      type: "earned",
+      source: "review",
+      description: `Review for ${reviewer.username}`,
+      relatedTransaction: transaction._id,
     });
   }
 
