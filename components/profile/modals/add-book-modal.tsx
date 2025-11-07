@@ -284,9 +284,9 @@ export function AddBookModal({
                         <CommandList>
                           <CommandEmpty>{t("noBooksFound")}</CommandEmpty>
                           <CommandGroup>
-                            {searchResults.map((book) => (
+                            {searchResults.map((book, index) => (
                               <CommandItem
-                                key={book.id}
+                                key={index}
                                 value={book.title}
                                 onSelect={() => handleSelectBook(book)}
                               >
