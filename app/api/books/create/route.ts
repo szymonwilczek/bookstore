@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import Book from "@/lib/models/Book";
 import User from "@/lib/models/User";
-import { connect } from "@/lib/db/connect";
+import connect from "@/lib/db/connect";
 
 export async function POST(request: NextRequest) {
   try {
