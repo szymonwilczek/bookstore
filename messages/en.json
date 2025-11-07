@@ -75,7 +75,16 @@
     "offers": "Exchange offers",
     "offeredBooks": "Offered books",
     "submittingOffers": "Submitting offers...",
-    "submitOffers": "Submit offers"
+    "submitOffers": "Submit offers",
+    "selectBooksToOffer": "Select books to offer",
+    "selectBooksDescription": "Click on the books you want to offer in exchange",
+    "searchBooks": "Search by title or author...",
+    "noBookFound": "No books found",
+    "addBooks": "Add books",
+    "offered": "Offered",
+    "selected": "Selected",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   },
 
   "transactions": {

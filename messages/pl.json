@@ -75,7 +75,16 @@
     "offers": "Oferty wymiany",
     "offeredBooks": "Oferowane książki",
     "submittingOffers": "Składanie ofert...",
-    "submitOffers": "Złóż oferty"
+    "submitOffers": "Złóż oferty",
+    "selectBooksToOffer": "Wybierz książki do ofertu",
+    "selectBooksDescription": "Kliknij na książki, które chcesz zaproponować w zamian",
+    "searchBooks": "Szukaj po tytule lub autorze...",
+    "noBookFound": "Nie znaleziono książek",
+    "addBooks": "Dodaj książki",
+    "offered": "Oferowana",
+    "selected": "Wybrane",
+    "cancel": "Anuluj",
+    "confirm": "Potwierdź"
   },
 
   "transactions": {
