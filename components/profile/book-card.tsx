@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { Coins } from "lucide-react";
 
 interface BookBase {
   id: string;
@@ -9,7 +10,9 @@ interface BookBase {
   author?: string;
   image?: string;
   createdAt?: string;
-  status?: t | "inactive";
+  status?: "active" | "inactive";
+  promotedUntil?: string;
+  promotedAt?: string;
 }
 
 interface BookCardProps {
@@ -17,6 +20,11 @@ interface BookCardProps {
   isReadOnly?: boolean;
   onEdit?: (book: BookBase) => void;
   onDelete?: (bookId: string) => void;
+  onPromote?: (bookId: string) => void;
+  onExtend?: (bookId: string) => void;
+  onCancel?: (bookId: string) => void;
+  userPoints?: number;
+  showPromoteActions?: boolean;
 }
 
 export function BookCard({
@@ -24,9 +32,36 @@ export function BookCard({
   isReadOnly,
   onEdit,
   onDelete,
+  onPromote,
+  onExtend,
+  onCancel,
+  userPoints,
+  showPromoteActions,
 }: BookCardProps) {
   const formatDate = (date: string) => new Date(date).toLocaleDateString();
   const t = useTranslations("profile");
+
+  const isPromoted =
+    book.promotedUntil && new Date(book.promotedUntil) > new Date();
+  const canPromote = userPoints && userPoints >= 100;
+  const promotedSameDay =
+    book.promotedAt &&
+    new Date(book.promotedAt).toDateString() === new Date().toDateString();
+
+  const daysRemaining = book.promotedUntil
+    ? Math.ceil(
+        (new Date(book.promotedUntil).getTime() - new Date().getTime()) /
+          (1000 * 60 * 60 * 24)
+      )
+    : 0;
+
+  console.log("BookCard book:", book);
+  console.log(
+    "BookCard status:",
+    book.status,
+    typeof book.status,
+    book.status === "active"
+  );
 
   return (
     <Card className="overflow-hidden min-w-[200px] h-full">
@@ -94,6 +129,54 @@ export function BookCard({
               >
                 {t("bookDelete")}
               </Button>
+            )}
+
+            {showPromoteActions && !isReadOnly && (
+              <>
+                {!isPromoted && onPromote && (
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="w-full mt-2 bg-yellow-600 hover:bg-yellow-700"
+                    onClick={() => onPromote(book.id)}
+                    disabled={!canPromote}
+                  >
+                    <Coins className="mr-2 h-4 w-4" />
+                    Promote (100 pts)
+                  </Button>
+                )}
+
+                {isPromoted && (
+                  <div className="mt-2 space-y-2">
+                    <div className="text-xs text-center text-muted-foreground">
+                      ⭐ Promoted for {daysRemaining} more days
+                    </div>
+
+                    {onExtend && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full"
+                        onClick={() => onExtend(book.id)}
+                        disabled={!canPromote}
+                      >
+                        Extend (100 pts)
+                      </Button>
+                    )}
+
+                    {onCancel && promotedSameDay && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full text-red-600 hover:text-red-700"
+                        onClick={() => onCancel(book.id)}
+                      >
+                        Cancel (refund 100 pts)
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </div>
         </CardContent>
