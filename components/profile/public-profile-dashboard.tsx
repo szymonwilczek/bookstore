@@ -7,7 +7,7 @@ import { OfferedBooksSection } from "./sections/offered-books-section";
 import { WishlistSection } from "./sections/wishlist-section";
 import { ReviewsSection } from "./sections/reviews-section";
 import { Button } from "@/components/ui/button";
-import { Ban, TrendingUp, User, Star } from "lucide-react";
+import { TrendingUp, User, Star } from "lucide-react";
 import { StartConversationModal } from "@/components/messages/start-conversation-modal";
 import {
   Dialog,
@@ -57,35 +57,9 @@ export function PublicProfileDashboard({
 }: PublicProfileDashboardProps) {
   const router = useRouter();
   const [messageModalOpen, setMessageModalOpen] = useState(false);
-  const [blockModalOpen, setBlockModalOpen] = useState(false);
-  const [blocking, setBlocking] = useState(false);
   const t = useTranslations("profile");
 
   const { user, offeredBooks, wishlist, reviews, stats } = profileData;
-
-  const handleBlockUser = async () => {
-    setBlocking(true);
-    try {
-      const res = await fetch("/api/user/block", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user._id }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to block user");
-      }
-
-      alert("User blocked successfully");
-      router.push("/");
-    } catch (error) {
-      console.error("Error blocking user:", error);
-      alert("Failed to block user");
-    } finally {
-      setBlocking(false);
-      setBlockModalOpen(false);
-    }
-  };
 
   return (
     <div className="container mx-auto p-4 space-y-6 max-w-7xl">
@@ -96,15 +70,6 @@ export function PublicProfileDashboard({
           </h1>
           <p className="text-muted-foreground">Public profile view</p>
         </div>
-
-        {currentUserId && (
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setBlockModalOpen(true)}>
-              <Ban className="mr-2 h-4 w-4" />
-              Block
-            </Button>
-          </div>
-        )}
       </div>
 
       <ProfileInfoSection
@@ -202,34 +167,6 @@ export function PublicProfileDashboard({
           recipientName={user.username}
         />
       )}
-
-      <Dialog open={blockModalOpen} onOpenChange={setBlockModalOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Block {user.username}?</DialogTitle>
-            <DialogDescription>
-              You won&apos;t be able to see their books or send messages. They
-              won&apos;t be notified that you blocked them.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setBlockModalOpen(false)}
-              disabled={blocking}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleBlockUser}
-              disabled={blocking}
-            >
-              {blocking ? "Blocking..." : "Block User"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

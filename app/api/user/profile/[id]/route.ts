@@ -30,43 +30,6 @@ export async function GET(
 
   const isOwnProfile = session?.user?.email === user.email;
 
-  // sprawdzanie blokad jesli nie jest to wlasny profil
-  if (!isOwnProfile && session) {
-    const userEmail = session.user?.email;
-    if (!userEmail) {
-      return NextResponse.json(
-        { error: "User email not found" },
-        { status: 401 }
-      );
-    }
-
-    const currentUser = await User.findOne({ email: userEmail });
-    if (currentUser) {
-      // przegladany uzytkownik zablokowal current usera
-      if (
-        user.blockedUsers?.some((blockedId: mongoose.Types.ObjectId) =>
-          blockedId.equals(currentUser._id)
-        )
-      ) {
-        return NextResponse.json(
-          { error: "You are blocked by this user" },
-          { status: 403 }
-        );
-      }
-      // current user zablokowal przegladanego uzytkownika
-      if (
-        currentUser.blockedUsers?.some((blockedId: mongoose.Types.ObjectId) =>
-          blockedId.equals(user._id)
-        )
-      ) {
-        return NextResponse.json(
-          { error: "You have blocked this user" },
-          { status: 403 }
-        );
-      }
-    }
-  }
-
   // ustawienia prywatnosci
   const publicProfile = {
     _id: user._id,
