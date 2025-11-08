@@ -7,7 +7,7 @@ import { EditBookModal } from "./modals/edit-book-modal";
 import { OnboardingBookSearch } from "@/components/profile/onboarding-book-search";
 import { StatsSection } from "./sections/stats-section";
 import { ProfileInfoSection } from "./sections/profile-info-section";
-import { TransactionHistory } from "./sections/transactions-history";
+import { useSession } from "next-auth/react";
 import { OfferedBooksSection } from "./sections/offered-books-section";
 import { WishlistSection } from "./sections/wishlist-section";
 import { OnboardingModal } from "./modals/onboarding-modal";
@@ -117,6 +117,7 @@ export function ProfileDashboard({
   const [modalType, setModalType] = useState<"offered" | "wishlist">("offered");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const t = useTranslations("profile");
+  const { update } = useSession();
 
   const {
     userData: fetchedUserData,
@@ -288,7 +289,10 @@ export function ProfileDashboard({
       method: "PUT",
       body: formData,
     });
+
     fetchData();
+
+    await update();
   };
 
   const handleEditBook = (book: {
