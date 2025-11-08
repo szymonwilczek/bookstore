@@ -180,13 +180,15 @@ export function ProfileInfoSection({
                 <Trophy className="h-4 w-4 text-yellow-500" />
                 {t("achievements")} ({achievements.length})
               </h4>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => router.push("/achievements")}
-              >
-                {t("showAll")}
-              </Button>
+              {!isPublicView && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => router.push("/achievements")}
+                >
+                  {t("showAll")}
+                </Button>
+              )}
             </div>
             <div className="flex flex-wrap gap-2">
               {achievements.map((achievement) => (
