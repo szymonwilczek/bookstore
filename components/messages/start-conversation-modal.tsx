@@ -99,6 +99,8 @@ export function StartConversationModal({
           <div className="flex items-center gap-3 rounded-lg border p-3">
             {book.coverImage && (
               <Image
+                width={150}
+                height={200}
                 src={book.coverImage}
                 alt={book.title}
                 className="h-16 w-12 rounded object-cover"

@@ -127,7 +127,6 @@ export function MessageInput({
     setMessage(e.target.value);
     handleTyping();
 
-    // Auto-resize textarea
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
@@ -136,7 +135,6 @@ export function MessageInput({
 
   return (
     <div className="border-t p-4">
-      {/* preview zalacznikow */}
       {attachments.length > 0 && (
         <div className="mb-3 flex flex-wrap gap-2">
           {attachments.map((attachment, index) => (
@@ -144,6 +142,8 @@ export function MessageInput({
               <Image
                 src={attachment.url}
                 alt={attachment.name}
+                width={80}
+                height={80}
                 className="h-20 w-20 rounded-lg object-cover border"
               />
               <button
