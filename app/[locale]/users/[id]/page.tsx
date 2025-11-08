@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { PublicProfileDashboard } from "@/components/profile/public-profile-dashboard";
 import { Loader2 } from "lucide-react";
+import { IBook } from "@/lib/models/Book";
 
 interface ProfileData {
   user: {
@@ -21,8 +22,8 @@ interface ProfileData {
     averageRating: number;
     createdAt: string;
   };
-  offeredBooks: unknown[];
-  wishlist: unknown[];
+  offeredBooks: IBook[];
+  wishlist: IBook[];
   reviews: unknown[];
   stats: {
     completedTransactions: number;

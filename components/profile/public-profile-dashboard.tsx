@@ -6,17 +6,9 @@ import { StatsSection } from "./sections/stats-section";
 import { OfferedBooksSection } from "./sections/offered-books-section";
 import { WishlistSection } from "./sections/wishlist-section";
 import { ReviewsSection } from "./sections/reviews-section";
-import { Button } from "@/components/ui/button";
 import { TrendingUp, User, Star } from "lucide-react";
 import { StartConversationModal } from "@/components/messages/start-conversation-modal";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { IBook } from "@/lib/models/Book";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
@@ -36,8 +28,8 @@ interface PublicProfileDashboardProps {
       averageRating: number;
       createdAt: string;
     };
-    offeredBooks: unknown[];
-    wishlist: unknown[];
+    offeredBooks: IBook[];
+    wishlist: IBook[];
     reviews: unknown[];
     stats: {
       completedTransactions: number;
@@ -60,6 +52,28 @@ export function PublicProfileDashboard({
   const t = useTranslations("profile");
 
   const { user, offeredBooks, wishlist, reviews, stats } = profileData;
+
+  const mappedOfferedBooks = offeredBooks.map((book: IBook) => ({
+    _id: book._id,
+    title: book.title,
+    author: book.author,
+    imageUrl: book.imageUrl,
+    createdAt: book.createdAt.toISOString(),
+    status: (book.status === "available" ? "active" : "inactive") as
+      | "active"
+      | "inactive",
+    condition: book.condition,
+    promotedUntil: book.promotedUntil?.toISOString(),
+    promotedAt: book.promotedAt?.toISOString(),
+  }));
+
+  const mappedWishlist = wishlist.map((book: IBook) => ({
+    id: book._id,
+    title: book.title,
+    author: book.author,
+    image: book.imageUrl,
+    createdAt: book.createdAt.toISOString(),
+  }));
 
   return (
     <div className="container mx-auto p-4 space-y-6 max-w-7xl">
@@ -134,16 +148,16 @@ export function PublicProfileDashboard({
       />
 
       <OfferedBooksSection
-        books={offeredBooks as never[]}
+        books={mappedOfferedBooks}
         onAddBook={() => {}}
         onEditBook={() => {}}
         onDeleteBook={() => {}}
         isPublicView={true}
       />
 
-      {wishlist.length > 0 && (
+      {mappedWishlist.length > 0 && (
         <WishlistSection
-          wishlist={wishlist as never[]}
+          wishlist={mappedWishlist}
           onAddToWishlist={() => {}}
           onRemoveFromWishlist={() => {}}
           isPublicView={true}
