@@ -228,7 +228,7 @@ export function ProfileInfoSection({
             <div className="flex gap-2 pt-2">
               {profileData.github && (
                 <a
-                  href={profileData.github}
+                  href={"https://github.com/" + profileData.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground"
@@ -238,7 +238,7 @@ export function ProfileInfoSection({
               )}
               {profileData.twitter && (
                 <a
-                  href={profileData.twitter}
+                  href={"https://x.com/" + profileData.twitter}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground"

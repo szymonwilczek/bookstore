@@ -17,6 +17,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
 
 interface UserProfile {
   username: string;
@@ -145,21 +151,33 @@ export function EditProfileModal({
 
             <div className="grid gap-2">
               <Label htmlFor="github">GitHub</Label>
-              <Input
-                id="github"
-                value={formData.github || ""}
-                onChange={(e) => handleChange("github", e.target.value)}
-                placeholder="https://github.com/username"
-              />
+              <InputGroup>
+                <InputGroupInput
+                  id="github"
+                  value={formData.github || ""}
+                  onChange={(e) => handleChange("github", e.target.value)}
+                  placeholder="username"
+                  className="!pl-1"
+                />
+                <InputGroupAddon>
+                  <InputGroupText>https://github.com/</InputGroupText>
+                </InputGroupAddon>
+              </InputGroup>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="twitter">Twitter</Label>
-              <Input
-                id="twitter"
-                value={formData.twitter || ""}
-                onChange={(e) => handleChange("twitter", e.target.value)}
-                placeholder="https://twitter.com/username"
-              />
+              <InputGroup>
+                <InputGroupInput
+                  id="twitter"
+                  value={formData.twitter || ""}
+                  onChange={(e) => handleChange("twitter", e.target.value)}
+                  placeholder="username"
+                  className="!pl-1"
+                />
+                <InputGroupAddon>
+                  <InputGroupText>https://twitter.com/</InputGroupText>
+                </InputGroupAddon>
+              </InputGroup>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="website">{t("userWebsite")}</Label>
