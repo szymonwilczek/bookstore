@@ -22,6 +22,7 @@ import { StartConversationModal } from "@/components/messages/start-conversation
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { toast } from "sonner";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface ListingModalProps {
@@ -55,7 +56,10 @@ export function ListingModal({
     }
 
     if (owner._id === session.user?.id) {
-      alert("Nie możesz wysłać wiadomości do siebie");
+      toast.error(`Poczekaj sekundę!`, {
+        position: "top-center",
+        description: "You cannot send message to yourself... Come on now...",
+      });
       return;
     }
 

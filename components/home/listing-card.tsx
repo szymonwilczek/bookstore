@@ -11,6 +11,7 @@ import { useCart } from "@/lib/context/cart-context";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { toast } from "sonner";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface ListingCardProps {
@@ -68,7 +69,10 @@ export function ListingCard({
     }
 
     if (owner._id === session.user?.id) {
-      alert("You cannot send message to yourself... Come on...");
+      toast.error(`Poczekaj sekundę!`, {
+        position: "top-center",
+        description: "You cannot send message to yourself... Come on now...",
+      });
       return;
     }
 
@@ -77,7 +81,10 @@ export function ListingCard({
 
   const handleAddToCart = async () => {
     if (!session) {
-      alert("You have to be logged in to add the book to the cart.");
+      toast.error(`Wystąpił błąd!`, {
+        position: "top-center",
+        description: "You have to be logged in to add the book to the cart.",
+      });
       return;
     }
 
