@@ -28,6 +28,8 @@ import { useTranslations } from "next-intl";
 import { PromotedBooksSection } from "./sections/promoted-books-section";
 import { PointsHistorySection } from "./sections/points-history-section";
 import { HistorySection } from "./sections/history-section";
+import { toast } from "sonner";
+import { useRouter } from "next/router";
 
 interface BookBase {
   id: string;
@@ -118,6 +120,7 @@ export function ProfileDashboard({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const t = useTranslations("profile");
   const { update } = useSession();
+  const router = useRouter();
 
   const {
     userData: fetchedUserData,
@@ -383,16 +386,29 @@ export function ProfileDashboard({
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.error || "Failed to promote book");
+        toast.error(`Wystąpił błąd!`, {
+          position: "top-center",
+          description: "Failed to promote book.",
+        });
         return;
       }
 
-      alert("Book promoted successfully!");
+      toast(`🎉 Book promoted successfully!`, {
+        position: "top-center",
+        action: {
+          label: "Przedłuż",
+          onClick: () => router.push("/profile"),
+        },
+        description: `Książka została wypromowana. Możesz przedłużyć okres promocji z panelu profilu.`,
+      });
       // Refresh data
       window.location.reload();
     } catch (error) {
       console.error("Error promoting book:", error);
-      alert("Failed to promote book");
+      toast.error(`Wystąpił błąd!`, {
+        position: "top-center",
+        description: "Failed to promote book.",
+      });
     }
   };
 
@@ -407,15 +423,24 @@ export function ProfileDashboard({
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.error || "Failed to extend promotion");
+        toast.error(`Wystąpił błąd!`, {
+          position: "top-center",
+          description: data.error || "Failed to extend promotion",
+        });
         return;
       }
 
-      alert("Promotion extended successfully!");
+      toast(`🎉 Promotion extended successfully!`, {
+        position: "top-center",
+        description: `Promocja książki została przedłużona na kolejne 30 dni.`,
+      });
       window.location.reload();
     } catch (error) {
       console.error("Error extending promotion:", error);
-      alert("Failed to extend promotion");
+      toast.error(`Wystąpił błąd!`, {
+        position: "top-center",
+        description: "Failed to extend promotion",
+      });
     }
   };
 
@@ -436,15 +461,24 @@ export function ProfileDashboard({
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.error || "Failed to cancel promotion");
+        toast.error(`Wystąpił błąd!`, {
+          position: "top-center",
+          description: data.error || "Failed to cancel promotion",
+        });
         return;
       }
 
-      alert(`Promotion cancelled! Refunded ${data.refundedPoints} points.`);
+      toast(`🎉 Promotion cancelled successfully!`, {
+        position: "top-center",
+        description: `Promotion cancelled! Refunded ${data.refundedPoints} points.`,
+      });
       window.location.reload();
     } catch (error) {
       console.error("Error cancelling promotion:", error);
-      alert("Failed to cancel promotion");
+      toast.error(`Wystąpił błąd!`, {
+        position: "top-center",
+        description: "Failed to cancel promotion",
+      });
     }
   };
 
