@@ -24,6 +24,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface TransactionCardProps {
@@ -113,13 +114,22 @@ export function TransactionCard({
       });
 
       if (!res.ok) {
-        throw new Error(t("failedToSubmitReview"));
+        toast.error(`Wystąpił błąd!`, {
+          position: "top-center",
+          description: t("failedToSubmitReview"),
+        });
       }
 
-      alert(t("thanksForReview"));
+      toast(`🎉 Opinia umieszczona!`, {
+        position: "top-center",
+        description: t("thanksForReview"),
+      });
     } catch (error) {
       console.error("Error submitting review:", error);
-      alert(t("failedToSubmitReview"));
+      toast.error(`Wystąpił błąd!`, {
+        position: "top-center",
+        description: t("failedToSubmitReview"),
+      });
     }
   };
 

@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Star } from "lucide-react";
+import { toast } from "sonner";
 
 interface TransactionUser {
   _id: string;
@@ -81,7 +82,10 @@ export function ReviewModal({
 
   const handleSubmit = async () => {
     if (rating === 0) {
-      alert("Proszę wybrać ocenę");
+      toast.error(`No rating was provided!`, {
+        position: "top-center",
+        description: "Proszę wybrać ocenę!",
+      });
       return;
     }
 
