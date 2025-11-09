@@ -3,14 +3,19 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
-import { Search } from "lucide-react";
+import { Search, Plus } from "lucide-react";
 
 interface SearchBarProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  onAddBook?: () => void;
 }
 
-export function SearchBar({ searchQuery, setSearchQuery }: SearchBarProps) {
+export function SearchBar({
+  searchQuery,
+  setSearchQuery,
+  onAddBook,
+}: SearchBarProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -29,6 +34,16 @@ export function SearchBar({ searchQuery, setSearchQuery }: SearchBarProps) {
         </PopoverTrigger>
       </Popover>
       <Button onClick={() => setOpen(false)}>Szukaj</Button>
+      {onAddBook && (
+        <Button
+          variant="default"
+          onClick={onAddBook}
+          className="bg-green-600 hover:bg-green-700 text-white"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Utwórz ofertę
+        </Button>
+      )}
     </div>
   );
 }

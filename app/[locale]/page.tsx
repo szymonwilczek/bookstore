@@ -8,6 +8,7 @@ import { Listings } from "@/components/home/listings";
 import { useTranslations } from "next-intl";
 import { PromotedSection } from "@/components/home/promoted-section";
 import { ListingModal } from "@/components/home/listing-modal";
+import { AddBookModal } from "@/components/profile/modals/add-book-modal";
 
 interface PromotedBook {
   _id: string;
@@ -43,6 +44,7 @@ export default function HomePage() {
   const [promotedLoading, setPromotedLoading] = useState(false);
   const [selectedBook, setSelectedBook] = useState<PromotedBook | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [addBookModalOpen, setAddBookModalOpen] = useState(false);
   const t = useTranslations();
 
   const itemsPerPage = 10;
@@ -115,9 +117,18 @@ export default function HomePage() {
     setModalOpen(true);
   };
 
+  const handleAddBookSave = () => {
+    setAddBookModalOpen(false);
+    window.location.reload();
+  };
+
   return (
     <div className="container mx-auto p-4">
-      <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onAddBook={() => setAddBookModalOpen(true)}
+      />
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-6">
         <div className="lg:col-span-1">
           <Filters filters={filters} setFilters={setFilters} />
@@ -158,6 +169,12 @@ export default function HomePage() {
           onOpenChange={setModalOpen}
         />
       )}
+      <AddBookModal
+        open={addBookModalOpen}
+        onOpenChange={setAddBookModalOpen}
+        onSave={handleAddBookSave}
+        type="offered"
+      />
     </div>
   );
 }
