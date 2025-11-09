@@ -1,6 +1,7 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 interface CartItemBook {
   _id: string;
@@ -81,7 +82,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setCart(data.cart?.items || []);
     } catch (error) {
       if (error instanceof Error) {
-        alert(error.message);
+        toast.error(`Wystąpił błąd!`, {
+          position: "top-center",
+          description: error.message,
+        });
       }
       throw error;
     } finally {
