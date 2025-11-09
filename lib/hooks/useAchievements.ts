@@ -56,6 +56,7 @@ export function useAchievements(userId?: string) {
 
         for (const achievement of data.newlyUnlocked) {
           toast(`🎉 ${achievement.name}`, {
+            position: "top-center",
             description: `${achievement.icon} ${achievement.description} (+${achievement.points} points)`,
           });
 
