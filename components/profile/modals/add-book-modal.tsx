@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useAchievements } from "@/lib/hooks/useAchievements";
 
 interface SearchBook {
   id: string;
@@ -78,6 +79,7 @@ export function AddBookModal({
   );
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const t = useTranslations("profile");
+  const { checkAchievements } = useAchievements();
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300);
@@ -198,6 +200,11 @@ export function AddBookModal({
           }),
         });
       }
+
+      if (type === "offered") {
+        await checkAchievements("book_added");
+      }
+
       onSave();
       resetModal();
     } catch (error) {
