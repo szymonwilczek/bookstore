@@ -14,6 +14,7 @@ import LoginForm from "@/components/login/login-form";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const t = useTranslations("login");
@@ -30,7 +31,10 @@ export default function LoginPage() {
       redirect: false,
     });
     if (result?.error) {
-      alert("Login error: " + result.error);
+      toast.error(`Wystąpił błąd podczas logowania!`, {
+        position: "top-center",
+        description: result.error,
+      });
     } else {
       window.location.href = "/profile";
     }
