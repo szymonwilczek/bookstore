@@ -48,16 +48,6 @@ export default function ProfilePage() {
   const [promotedBooks, setPromotedBooks] = useState([]);
   const t = useTranslations("profile");
 
-  const updateProfile = async () => {
-    const res = await fetch("/api/user/profile");
-    const data = await res.json();
-    setUserData(data);
-
-    const promotedRes = await fetch("/api/user/promoted-books");
-    const promotedData = await promotedRes.json();
-    setPromotedBooks(promotedData.active || []);
-  };
-
   useEffect(() => {
     if (session) {
       const fetchData = async () => {
