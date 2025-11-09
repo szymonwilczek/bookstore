@@ -14,6 +14,7 @@ import RegisterForm from "@/components/register/register-form";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
   const t = useTranslations("register");
@@ -33,13 +34,19 @@ export default function RegisterPage() {
     });
     const result = await res.json();
     if (res.ok) {
-      alert("Registered successfully! You will be redirected to login.");
+      toast(`🎉 Zarejestrowany!`, {
+        position: "top-center",
+        description: `Zapnij pasy, trzymaj się i usiądź wygodnie. Zostaniesz przekierowany do logowania.`,
+      });
 
       setTimeout(() => {
         window.location.href = "/login";
       }, 1500);
     } else {
-      alert(result.error);
+      toast.error(`Wystąpił błąd!`, {
+        position: "top-center",
+        description: result.error,
+      });
     }
   };
 
