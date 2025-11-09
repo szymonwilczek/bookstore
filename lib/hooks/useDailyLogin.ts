@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useAchievements } from "@/lib/hooks/useAchievements";
+import { toast } from "sonner";
 
 export function useDailyLogin() {
   const { data: session } = useSession();
   const [loginRecorded, setLoginRecorded] = useState(false);
+  const { checkAchievements } = useAchievements();
 
   useEffect(() => {
     if (session && !loginRecorded) {
@@ -22,16 +25,18 @@ export function useDailyLogin() {
               localStorage.setItem("lastDailyLogin", today);
               setLoginRecorded(true);
 
-              //TODO: toast z informacja zamiast console loga
-              console.log(
-                `+${data.pointsEarned} points! Streak: ${data.streak} days`
-              );
+              checkAchievements("login");
+
+              toast(`🔥 Streak updated!`, {
+                position: "top-center",
+                description: `+${data.pointsEarned} points! Current streak: ${data.streak} days`,
+              });
             }
           })
           .catch(console.error);
       }
     }
-  }, [session, loginRecorded]);
+  }, [session, loginRecorded, checkAchievements]);
 
   return loginRecorded;
 }
