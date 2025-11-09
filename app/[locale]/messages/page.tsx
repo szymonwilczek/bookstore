@@ -50,7 +50,6 @@ export default function MessagesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const {
-    socket,
     registerConversationUpdateListener,
     unregisterConversationUpdateListener,
   } = useSocket();
