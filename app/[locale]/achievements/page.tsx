@@ -43,12 +43,12 @@ interface AchievementsData {
 }
 
 const categoryLabels: Record<string, string> = {
-  trading: "📚 Trading",
-  reputation: "⭐ Reputacja",
-  collection: "📖 Kolekcja",
-  activity: "⚡ Aktywność",
-  community: "💬 Społeczność",
-  special: "🌟 Specjalne",
+  trading: "🪙 Handlowiec",
+  reputation: "⚖️ Zaufany Handlarz",
+  collection: "📖 Kolekcjoner",
+  community: "🏘️ Dusza Towarzystwa",
+  activity: "🚀 Aktywność",
+  special: "🌟 Unikatowe",
 };
 
 export default function AchievementsPage() {
@@ -82,7 +82,7 @@ export default function AchievementsPage() {
     }
   }, [session, status, router]);
 
-  // pobieranie osiagniec 
+  // pobieranie osiagniec
   useEffect(() => {
     const fetchAchievements = async () => {
       if (!mongoUserId) return;
