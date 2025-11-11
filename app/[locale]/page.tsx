@@ -31,7 +31,6 @@ export default function HomePage() {
   const [filters, setFilters] = useState({
     genres: [],
     conditions: [],
-    locations: [],
     dateRange: "",
   });
   const [sortBy, setSortBy] = useState("date");
@@ -93,8 +92,6 @@ export default function HomePage() {
           params.append("genres", filters.genres.join(","));
         if (filters.conditions.length > 0)
           params.append("conditions", filters.conditions.join(","));
-        if (filters.locations.length > 0)
-          params.append("locations", filters.locations.join(","));
         if (filters.dateRange) params.append("dateRange", filters.dateRange);
 
         const res = await fetch(`/api/books/available?${params}`);
