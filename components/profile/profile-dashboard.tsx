@@ -26,7 +26,6 @@ import {
 import { Button } from "../ui/button";
 import { useTranslations } from "next-intl";
 import { PromotedBooksSection } from "./sections/promoted-books-section";
-import { PointsHistorySection } from "./sections/points-history-section";
 import { HistorySection } from "./sections/history-section";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
