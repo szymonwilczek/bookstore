@@ -347,6 +347,169 @@
     "orContinueWith": "Or continue with"
   },
 
+  "achievements": {
+    "exchange_master_bronze": {
+      "name": "Little Wonders",
+      "description": "You found joy in small transactions. Remember, even little wonders can be huge."
+    },
+    "exchange_master_silver": {
+      "name": "Express Yourself",
+      "description": "Your goods always arrive on time. Time is money, so make sure to Express Yourself."
+    },
+    "exchange_master_gold": {
+      "name": "What Have You Done For Me Lately?",
+      "description": "Mastery in exchanges achieved. May fate be kind and give you what you ask for."
+    },
+    "exchange_master_platinum": {
+      "name": "How the West Was Won",
+      "description": "The peak of trade. Time for celebration! Go West!"
+    },
+
+    "trusted_trader_bronze": {
+      "name": "I Got You Babe",
+      "description": "The first thread of trust has been spun. Believing in others is the start of every relationship."
+    },
+    "trusted_trader_silver": {
+      "name": "Can't Take My Eyes Off You",
+      "description": "Trust is a currency more precious than gold. Tell us, Can't You Take Your Eyes Off?"
+    },
+    "trusted_trader_gold": {
+      "name": "Bette Davis Eyes",
+      "description": "You are perceived as the golden standard. It must be the Bette Davis Eyes."
+    },
+    "trusted_trader_platinum": {
+      "name": "Sweet Child O' Mine",
+      "description": "Let others feel at home with the Sweet Child O' Mine hovering over their heads."
+    },
+
+    "perfect_rating_bronze": {
+      "name": "S01E01: Pilot",
+      "description": "Every great story has a beginning."
+    },
+    "perfect_rating_silver": {
+      "name": ".38",
+      "description": "We hear this caliber always hits the bullseye."
+    },
+    "perfect_rating_gold": {
+      "name": "Shotgun",
+      "description": "This is no accident, it's a steady hand."
+    },
+    "perfect_rating_platinum": {
+      "name": "Granite State",
+      "description": "Hard proof that you are one of the best."
+    },
+
+    "book_collector_bronze": {
+      "name": "Act I: First Volume",
+      "description": "The collection has begun. Act I: First Volume takes the stage."
+    },
+    "book_collector_silver": {
+      "name": "Ancient Grudge, Break to New Mutiny",
+      "description": "A sizable collection. Remember that ancient grudges, break to new mutiny are hidden in books."
+    },
+    "book_collector_gold": {
+      "name": "Scroll of the Forgotten",
+      "description": "A treasure-worthy collection. How did you discover the Scroll of the Forgotten?"
+    },
+    "book_collector_platinum": {
+      "name": "Universal Nomenclature of Rarity",
+      "description": "The collection of rare volumes is complete. The Universal Nomenclature of Rarity is known to you."
+    },
+
+    "social_butterfly_bronze": {
+      "name": "I'm New Here",
+      "description": "First acquaintances made. Come on, admit it, you're new here, right?"
+    },
+    "social_butterfly_silver": {
+      "name": "Camp Connector",
+      "description": "You know people from different camps. Your influence is growing."
+    },
+    "social_butterfly_gold": {
+      "name": "Diego's Ol' Friend",
+      "description": "You are now a respected companion of the Old Camp."
+    },
+    "social_butterfly_platinum": {
+      "name": "To Gomez!",
+      "description": "Raise a toast in his very own chamber. To Gomez!"
+    },
+
+    "generous_giver_bronze": {
+      "name": "Give A Little Sign",
+      "description": "The first act of generosity. Keep the streak going, it's worth it."
+    },
+    "generous_giver_silver": {
+      "name": "Time After Time",
+      "description": "Your gift has value. Share what is most precious."
+    },
+    "generous_giver_gold": {
+      "name": "Total Eclipse of the Heart",
+      "description": "Golden level of generosity. It’s clear you give straight from the heart."
+    },
+    "generous_giver_platinum": {
+      "name": "Jim Best",
+      "description": "You are The Best at sharing with others."
+    },
+
+    "thoughtful_reviewer_bronze": {
+      "name": "The Freelancer (No. 145)",
+      "description": "The first good review written without coercion."
+    },
+    "thoughtful_reviewer_silver": {
+      "name": "The Debt Collector (No. 46)",
+      "description": "In-depth reviews only, your words are worth silver."
+    },
+    "thoughtful_reviewer_gold": {
+      "name": "The Judge (No. 57)",
+      "description": "An insightful and fair reviewer is a good reviewer."
+    },
+    "thoughtful_reviewer_platinum": {
+      "name": "Raymond Reddington (No. 00)",
+      "description": "One of a kind. The top of The Blacklist."
+    },
+
+    "loyal_member_bronze": {
+      "name": "Circle of Friends",
+      "description": "You are now a member of our group. Trust is a luxury, but Popping Cherry is essential."
+    },
+    "loyal_member_silver": {
+      "name": "Popping Cherry",
+      "description": "You stick to the Code, even when everyone else is asleep in the big city."
+    },
+    "loyal_member_gold": {
+      "name": "In an Unexpected Way",
+      "description": "Long tenure. Life as a dream, but you know there's more beneath the perfect facade."
+    },
+    "loyal_member_platinum": {
+      "name": "Resistance Is Futile",
+      "description": "Wow. Certain patterns repeat, but do you remember the monsters? Resistance Is Futile."
+    },
+
+    "pioneer": {
+      "name": "Dances with Wolves",
+      "description": "One of the first people to face the new challenges. The territory has been settled."
+    },
+
+    "summer_harvest": {
+      "name": "Summer Lovin'",
+      "description": "The summer harvest season is complete. Hear the sea and the Summer Lovin' sound."
+    },
+
+    "new_year_contract": {
+      "name": "When Harry Met Sally",
+      "description": "The contract was signed on New Year's. May it be as groundbreaking as the midnight kiss. Happy New Year!"
+    },
+
+    "king_of_merchant_guild": {
+      "name": "The King's Speech",
+      "description": "The peak of the hierarchy. The art of speaking and ruling."
+    },
+
+    "best_of_the_best": {
+      "name": "\"The Man Who Can't Be Moved\"",
+      "description": "The best of the best. Nothing can move you from here."
+    }
+  },
+
   "errors": {
     "required": "This field is required",
     "invalidEmail": "Invalid email address",

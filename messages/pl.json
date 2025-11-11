@@ -347,6 +347,169 @@
     "orContinueWith": "Or continue with"
   },
 
+  "achievements": {
+    "exchange_master_bronze": {
+      "name": "Małe szczęścia",
+      "description": "Szukasz radości w drobnych transakcjach. Nawet małe szczęścia bywają wielkie."
+    },
+    "exchange_master_silver": {
+      "name": "Przesyłka Ekspresowa",
+      "description": "Twoje towary docierają na czas. Pamiętaj: czas to peniądz, a to wszystko Przesyłka Ekspresowa."
+    },
+    "exchange_master_gold": {
+      "name": "Co mi Panie dasz?",
+      "description": "Osiągnięto mistrzostwo w wymianach. Oby tylko los był łaskawy i dał to, o co prosisz."
+    },
+    "exchange_master_platinum": {
+      "name": "Niech żyje bal!",
+      "description": "Szczyt handlu. Czas na celebrację! Niech żyje bal!"
+    },
+
+    "trusted_trader_bronze": {
+      "name": "Wierzę w Ciebie, miły",
+      "description": "Pierwsza nić zaufania. Wiara w drugiego to początek każdej relacji."
+    },
+    "trusted_trader_silver": {
+      "name": "Czy te oczy mogą kłamać?",
+      "description": "Zaufanie to waluta cenniejsza niż złoto. Ale powiedz, czy te oczy mogą kłamać?"
+    },
+    "trusted_trader_gold": {
+      "name": "Takie ładne oczy",
+      "description": "Postrzegają Cię jako złoty standard. To musi być zasługa tych oczu."
+    },
+    "trusted_trader_platinum": {
+      "name": "Niebo z moich stron",
+      "description": "Niech inni poczują się jak w domu mając nad głową niebo z Twoich stron."
+    },
+
+    "perfect_rating_bronze": {
+      "name": "S01E01: Pilot",
+      "description": "Każda opowieść ma gdzieś początek."
+    },
+    "perfect_rating_silver": {
+      "name": ".38",
+      "description": "Słyszeliśmy, że ten kaliber zawsze trafia w środek tarczy."
+    },
+    "perfect_rating_gold": {
+      "name": "Strzelba",
+      "description": "To już nie przypadek, to pewna ręka."
+    },
+    "perfect_rating_platinum": {
+      "name": "Granitowy Stan",
+      "description": "Twardy dowód na to, że jesteś jednym z najlepszych."
+    },
+
+    "book_collector_bronze": {
+      "name": "Akt I: Pierwszy Tom",
+      "description": "Rozpoczęto kolekcję. Na scenę wkracza Akt I: Pierwszy Tom."
+    },
+    "book_collector_silver": {
+      "name": "Waśnie krwawe, stare i nowe",
+      "description": "Spory zbiór. Pamiętaj, że w książkach ukryte są waśnie krwawe, stare i nowe."
+    },
+    "book_collector_gold": {
+      "name": "Odnaleźć Zapomniany Zwój",
+      "description": "Kolekcja na miarę skarbów. Jak odkryłeś jak odnaleźć Zapomniany Zwój?"
+    },
+    "book_collector_platinum": {
+      "name": "Uniwersalna Nomenklatura Rzadkości",
+      "description": "Ukończono kolekcję rzadkich tomów. Ta Uniwersalna Nomenklatura jest Ci znana."
+    },
+
+    "social_butterfly_bronze": {
+      "name": "Jestem tu Nowy",
+      "description": "Nawiązano pierwsze znajomości. Przyznaj się, jesteś tu Nowy co?"
+    },
+    "social_butterfly_silver": {
+      "name": "Łącznik Obozowy",
+      "description": "Znasz ludzi z różnych obozów. Twoje wpływy rosną."
+    },
+    "social_butterfly_gold": {
+      "name": "Stary Przyjaciel Diego",
+      "description": "Jesteś od teraz cenionym towarzyszem Starego Obozu."
+    },
+    "social_butterfly_platinum": {
+      "name": "Za Gomeza!",
+      "description": "Wznieś toast w jego własnej komnacie. Za Gomeza!"
+    },
+
+    "generous_giver_bronze": {
+      "name": "Daj Mi Chwilę",
+      "description": "Pierwszy akt hojności. Trzymaj passę, warto."
+    },
+    "generous_giver_silver": {
+      "name": "Podaruj Mi Czas",
+      "description": "Twój dar ma wartość. Podziel się tym co najcenniejsze."
+    },
+    "generous_giver_gold": {
+      "name": "Serce Do Serca",
+      "description": "Złoty poziom hojności. Widać że dajesz prosto z serca."
+    },
+    "generous_giver_platinum": {
+      "name": "Jim Best",
+      "description": "Jesteś Najlepszy w dzieleniu się z innymi."
+    },
+
+    "thoughtful_reviewer_bronze": {
+      "name": "Wolny strzelec (nr 145)",
+      "description": "Pierwsza dobra opinia napisana bez przymusu."
+    },
+    "thoughtful_reviewer_silver": {
+      "name": "Windykator (nr 46)",
+      "description": "Same dogłębne opinie, Twoje słowa są na wagę srebra."
+    },
+    "thoughtful_reviewer_gold": {
+      "name": "Sędzia (nr 57)",
+      "description": "Wnikliwy i sprawiedliwy recenzent, to dobry recenzent."
+    },
+    "thoughtful_reviewer_platinum": {
+      "name": "Raymond Reddington (nr 00)",
+      "description": "Jedyny w swoim rodzaju. Szczyt Czarnej Listy."
+    },
+
+    "loyal_member_bronze": {
+      "name": "Krąg przyjaciół",
+      "description": "Od teraz jesteś członkiem naszej grupy. Krąg przyjaciół to podstawa, ale zaufanie to luksus."
+    },
+    "loyal_member_silver": {
+      "name": "Sen w Wielkim Mieście",
+      "description": "Trzymasz się zasad, nawet gdy reszta śni w wielkim mieście."
+    },
+    "loyal_member_gold": {
+      "name": "Życie jak sen",
+      "description": "Długi staż. Życie jak sen, ale wiesz że za perfekcyjną fasadą kryje się coś więcej."
+    },
+    "loyal_member_platinum": {
+      "name": "Pamiętasz powtory?",
+      "description": "Wow. Pewne schematy się powtarzają, ale pamiętasz potwory?"
+    },
+
+    "pioneer": {
+      "name": "Tańczący z wilkami",
+      "description": "Jedna z pierwszych osób, która stawiła czoła nowym wyzwaniom. Terytorium zostalo zasiedlone."
+    },
+
+    "summer_harvest": {
+      "name": "Cykady na Cykladach",
+      "description": "Ukończono letni sezon zbiorów. Usłysz szum morza i śpiew cykad."
+    },
+
+    "new_year_contract": {
+      "name": "Kiedy Harry poznał Sally",
+      "description": "Umowa podpisana w nowy rok. Oby była tak przełomowa, jak pocałunek o północy. Wesołego Nowego Roku!"
+    },
+
+    "king_of_merchant_guild": {
+      "name": "Jak zostać królem?",
+      "description": "Szczyt hierarchii. Sztuka przemawiania i rządzenia."
+    },
+
+    "best_of_the_best": {
+      "name": "\"The Man Who Can't Be Moved\"",
+      "description": "Najlepszy z najlepszych. Nic Cię stąd nie ruszy."
+    }
+  },
+
   "errors": {
     "required": "This field is required",
     "invalidEmail": "Invalid email address",
