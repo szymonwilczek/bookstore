@@ -292,7 +292,6 @@
     "clear": "Clear all",
     "genres": "Genres",
     "condition": "Book condition",
-    "location": "Location",
     "dateAdded": "Date added",
     "conditions": {
       "new": "New",

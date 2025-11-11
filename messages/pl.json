@@ -288,22 +288,21 @@
   },
 
   "filters": {
-    "title": "Filters",
-    "clear": "Clear all",
-    "genres": "Genres",
-    "condition": "Book condition",
-    "location": "Location",
-    "dateAdded": "Date added",
+    "title": "Filtry",
+    "clear": "Wyczyść filtry",
+    "genres": "Gatunki",
+    "condition": "Stan książki",
+    "dateAdded": "Data dodania",
     "conditions": {
-      "new": "New",
-      "used": "Used",
-      "damaged": "Damaged"
+      "new": "Nowy",
+      "used": "Używany",
+      "damaged": "Uszkodzony"
     },
     "dateRanges": {
-      "placeholder": "Choose range",
-      "last7": "Last 7 days",
-      "last30": "Last 30 days",
-      "last90": "Last 90 days"
+      "placeholder": "Wybierz zakres",
+      "last7": "Ostatnie 7 dni",
+      "last30": "Ostatnie 30 dni",
+      "last90": "Ostatnie 90 dni"
     }
   },
 

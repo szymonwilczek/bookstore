@@ -15,23 +15,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslations } from "next-intl";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface FiltersProps {
   filters: {
     genres: string[];
     conditions: string[];
-    locations: string[];
     dateRange: string;
   };
   setFilters: (filters: any) => void;
 }
 
 const conditions = ["new", "used", "damaged"];
-const locations = ["Warszawa", "Kraków", "Gdańsk", "Wrocław", "Poznań"];
 
 export function Filters({ filters, setFilters }: FiltersProps) {
   const [availableGenres, setAvailableGenres] = useState<string[]>([]);
+  const t = useTranslations("filters");
 
   useEffect(() => {
     fetch("/api/books/genres")
@@ -44,7 +44,6 @@ export function Filters({ filters, setFilters }: FiltersProps) {
     setFilters({
       genres: [],
       conditions: [],
-      locations: [],
       dateRange: "",
     });
   };
@@ -52,14 +51,14 @@ export function Filters({ filters, setFilters }: FiltersProps) {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="font-semibold">Filters</h3>
+        <h3 className="font-semibold">{t("title")}</h3>
         <Button variant="ghost" size="sm" onClick={handleReset}>
-          Clear
+          {t("clear")}
         </Button>
       </div>
       <Accordion type="single" collapsible>
         <AccordionItem value="genres">
-          <AccordionTrigger>Genres</AccordionTrigger>
+          <AccordionTrigger>{t("genres")}</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-2">
               {availableGenres.map((g) => (
@@ -88,7 +87,7 @@ export function Filters({ filters, setFilters }: FiltersProps) {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="condition">
-          <AccordionTrigger>Book condition</AccordionTrigger>
+          <AccordionTrigger>{t("condition")}</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-2">
               {conditions.map((c) => (
@@ -109,36 +108,11 @@ export function Filters({ filters, setFilters }: FiltersProps) {
                     htmlFor={`condition-${c}`}
                     className="text-sm cursor-pointer"
                   >
-                    {c === "new" ? "New" : c === "used" ? "Used" : "Damaged"}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="location">
-          <AccordionTrigger>Location</AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-2">
-              {locations.map((l) => (
-                <div key={l} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`location-${l}`}
-                    checked={filters.locations.includes(l)}
-                    onCheckedChange={(checked) => {
-                      setFilters({
-                        ...filters,
-                        locations: checked
-                          ? [...filters.locations, l]
-                          : filters.locations.filter((x) => x !== l),
-                      });
-                    }}
-                  />
-                  <label
-                    htmlFor={`location-${l}`}
-                    className="text-sm cursor-pointer"
-                  >
-                    {l}
+                    {c === "new"
+                      ? t("conditions.new")
+                      : c === "used"
+                        ? t("conditions.used")
+                        : t("conditions.damaged")}
                   </label>
                 </div>
               ))}
@@ -146,19 +120,19 @@ export function Filters({ filters, setFilters }: FiltersProps) {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="date">
-          <AccordionTrigger>Date added</AccordionTrigger>
+          <AccordionTrigger>{t("dateAdded")}</AccordionTrigger>
           <AccordionContent>
             <Select
               value={filters.dateRange}
               onValueChange={(v) => setFilters({ ...filters, dateRange: v })}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Choose range" />
+                <SelectValue placeholder={t("dateRanges.placeholder")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="7">Last 7 days</SelectItem>
-                <SelectItem value="30">Last 30 days</SelectItem>
-                <SelectItem value="90">Last 90 days</SelectItem>
+                <SelectItem value="7">{t("dateRanges.last7")}</SelectItem>
+                <SelectItem value="30">{t("dateRanges.last30")}</SelectItem>
+                <SelectItem value="90">{t("dateRanges.last90")}</SelectItem>
               </SelectContent>
             </Select>
           </AccordionContent>
