@@ -25,7 +25,11 @@
     "signIn": "Sign In",
     "dontHaveAccount": "Don't have an account yet? <signUpLink>Sign Up</signUpLink>",
     "or": "or",
-    "google": "Sign in with Google"
+    "google": "Sign in with Google",
+    "errors": {
+      "emailRequired": "Email is required",
+      "passwordRequired": "Password is required"
+    }
   },
 
   "register": {

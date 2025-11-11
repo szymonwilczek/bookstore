@@ -25,7 +25,11 @@
     "signIn": "Zaloguj się",
     "dontHaveAccount": "Nie masz jeszcze konta? <signUpLink>Zarejestruj się</signUpLink>",
     "or": "lub",
-    "google": "Zaloguj się przez Google"
+    "google": "Zaloguj się przez Google",
+    "errors": {
+      "emailRequired": "Adres e-mail jest wymagany",
+      "passwordRequired": "Hasło jest wymagane"
+    }
   },
 
   "register": {

@@ -28,8 +28,8 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
     e.preventDefault();
     const newErrors: { [key: string]: string } = {};
 
-    if (!email) newErrors.email = "Email is required.";
-    if (!password) newErrors.password = "Password is required.";
+    if (!email) newErrors.email = t("errors.emailRequired");
+    if (!password) newErrors.password = t("errors.passwordRequired");
 
     setErrors(newErrors);
 
