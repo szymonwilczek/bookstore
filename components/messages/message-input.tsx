@@ -33,7 +33,7 @@ export function MessageInput({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const t = useTranslations("message");
+  const t = useTranslations("messages");
 
   const handleFileClick = () => {
     fileInputRef.current?.click();
