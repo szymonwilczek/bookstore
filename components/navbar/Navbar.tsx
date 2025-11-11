@@ -131,7 +131,10 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
       [ref]
     );
 
-    if (pathname === "/login" || pathname === "/register") {
+    if (
+      (pathname && pathname.endsWith("/login")) ||
+      (pathname && pathname.endsWith("/register"))
+    ) {
       return null;
     }
 
