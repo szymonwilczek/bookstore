@@ -110,12 +110,6 @@ export function ListingCard({
         className={`h-full -p-2 ${isMatch ? "border-2 border-orange-500" : ""} ${isPromoted ? "border-2 border-purple-500" : ""}`}
       >
         <div className="hidden md:flex h-full gap-4 p-5">
-          {isPromoted && (
-            <div className="absolute top-2 right-2 bg-purple-500 text-white px-2 py-1 rounded text-xs font-semibold">
-              {t("promoted.badge")}
-            </div>
-          )}
-
           <Image
             width={80}
             height={112}
@@ -207,12 +201,6 @@ export function ListingCard({
         <div
           className={`md:hidden flex flex-col p-4 relative ${isMatch ? "border-2 border-orange-500" : ""} ${isPromoted ? "border-2 border-purple-500" : ""}`}
         >
-          {isPromoted && (
-            <div className="absolute top-2 right-2 bg-purple-500 text-white px-2 py-1 rounded text-xs font-semibold">
-              {t("promoted.badge")}
-            </div>
-          )}
-
           <Image
             src={book.imageUrl || "/placeholder-book.png"}
             width={160}

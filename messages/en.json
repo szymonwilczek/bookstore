@@ -347,7 +347,6 @@
     "createOffer": "Create offer",
     "promoted": {
       "title": "Promoted Books",
-      "badge": "⭐ Promoted",
       "promoted": "Promoted"
     },
     "match": {
