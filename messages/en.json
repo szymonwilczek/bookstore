@@ -44,7 +44,7 @@
     "google": "Sign in with Google"
   },
 
-  "cart": {
+  "checkout": {
     "locationError": "Please fill in the exchange location for all books.",
     "failedToCreateTransaction": "Failed to create transaction. We are so so sorry for that...",
     "errorOccured": "An error occured while submitting offers... We are sorry for that...",
@@ -606,6 +606,49 @@
     "cancelButton": "Cancel",
     "sendingMessage": "Sending...",
     "sendMessage": "Send message"
+  },
+
+  "cart": {
+    "title": "Cart",
+    "feelsEmpty": "Something feels empty here... Add anything!",
+    "browseBooks": "Browse books",
+    "from": "From: ",
+    "book": "book",
+    "books": "books",
+    "conditions": {
+      "new": "New",
+      "used": "Used",
+      "damaged": "Damaged"
+    },
+    "transactions": "Transactions: ",
+    "booksOffers": "Books: ",
+    "goToExchange": "Go to exchange"
+  },
+
+  "navbar": {
+    "language": "Language",
+    "points": {
+      "title": "Platform Points",
+      "earnBy": "Earn points by:",
+      "dailyLogin": "Daily login: 1 pkt",
+      "writingReviews": "Writing reviews: 2 pkt",
+      "completingTransactions": "Completing transactions: 5-10 pkt",
+      "achievements": "Unlocking achievements",
+      "promoteBook": "Use 100 points to promote your books for 30 days!"
+    },
+    "userMenu": {
+      "title": "User menu",
+      "profile": "Profile",
+      "achievements": "Achievements",
+      "darkTheme": "Dark theme",
+      "lightTheme": "Light theme",
+      "logOut": "Log out"
+    },
+    "navigationLinks": {
+      "home": "Home",
+      "transactions": "Transactions"
+    },
+    "logIn": "LOG IN"
   },
 
   "errors": {

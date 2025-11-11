@@ -19,7 +19,6 @@ import { cn } from "@/lib/utils";
 
 import { HamburgerIcon } from "@/components/navbar/HamburgerIcon";
 import { Logo } from "@/components/Logo";
-import { InfoMenu } from "@/components/navbar/InfoMenu";
 import { UserMenu } from "@/components/navbar/UserMenu";
 import { CartSheet } from "@/components/navbar/CartSheet";
 import { useSession } from "next-auth/react";
@@ -27,6 +26,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { MessageCircle, LogIn } from "lucide-react";
 import { PointsDisplay } from "./PointsDisplay";
 import { IUser } from "@/lib/models/User";
+import { useTranslations } from "next-intl";
 
 export interface NavbarNavItem {
   href?: string;
@@ -41,17 +41,11 @@ export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
   onUserItemClick?: (item: string) => void;
 }
 
-const defaultNavigationLinks: NavbarNavItem[] = [
-  { href: "/", label: "Home" },
-  { href: "/transactions", label: "Transactions" },
-];
-
 export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
   (
     {
       className,
       logo = <Logo />,
-      navigationLinks = defaultNavigationLinks,
       onNavItemClick,
       onInfoItemClick,
       onUserItemClick,
@@ -66,6 +60,12 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
     const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
     const pathname = usePathname();
     const router = useRouter();
+    const t = useTranslations("navbar");
+
+    const defaultNavigationLinks: NavbarNavItem[] = [
+      { href: "/", label: t("navigationLinks.home") },
+      { href: "/transactions", label: t("navigationLinks.transactions") },
+    ];
 
     useEffect(() => {
       if (session) {
@@ -162,7 +162,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 <PopoverContent align="start" className="w-64 p-1">
                   <NavigationMenu className="max-w-none">
                     <NavigationMenuList className="flex-col items-start gap-0">
-                      {navigationLinks.map((link, index) => (
+                      {defaultNavigationLinks.map((link, index) => (
                         <NavigationMenuItem key={index} className="w-full">
                           <button
                             onClick={() => {
@@ -198,7 +198,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
               {!isMobile && (
                 <NavigationMenu className="flex">
                   <NavigationMenuList className="gap-1">
-                    {navigationLinks.map((link, index) => (
+                    {defaultNavigationLinks.map((link, index) => (
                       <NavigationMenuItem key={index}>
                         <NavigationMenuLink
                           href={link.href}
@@ -264,7 +264,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 className="gap-2"
               >
                 <LogIn className="h-4 w-4" />
-                LOG IN
+                {t("logIn")}
               </Button>
             )}
           </div>
@@ -276,4 +276,4 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
 
 Navbar.displayName = "Navbar";
 
-export { Logo, HamburgerIcon, InfoMenu, UserMenu, CartSheet };
+export { Logo, HamburgerIcon, UserMenu, CartSheet };

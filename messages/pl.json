@@ -44,7 +44,7 @@
     "google": "Kontynuuj przez Google"
   },
 
-  "cart": {
+  "checkout": {
     "locationError": "Proszę podać miejsce wymiany dla wszystkich książek.",
     "failedToCreateTransaction": "Nie udało się utworzyć transakcji. Bardzo nam przykro...",
     "errorOccured": "Wystąpił błąd podczas przesyłania ofert... Przepraszamy za tę niedogodność...",
@@ -606,6 +606,49 @@
     "cancelButton": "Anuluj",
     "sendingMessage": "Wysyłanie...",
     "sendMessage": "Wyślij wiadomość"
+  },
+
+  "cart": {
+    "title": "Koszyk",
+    "feelsEmpty": "Powiewa pustką... Dodaj coś!",
+    "browseBooks": "Przeglądaj książki",
+    "from": "Od: ",
+    "book": "książka",
+    "books": "książki",
+    "conditions": {
+      "new": "Nowa",
+      "used": "Używana",
+      "damaged": "Uszkodzona"
+    },
+    "transactions": "Transakcje: ",
+    "booksOffers": "Książki: ",
+    "goToExchange": "Przejdź do wymiany"
+  },
+
+  "navbar": {
+    "language": "Język",
+    "points": {
+      "title": "Punkty Platformy",
+      "earnBy": "Zdobywaj punkty za:",
+      "dailyLogin": "Dzienne logowanie: 1 pkt",
+      "writingReviews": "Wystawianie opinii: 2 pkt",
+      "completingTransactions": "Wymiany: 5-10 pkt",
+      "achievements": "Zdobywanie osiągnięć",
+      "promoteBook": "Użyj 100 punktów żeby wypromować książkę na 30 dni!"
+    },
+    "userMenu": {
+      "title": "Menu użytkownika",
+      "profile": "Profil",
+      "achievements": "Osiągnięcia",
+      "darkTheme": "Ciemny motyw",
+      "lightTheme": "Jasny motyw",
+      "logOut": "Wyloguj się"
+    },
+    "navigationLinks": {
+      "home": "Strona główna",
+      "transactions": "Transakcje"
+    },
+    "logIn": "ZALOGUJ SIĘ"
   },
 
   "errors": {

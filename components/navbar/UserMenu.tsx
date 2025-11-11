@@ -13,6 +13,7 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 
 export const UserMenu = ({
   userName = "John Doe",
@@ -27,6 +28,7 @@ export const UserMenu = ({
 }) => {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
+  const t = useTranslations("navbar.userMenu");
 
   return (
     <DropdownMenu>
@@ -45,7 +47,7 @@ export const UserMenu = ({
             </AvatarFallback>
           </Avatar>
           <ChevronDownIcon className="h-3 w-3 ml-1" />
-          <span className="sr-only">User menu</span>
+          <span className="sr-only">{t("title")}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
@@ -65,7 +67,7 @@ export const UserMenu = ({
           }}
         >
           <User className="mr-2 h-4 w-4" />
-          Profile
+          {t("profile")}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
@@ -74,7 +76,7 @@ export const UserMenu = ({
           }}
         >
           <Trophy className="mr-2 h-4 w-4" />
-          Achievements
+          {t("achievements")}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
@@ -87,14 +89,14 @@ export const UserMenu = ({
           <Sun className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="mr-2 absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="no-wrap w-full">
-            {theme == "dark" ? "Dark theme" : "Light theme"}
+            {theme == "dark" ? t("darkTheme") : t("lightTheme")}
           </span>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => signOut()}>
           <LogOut className="mr-2 h-4 w-4" />
-          Log out
+          {t("logOut")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

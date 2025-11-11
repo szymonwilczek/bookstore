@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +17,7 @@ export function LanguageSwitcher() {
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations("navbar");
 
   const switchLocale = (newLocale: "pl" | "en") => {
     startTransition(() => {
@@ -33,7 +34,7 @@ export function LanguageSwitcher() {
       >
         <div className="justify-center items-center">
           <Languages className="mr-4 h-4 w-4" />
-          <span>Language</span>
+          <span>{t("language")}</span>
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

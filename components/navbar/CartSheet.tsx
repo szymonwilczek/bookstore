@@ -15,6 +15,7 @@ import { useCart } from "@/lib/context/cart-context";
 import { useRouter } from "next/navigation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface CartItemBook {
   _id: string;
@@ -35,6 +36,7 @@ export function CartSheet() {
   const { cart, cartCount, removeFromCart, loading } = useCart();
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
+  const t = useTranslations("cart");
 
   const handleCheckout = () => {
     setOpen(false);
@@ -85,7 +87,7 @@ export function CartSheet() {
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <ShoppingCart className="h-5 w-5" />
-            Cart ({cartCount})
+            {t("title")} ({cartCount})
           </SheetTitle>
         </SheetHeader>
 
@@ -93,10 +95,10 @@ export function CartSheet() {
           <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] gap-4">
             <ShoppingCart className="h-16 w-16 text-muted-foreground" />
             <p className="text-muted-foreground text-center">
-              Something feels empty here... Add something!
+              {t("feelsEmpty")}
             </p>
             <Button variant="outline" onClick={() => setOpen(false)}>
-              Browse books
+              {t("browseBooks")}
             </Button>
           </div>
         ) : (
@@ -113,7 +115,7 @@ export function CartSheet() {
                       <div className="flex items-center gap-2 pb-2 border-b">
                         <div className="flex-1">
                           <p className="font-semibold text-sm">
-                            From: {owner.username}
+                            {t("from")} {owner.username}
                           </p>
                           {owner.location && (
                             <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -124,7 +126,7 @@ export function CartSheet() {
                         </div>
                         <Badge variant="secondary">
                           {ownerBooks.length}{" "}
-                          {ownerBooks.length === 1 ? "book" : "books"}
+                          {ownerBooks.length === 1 ? t("book") : t("books")}
                         </Badge>
                       </div>
 
@@ -149,10 +151,10 @@ export function CartSheet() {
                             </p>
                             <Badge variant="outline" className="text-xs mt-1">
                               {item.book.condition === "new"
-                                ? "New"
+                                ? t("conditions.new")
                                 : item.book.condition === "used"
-                                  ? "Used"
-                                  : "Damaged"}
+                                  ? t("conditions.used")
+                                  : t("conditions.damaged")}
                             </Badge>
                           </div>
                           <Button
@@ -174,11 +176,15 @@ export function CartSheet() {
 
             <div className="border-t pt-4 px-4 mt-4 space-y-3">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Transactions:</span>
+                <span className="text-muted-foreground">
+                  {t("transactions")}
+                </span>
                 <span className="font-semibold">{groupedByOwner.length}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Books:</span>
+                <span className="text-muted-foreground">
+                  {t("booksOffers")}
+                </span>
                 <span className="font-semibold">{cartCount}</span>
               </div>
               <Button
@@ -187,7 +193,7 @@ export function CartSheet() {
                 onClick={handleCheckout}
                 disabled={loading}
               >
-                Go to exchange
+                {t("goToExchange")}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
