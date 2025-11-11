@@ -46,7 +46,7 @@ export default function HomePage() {
   const [addBookModalOpen, setAddBookModalOpen] = useState(false);
   const t = useTranslations();
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
 
   // pobieranie matches (wishlista)
   useEffect(() => {
