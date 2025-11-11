@@ -15,6 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
+import { LanguageSwitcher } from "@/components/navbar/LanguageSwitcher";
 
 export default function LoginPage() {
   const t = useTranslations("login");
@@ -51,7 +52,10 @@ export default function LoginPage() {
 
       <Card className="z-1 w-full border-none shadow-md sm:max-w-lg">
         <CardHeader className="gap-6">
-          <Logo className="gap-3" />
+          <div className="flex justify-between items-center">
+            <Logo className="gap-3" />
+            <LanguageSwitcher />
+          </div>
 
           <div>
             <CardTitle className="mb-1.5 text-2xl">{t("title")}</CardTitle>
