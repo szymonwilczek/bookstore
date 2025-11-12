@@ -272,7 +272,9 @@
     "userReviews": "Opinie",
     "history": "Historia",
     "transactions": "Transakcje",
-    "points": "Punkty"
+    "points": "Punkty",
+    "reviews": "Opinie",
+    "noReviews": "Brak opinii"
   },
 
   "reviews": {

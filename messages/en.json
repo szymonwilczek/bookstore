@@ -272,7 +272,9 @@
     "userReviews": "Reviews",
     "history": "History",
     "transactions": "Transactions",
-    "points": "Points"
+    "points": "Points",
+    "reviews": "Reviews",
+    "noReviews": "No reviews yet."
   },
 
   "reviews": {

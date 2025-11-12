@@ -2,9 +2,10 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { History, ArrowRightLeft, Coins } from "lucide-react";
+import { History, ArrowRightLeft, Coins, MessageSquare } from "lucide-react";
 import { TransactionHistory } from "./transactions-history";
 import { PointsHistorySection } from "./points-history-section";
+import { ReviewsHistory } from "./reviews-history";
 import { useTranslations } from "next-intl";
 
 interface HistorySectionProps {
@@ -28,7 +29,7 @@ export function HistorySection({
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="transactions" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger
               value="transactions"
               className="flex items-center gap-2"
@@ -39,6 +40,10 @@ export function HistorySection({
             <TabsTrigger value="points" className="flex items-center gap-2">
               <Coins className="h-4 w-4" />
               {t("points")}
+            </TabsTrigger>
+            <TabsTrigger value="reviews" className="flex items-center gap-2">
+              <MessageSquare className="h-4 w-4" />
+              {t("reviews")}
             </TabsTrigger>
           </TabsList>
 
@@ -51,6 +56,12 @@ export function HistorySection({
           <TabsContent value="points" className="mt-4">
             <div className="lg:max-h-[450px] lg:overflow-y-auto">
               <PointsHistorySection isPublicView={isPublicView} />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="reviews" className="mt-4">
+            <div className="lg:max-h-[450px] lg:overflow-y-auto">
+              <ReviewsHistory userEmail={userEmail} />
             </div>
           </TabsContent>
         </Tabs>
