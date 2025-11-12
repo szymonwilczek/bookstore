@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Star, MessageSquare } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
@@ -19,38 +18,15 @@ interface Review {
 }
 
 interface ReviewsHistoryProps {
-  userEmail?: string;
+  reviews: Review[];
+  loading: boolean;
 }
 
-export function ReviewsHistory({ userEmail }: ReviewsHistoryProps) {
+export function ReviewsHistory({ reviews, loading }: ReviewsHistoryProps) {
   const t = useTranslations("profile");
   const locale = useLocale();
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [loading, setLoading] = useState(true);
 
   const dateLocale = locale === "pl" ? pl : enUS;
-
-  useEffect(() => {
-    async function fetchReviews() {
-      try {
-        const endpoint = userEmail
-          ? `/api/reviews/user?email=${userEmail}`
-          : "/api/reviews/my-reviews";
-
-        const response = await fetch(endpoint);
-        if (response.ok) {
-          const data = await response.json();
-          setReviews(data);
-        }
-      } catch (error) {
-        console.error("Error fetching reviews:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchReviews();
-  }, [userEmail]);
 
   if (loading) {
     return (
@@ -83,7 +59,7 @@ export function ReviewsHistory({ userEmail }: ReviewsHistoryProps) {
                   review.reviewer.name ||
                   review.reviewer.email}
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 {formatDistanceToNow(new Date(review.createdAt), {
                   addSuffix: true,
                   locale: dateLocale,
@@ -92,11 +68,11 @@ export function ReviewsHistory({ userEmail }: ReviewsHistoryProps) {
             </div>
             <div className="flex items-center gap-1">
               <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-              <span className="font-semibold">{review.rating.toFixed(1)}</span>
+              <span className="font-semibold">{review.rating}</span>
             </div>
           </div>
           {review.comment && (
-            <p className="text-sm text-muted-background mt-2">
+            <p className="text-sm text-muted-foreground mt-2">
               {review.comment}
             </p>
           )}

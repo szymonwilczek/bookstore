@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { User, ArrowRightLeft, Calendar } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 interface TransactionUser {
   _id: string;
@@ -31,32 +30,18 @@ interface TransactionItem {
 }
 
 interface TransactionHistoryProps {
+  transactions: TransactionItem[];
+  loading: boolean;
   userEmail?: string;
 }
 
-export function TransactionHistory({ userEmail }: TransactionHistoryProps) {
-  const [transactions, setTransactions] = useState<TransactionItem[]>([]);
-  const [loading, setLoading] = useState(true);
+export function TransactionHistory({
+  transactions,
+  loading,
+  userEmail,
+}: TransactionHistoryProps) {
   const t = useTranslations("profile");
-
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      if (!userEmail) return;
-
-      setLoading(true);
-      try {
-        const res = await fetch("/api/transactions/user");
-        const data: TransactionItem[] = await res.json();
-        setTransactions(data.slice(0, 5));
-      } catch (error) {
-        console.error("Error fetching transactions:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTransactions();
-  }, [userEmail]);
+  const locale = useLocale();
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -84,16 +69,18 @@ export function TransactionHistory({ userEmail }: TransactionHistoryProps) {
   };
 
   const getTransactionDate = (transaction: TransactionItem) => {
+    const dateLocale = locale === "pl" ? "pl-PL" : "en-US";
+
     if (transaction.completedAt) {
-      return new Date(transaction.completedAt).toLocaleDateString("pl-PL");
+      return new Date(transaction.completedAt).toLocaleDateString(dateLocale);
     }
     if (transaction.rejectedAt) {
-      return new Date(transaction.rejectedAt).toLocaleDateString("pl-PL");
+      return new Date(transaction.rejectedAt).toLocaleDateString(dateLocale);
     }
     if (transaction.acceptedAt) {
-      return new Date(transaction.acceptedAt).toLocaleDateString("pl-PL");
+      return new Date(transaction.acceptedAt).toLocaleDateString(dateLocale);
     }
-    return new Date(transaction.createdAt).toLocaleDateString("pl-PL");
+    return new Date(transaction.createdAt).toLocaleDateString(dateLocale);
   };
 
   if (loading) {
@@ -104,64 +91,64 @@ export function TransactionHistory({ userEmail }: TransactionHistoryProps) {
     );
   }
 
+  if (transactions.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-muted-foreground">{t("noTransactionsFound")}</p>
+      </div>
+    );
+  }
+
   return (
-    <>
-      {transactions.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">{t("noTransactionsFound")}</p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {transactions.map((transaction) => {
-            const isInitiator = transaction.initiator.email === userEmail;
-            const otherUser = isInitiator
-              ? transaction.receiver
-              : transaction.initiator;
+    <div className="space-y-4">
+      {transactions.map((transaction) => {
+        const isInitiator = transaction.initiator.email === userEmail;
+        const otherUser = isInitiator
+          ? transaction.receiver
+          : transaction.initiator;
 
-            const receivedBook = isInitiator
-              ? transaction.requestedBook
-              : transaction.offeredBooks?.[0];
+        const receivedBook = isInitiator
+          ? transaction.requestedBook
+          : transaction.offeredBooks?.[0];
 
-            const actionLabel = t("receivedFrom");
+        const actionLabel = t("receivedFrom");
 
-            return (
-              <div
-                key={transaction._id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
-              >
-                <div className="space-y-2 flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="font-medium line-clamp-1">
-                      {receivedBook?.title || t("unknownBook")}
-                    </p>
-                    <Badge
-                      className={getStatusColor(transaction.status)}
-                      variant="outline"
-                    >
-                      {getStatusLabel(transaction.status)}
-                    </Badge>
-                  </div>
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <ArrowRightLeft className="h-3 w-3" />
-                      {actionLabel}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <User className="h-3 w-3" />
-                      {otherUser.username || otherUser.email}
-                    </span>
-                    <span className="hidden sm:inline">•</span>
-                    <span className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      {getTransactionDate(transaction)}
-                    </span>
-                  </div>
-                </div>
+        return (
+          <div
+            key={transaction._id}
+            className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+          >
+            <div className="space-y-2 flex-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="font-medium line-clamp-1">
+                  {receivedBook?.title || t("unknownBook")}
+                </p>
+                <Badge
+                  className={getStatusColor(transaction.status)}
+                  variant="outline"
+                >
+                  {getStatusLabel(transaction.status)}
+                </Badge>
               </div>
-            );
-          })}
-        </div>
-      )}
-    </>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <ArrowRightLeft className="h-3 w-3" />
+                  {actionLabel}
+                </span>
+                <span className="flex items-center gap-1">
+                  <User className="h-3 w-3" />
+                  {otherUser.username || otherUser.email}
+                </span>
+                <span className="hidden sm:inline">•</span>
+                <span className="flex items-center gap-1">
+                  <Calendar className="h-3 w-3" />
+                  {getTransactionDate(transaction)}
+                </span>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 }
