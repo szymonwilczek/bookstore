@@ -167,9 +167,9 @@
     "hello": "Cześć",
     "you": "Nieznajomy",
     "subtitle": "Zarządzaj swoim profilem, śledź transakcje i monitoruj swoje książki",
-    "platformStats": "Statystyki Platformy",
-    "yourStats": "Statystyki Użytkownika",
-    "activityStats": "Statystyki Aktywności",
+    "platformStats": "Platforma",
+    "yourStats": "Użytkownik",
+    "activityStats": "Aktywność",
     "loading": "Ładowanie...",
     "informations": "Informacje o profilu",
     "editProfile": "Edytuj Profil",
@@ -281,7 +281,13 @@
     "day": "dzień",
     "days": "dni",
     "daysMany": "dni",
-    "leaderboard": "Ranking"
+    "leaderboard": "Ranking",
+    "ranking": {
+      "position": "Pozycja w Rankingu",
+      "rank": "Pozycja",
+      "tier": "Poziom",
+      "totalScore": "Łączny Wynik"
+    }
   },
 
   "reviews": {
@@ -670,6 +676,7 @@
       "title": "Menu użytkownika",
       "profile": "Profil",
       "achievements": "Osiągnięcia",
+      "leaderboard": "Ranking",
       "darkTheme": "Ciemny motyw",
       "lightTheme": "Jasny motyw",
       "logOut": "Wyloguj się"

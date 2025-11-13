@@ -167,9 +167,9 @@
     "hello": "Hello",
     "you": "You",
     "subtitle": "Manage your profile, track transactions, and monitor your books",
-    "platformStats": "Platform Stats",
-    "yourStats": "User Stats",
-    "activityStats": "Activity Stats",
+    "platformStats": "Platform",
+    "yourStats": "User",
+    "activityStats": "Activity",
     "loading": "Loading...",
     "informations": "Profile Informations",
     "editProfile": "Edit Profile",
@@ -279,7 +279,13 @@
     "hours": "hours",
     "day": "day",
     "days": "days",
-    "leaderboard": "Leaderboard"
+    "leaderboard": "Leaderboard",
+    "ranking": {
+      "position": "Ranking Position",
+      "rank": "Rank",
+      "tier": "Tier",
+      "totalScore": "Total Score"
+    }
   },
 
   "reviews": {
@@ -668,6 +674,7 @@
       "title": "User menu",
       "profile": "Profile",
       "achievements": "Achievements",
+      "leaderboard": "Leaderboard",
       "darkTheme": "Dark theme",
       "lightTheme": "Light theme",
       "logOut": "Log out"
