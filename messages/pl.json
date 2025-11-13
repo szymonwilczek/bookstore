@@ -424,6 +424,9 @@
     "nextGoal": "Następny cel",
     "pointsGained": "punktów",
     "hasBeenUnlocked": "Odblokowano",
+    "streakUpdated": "Seria zaktualizowana!",
+    "currentStreak": "Aktualna seria",
+    "days": "dni",
 
     "tiers": {
       "bronze": "Brązowy",

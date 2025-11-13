@@ -422,6 +422,9 @@
     "nextGoal": "Next goal",
     "pointsGained": "points",
     "hasBeenUnlocked": "Unlocked",
+    "streakUpdated": "Streak updated!",
+    "currentStreak": "Current streak",
+    "days": "days",
 
     "tiers": {
       "bronze": "Bronze",
