@@ -6,12 +6,17 @@ import Book from "../models/Book";
 import Conversation from "../models/Conversation";
 import LoginStreak from "../models/LoginStreak";
 import UserAchievement from "../models/UserAchievement";
-import { ScoreBreakdown, RankingStats, TierType } from "../types/ranking";
+import { ScoreBreakdown, RankingStats, TierType, UserRankingData } from "../types/ranking";
+import UserRanking from "../models/UserRanking";
 
 interface CalculatedScore {
   totalScore: number;
   scores: ScoreBreakdown;
   stats: RankingStats;
+  tier: TierType;
+  weeklyExchanges: number;
+  weeklyReviews: number;
+  lastActivity: Date;
 }
 
 /**
@@ -261,7 +266,6 @@ export async function calculateUserScore(
   const activity = await calculateActivityScore(userId);
   const quality = await calculateQualityScore(userId);
 
-  // wagi: Trading 30%, Reputation 25%, Community 20%, Activity 15%, Quality 10%
   const scores: ScoreBreakdown = {
     trading: Math.round(trading.score * 0.3),
     reputation: Math.round(reputation.score * 0.25),
@@ -277,6 +281,8 @@ export async function calculateUserScore(
       scores.activity +
       scores.quality,
   );
+
+  const tier = assignTier(totalScore);
 
   const stats: RankingStats = {
     completedTransactions: trading.stats.completedTransactions || 0,
@@ -296,10 +302,16 @@ export async function calculateUserScore(
     completionRate: quality.stats.completionRate || 0,
   };
 
+  const existingRanking = (await UserRanking.findOne({ userId }).lean()) as UserRankingData | null;
+
   return {
     totalScore,
     scores,
     stats,
+    tier,
+    weeklyExchanges: existingRanking?.weeklyExchanges || 0,
+    weeklyReviews: existingRanking?.weeklyReviews || 0,
+    lastActivity: existingRanking?.lastActivity || new Date(),
   };
 }
 
