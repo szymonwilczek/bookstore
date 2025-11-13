@@ -23,6 +23,8 @@ import {
   Trophy,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { LeaderboardEntry } from "@/lib/types/ranking";
+import { TierBadge } from "@/components/ranking/tier-badge";
 
 interface UserProfile {
   username: string;
@@ -41,6 +43,7 @@ interface ProfileInfoSectionProps {
   onEditProfile: () => void;
   isPublicView?: boolean;
   userId?: string;
+  ranking?: LeaderboardEntry;
 }
 
 interface Achievement {
@@ -59,6 +62,7 @@ export function ProfileInfoSection({
   onEditProfile,
   isPublicView = false,
   userId,
+  ranking,
 }: ProfileInfoSectionProps) {
   const { data: session } = useSession();
   const router = useRouter();
@@ -168,8 +172,16 @@ export function ProfileInfoSection({
             </AvatarFallback>
           </Avatar>
           <div className="text-center">
-            <h3 className="text-lg font-semibold">{profileData.username}</h3>
+            <div className="flex items-center justify-center gap-2">
+              <h3 className="text-lg font-semibold">{profileData.username}</h3>
+              {ranking && <TierBadge tier={ranking.tier} size="sm" />}
+            </div>
             <p className="text-sm text-muted-foreground">{profileData.email}</p>
+            {ranking && (
+              <p className="text-xs text-muted-foreground mt-1">
+                Rank #{ranking.rank} • {ranking.totalScore.toLocaleString()} pts
+              </p>
+            )}
           </div>
         </div>
 
@@ -227,39 +239,39 @@ export function ProfileInfoSection({
           {(profileData.github ||
             profileData.twitter ||
             profileData.website) && (
-            <div className="flex gap-2 pt-2">
-              {profileData.github && (
-                <a
-                  href={"https://github.com/" + profileData.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <Github className="h-5 w-5" />
-                </a>
-              )}
-              {profileData.twitter && (
-                <a
-                  href={"https://x.com/" + profileData.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <Twitter className="h-5 w-5" />
-                </a>
-              )}
-              {profileData.website && (
-                <a
-                  href={profileData.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <Globe className="h-5 w-5" />
-                </a>
-              )}
-            </div>
-          )}
+              <div className="flex gap-2 pt-2">
+                {profileData.github && (
+                  <a
+                    href={"https://github.com/" + profileData.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <Github className="h-5 w-5" />
+                  </a>
+                )}
+                {profileData.twitter && (
+                  <a
+                    href={"https://x.com/" + profileData.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <Twitter className="h-5 w-5" />
+                  </a>
+                )}
+                {profileData.website && (
+                  <a
+                    href={profileData.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <Globe className="h-5 w-5" />
+                  </a>
+                )}
+              </div>
+            )}
         </div>
       </CardContent>
     </Card>
