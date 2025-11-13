@@ -6,21 +6,22 @@ import { LeaderboardEntry, UserRankingData } from "@/lib/types/ranking";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { userId: string } },
+  context: { params: Promise<{ userId: string }> },
 ) {
   try {
     await connectToDB();
 
-    const { userId } = params;
+    const { userId } = await context.params;
 
     const ranking = (await UserRanking.findOne({
       userId,
-    }).lean()) as UserRankingData;
+    }).lean()) as UserRankingData | null;
+
     if (!ranking) {
       return NextResponse.json({ error: "Ranking not found" }, { status: 404 });
     }
 
-    const user = (await User.findById(userId).lean()) as IUser;
+    const user = (await User.findById(userId).lean()) as IUser | null;
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }

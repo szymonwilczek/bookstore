@@ -2,11 +2,14 @@ import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { LeaderboardClient } from "./leaderboard-client";
 
+type PageProps = {
+  params: Promise<{ locale: string }>;
+};
+
 export async function generateMetadata({
-  params: { locale },
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "ranking" });
 
   return {
@@ -15,6 +18,7 @@ export async function generateMetadata({
   };
 }
 
-export default function LeaderboardPage() {
+export default async function LeaderboardPage({ params }: PageProps) {
+  await params;
   return <LeaderboardClient />;
 }
