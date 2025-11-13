@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { BookHeart } from "lucide-react";
 import { ListingCard } from "./listing-card";
 import { useTranslations } from "next-intl";
-import { TierBadge } from "@/components/ranking/tier-badge";
 
 interface MatchSectionProps {
   matches: {
@@ -33,7 +32,7 @@ export function MatchSection({ matches }: MatchSectionProps) {
   const t = useTranslations("listings.match");
   if (matches.length === 0) return null;
 
-  // Zlicz Platinum+ matches
+  // Platinum+ matches
   const premiumMatches = matches.filter((m) => {
     const tier = m.ownerTier;
     return tier === "platinum" || tier === "diamond" || tier === "legendary";
@@ -62,22 +61,6 @@ export function MatchSection({ matches }: MatchSectionProps) {
 
           return (
             <div key={`match-${match.offeredBook._id}-${idx}`} className="relative">
-              {match.ownerTier && (
-                <div className="absolute top-2 right-2 z-10">
-                  <TierBadge
-                    tier={
-                      match.ownerTier as
-                        | "bronze"
-                        | "silver"
-                        | "gold"
-                        | "platinum"
-                        | "diamond"
-                        | "legendary"
-                    }
-                    size="sm"
-                  />
-                </div>
-              )}
               <ListingCard book={book} owner={owner} isMatch={true} />
             </div>
           );
