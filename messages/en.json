@@ -274,7 +274,14 @@
     "transactions": "Transactions",
     "points": "Points",
     "reviews": "Reviews",
-    "noReviews": "No reviews yet."
+    "noReviews": "No reviews yet.",
+    "pendingExchanges": "Pending Exchanges",
+    "averageExchangeTime": "Average Exchange Time",
+    "wishlistMatches": "Wishlist Matches",
+    "hour": "hour",
+    "hours": "hours",
+    "day": "day",
+    "days": "days"
   },
 
   "reviews": {

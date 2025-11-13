@@ -274,7 +274,16 @@
     "transactions": "Transakcje",
     "points": "Punkty",
     "reviews": "Opinie",
-    "noReviews": "Brak opinii"
+    "noReviews": "Brak opinii",
+    "pendingExchanges": "Oczekujące wymiany",
+    "averageExchangeTime": "Średni czas wymiany",
+    "wishlistMatches": "Dopasowania listy życzeń",
+    "hour": "godzina",
+    "hours": "godziny",
+    "hoursMany": "godzin",
+    "day": "dzień",
+    "days": "dni",
+    "daysMany": "dni"
   },
 
   "reviews": {
