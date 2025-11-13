@@ -2,7 +2,6 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/routing";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,10 +28,10 @@ export function LanguageSwitcher() {
     <DropdownMenu>
       <DropdownMenuTrigger
         asChild
-        className="flex flex-row items-center cursor-pointer"
+        className="flex w-full flex-row items-center cursor-pointer"
         disabled={isPending}
       >
-        <div className="justify-center items-center">
+        <div className="justify-start items-center">
           <Languages className="mr-4 h-4 w-4" />
           <span>{t("language")}</span>
         </div>
