@@ -162,9 +162,6 @@
     "booksExchanged": "Books Exchanged",
     "averageRating": "Average Rating",
     "booksInWishlist": "Books in Wishlist",
-    "pendingExchanges": "Pending Exchanges",
-    "averageExchangeTime": "Average Exchange Time",
-    "wishlistMatches": "Wishlist Matches",
     "failedToDeleteBook": "Failed to delete book. Please report this error.",
     "unexpectedErrorOcccurred": "An unexpected error occurred. Please try again.",
     "hello": "Hello",
@@ -281,7 +278,8 @@
     "hour": "hour",
     "hours": "hours",
     "day": "day",
-    "days": "days"
+    "days": "days",
+    "leaderboard": "Leaderboard"
   },
 
   "reviews": {

@@ -162,9 +162,6 @@
     "booksExchanged": "Wymienionych książek",
     "averageRating": "Średnia ocena",
     "booksInWishlist": "Książek na liście życzeń",
-    "pendingExchanges": "Oczekujących wymian",
-    "averageExchangeTime": "Średni czas wymiany",
-    "wishlistMatches": "Dopasowań listy życzeń",
     "failedToDeleteBook": "Nie udało się usunąć książki. Prosimy - zgłoś ten błąd.",
     "unexpectedErrorOcccurred": "Wystąpił nieoczekiwany błąd. Prosimy - spróbuj ponownie.",
     "hello": "Cześć",
@@ -283,7 +280,8 @@
     "hoursMany": "godzin",
     "day": "dzień",
     "days": "dni",
-    "daysMany": "dni"
+    "daysMany": "dni",
+    "leaderboard": "Ranking"
   },
 
   "reviews": {
