@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dailyRankingUpdate } from "@/lib/cron/ranking-update";
+import connectToDB from "@/lib/db/connect";
+import {
+  updateAllUsers,
+  recalculateRankings,
+  applyDecaySystem,
+} from "@/lib/ranking/updater";
 
 export async function GET(req: NextRequest) {
+  const startTime = Date.now();
+
   try {
     const authHeader = req.headers.get("authorization");
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
@@ -10,27 +17,35 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const result = await dailyRankingUpdate();
+    await connectToDB();
 
-    if (!result.success) {
-      return NextResponse.json(
-        {
-          error: "Ranking update failed",
-          details: result.error,
-          timestamp: result.timestamp,
-        },
-        { status: 500 },
-      );
-    }
+    // 1. update wszystkich uzytkownikow
+    const usersUpdated = await updateAllUsers();
+
+    // 2. decay system
+    const usersDecayed = await applyDecaySystem();
+
+    // 3. rankingi
+    await recalculateRankings();
+
+    const duration = Date.now() - startTime;
+
+    console.log(`[CRON] Ranking update completed:`, {
+      usersUpdated,
+      usersDecayed,
+      duration: `${duration}ms`,
+      timestamp: new Date().toISOString(),
+    });
 
     return NextResponse.json({
       success: true,
-      usersUpdated: result.usersUpdated,
-      usersDecayed: result.usersDecayed,
-      timestamp: result.timestamp,
+      usersUpdated,
+      usersDecayed,
+      duration,
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Cron endpoint error:", error);
+    console.error("[CRON] Ranking update failed:", error);
     return NextResponse.json(
       {
         error: "Internal Server Error",
