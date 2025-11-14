@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Coins } from "lucide-react";
 import {
@@ -10,22 +9,21 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useTranslations } from "next-intl";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function PointsDisplay() {
-  const { data: session } = useSession();
-  const [points, setPoints] = useState<number>(0);
+  const { data: session, status } = useSession();
   const t = useTranslations("navbar.points");
 
-  useEffect(() => {
-    if (session) {
-      fetch("/api/user/profile")
-        .then((res) => res.json())
-        .then((data) => setPoints(data.points || 0))
-        .catch(console.error);
-    }
-  }, [session]);
+  if (status === "loading") {
+    return <Skeleton className="h-9 w-20 rounded-lg" />;
+  }
 
-  if (!session) return null;
+  if (!session?.user) {
+    return null;
+  }
+
+  const points = session.user.points || 0;
 
   return (
     <TooltipProvider>
