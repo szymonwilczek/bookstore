@@ -35,7 +35,6 @@ export function SearchBar({
           </div>
         </PopoverTrigger>
       </Popover>
-      <Button onClick={() => setOpen(false)}>{t("search")}</Button>
       {onAddBook && (
         <Button
           variant="default"
