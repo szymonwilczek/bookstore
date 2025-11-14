@@ -22,6 +22,7 @@ export interface AchievementRequirement {
   freeGiveaways?: number;
   conversationsStarted?: number;
   detailedReviews?: number;
+  completedInSummer?: number;
 }
 
 export interface IAchievement extends Document {
@@ -79,6 +80,7 @@ const AchievementSchema: Schema = new Schema(
       freeGiveaways: { type: Number },
       conversationsStarted: { type: Number },
       detailedReviews: { type: Number },
+      completedInSummer: { type: Number },
     },
     isActive: { type: Boolean, default: true },
   },

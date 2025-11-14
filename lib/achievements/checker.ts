@@ -36,6 +36,18 @@ export async function checkAchievements(userId: string) {
     status: "completed",
   });
 
+  const summerTransactions = await Transaction.countDocuments({
+    $or: [{ initiator: userId }, { receiver: userId }],
+    status: "completed",
+    completedAt: { $exists: true },
+    $expr: {
+      $or: [
+        { $eq: [{ $month: "$completedAt" }, 7] }, // lipiec
+        { $eq: [{ $month: "$completedAt" }, 8] }, // sierpien
+      ],
+    },
+  });
+
   // 2. FREE GIVEAWAYS
   const freeGiveaways = await Transaction.countDocuments({
     receiver: userId,
@@ -81,7 +93,7 @@ export async function checkAchievements(userId: string) {
     if (!achievement.requirement) continue;
 
     const existingUserAchievement = userAchievements.find(
-      (ua) => ua.achievementId.toString() === achievement._id.toString()
+      (ua) => ua.achievementId.toString() === achievement._id.toString(),
     );
 
     if (existingUserAchievement?.unlockedAt) continue;
@@ -116,11 +128,16 @@ export async function checkAchievements(userId: string) {
       achievement.requirement.averageRating &&
       achievement.requirement.minReviews
     ) {
-      targetProgress = achievement.requirement.minReviews;
+      const avgRating =
+        reviews.length > 0
+          ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+          : 0;
+
+      targetProgress = achievement.requirement.minReviews; // 5, 15, 50, 100
       currentProgress = reviews.length;
       unlocked =
         reviews.length >= achievement.requirement.minReviews &&
-        avgRating >= achievement.requirement.averageRating;
+        avgRating >= achievement.requirement.averageRating; // >= 5.0
     }
 
     // REPUTATION - Positive Reviews
@@ -148,6 +165,13 @@ export async function checkAchievements(userId: string) {
     if (achievement.requirement.loginStreak) {
       targetProgress = achievement.requirement.loginStreak;
       currentProgress = loginStreak;
+      unlocked = currentProgress >= targetProgress;
+    }
+
+    // SPECIAL - Summer Harvest
+    if (achievement.requirement.completedInSummer) {
+      targetProgress = achievement.requirement.completedInSummer;
+      currentProgress = summerTransactions;
       unlocked = currentProgress >= targetProgress;
     }
 
