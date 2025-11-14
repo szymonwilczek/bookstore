@@ -94,6 +94,8 @@ export async function POST(req: NextRequest) {
   const loginStreakDoc = await LoginStreak.findOne({ user: targetUserId });
   const loginStreak = loginStreakDoc ? loginStreakDoc.currentStreak : 0;
 
+  let pointsChanged = false;
+
   // sprawdzanie kazdeg osiagniecia
   for (const achievement of allAchievements) {
     const existingUserAchievement = userAchievements.find(
@@ -213,6 +215,7 @@ export async function POST(req: NextRequest) {
           // punkty bonusowe
           user.points += achievement.points;
           await user.save();
+          pointsChanged = true;
           await PointsHistory.create({
             user: targetUserId,
             amount: achievement.points,
@@ -249,6 +252,7 @@ export async function POST(req: NextRequest) {
         // punkty bonusowe
         user.points += achievement.points;
         await user.save();
+        pointsChanged = true;
         await PointsHistory.create({
           user: targetUserId,
           amount: achievement.points,
@@ -271,6 +275,7 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     newlyUnlocked,
     progressUpdates,
+    pointsChanged,
     message:
       newlyUnlocked.length > 0
         ? `Unlocked ${newlyUnlocked.length} achievement(s)!`

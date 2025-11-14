@@ -2,9 +2,11 @@ import { useState } from "react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { useTranslations } from "next-intl";
+import { useSession } from "next-auth/react";
 
 export function useAchievements(userId?: string) {
   const [checking, setChecking] = useState(false);
+  const { update } = useSession();
   const t = useTranslations();
 
   const triggerConfetti = () => {
@@ -52,6 +54,10 @@ export function useAchievements(userId?: string) {
       if (!res.ok) throw new Error("Failed to check achievements");
 
       const data = await res.json();
+
+      if (data.pointsChanged) {
+        await update({});
+      }
 
       if (data.newlyUnlocked && data.newlyUnlocked.length > 0) {
         triggerConfetti();
