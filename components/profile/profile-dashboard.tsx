@@ -102,11 +102,13 @@ interface TransactionFromAPI {
 interface ProfileDashboardProps {
   userData: UserData | null;
   promotedBooks: PromotedBook[];
+  onProfileUpdate?: () => Promise<void>;
 }
 
 export function ProfileDashboard({
   userData,
   promotedBooks,
+  onProfileUpdate,
 }: ProfileDashboardProps) {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isAddBookModalOpen, setIsAddBookModalOpen] = useState(false);
@@ -342,7 +344,9 @@ export function ProfileDashboard({
 
     fetchData();
 
-    await update();
+    if (onProfileUpdate) {
+      await onProfileUpdate();
+    }
   };
 
   const handleEditBook = (book: {
@@ -440,6 +444,10 @@ export function ProfileDashboard({
         return;
       }
 
+      await update({});
+
+      await fetchData();
+
       toast(`🎉 Book promoted successfully!`, {
         position: "top-center",
         action: {
@@ -448,8 +456,7 @@ export function ProfileDashboard({
         },
         description: `Książka została wypromowana. Możesz przedłużyć okres promocji z panelu profilu.`,
       });
-      // Refresh data
-      window.location.reload();
+
     } catch (error) {
       console.error("Error promoting book:", error);
       toast.error(`Wystąpił błąd!`, {
@@ -477,11 +484,16 @@ export function ProfileDashboard({
         return;
       }
 
+
+      await update({});
+
+      await fetchData();
+
       toast(`🎉 Promotion extended successfully!`, {
         position: "top-center",
         description: `Promocja książki została przedłużona na kolejne 30 dni.`,
       });
-      window.location.reload();
+
     } catch (error) {
       console.error("Error extending promotion:", error);
       toast.error(`Wystąpił błąd!`, {
@@ -515,11 +527,15 @@ export function ProfileDashboard({
         return;
       }
 
+      await update({});
+
+      await fetchData();
+
       toast(`🎉 Promotion cancelled successfully!`, {
         position: "top-center",
         description: `Promotion cancelled! Refunded ${data.refundedPoints} points.`,
       });
-      window.location.reload();
+
     } catch (error) {
       console.error("Error cancelling promotion:", error);
       toast.error(`Wystąpił błąd!`, {

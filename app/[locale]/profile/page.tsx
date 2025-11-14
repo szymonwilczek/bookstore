@@ -43,7 +43,7 @@ interface UserData {
 }
 
 export default function ProfilePage() {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [promotedBooks, setPromotedBooks] = useState([]);
   const t = useTranslations("profile");
@@ -68,7 +68,7 @@ export default function ProfilePage() {
   return (
     <div>
       <div className="min-h-screen bg-background">
-        <ProfileDashboard userData={userData} promotedBooks={promotedBooks} />
+        <ProfileDashboard userData={userData} promotedBooks={promotedBooks} onProfileUpdate={update} />
       </div>
     </div>
   );
