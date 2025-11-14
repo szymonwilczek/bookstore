@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 interface ReviewFormProps {
   transactionId: string;
@@ -12,6 +13,7 @@ interface ReviewFormProps {
 export default function ReviewForm({ transactionId }: ReviewFormProps) {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
+  const { update } = useSession();
 
   const submitReview = async () => {
     await fetch("/api/reviews", {
@@ -23,6 +25,8 @@ export default function ReviewForm({ transactionId }: ReviewFormProps) {
       position: "top-center",
       description: "Recenzja dodana!",
     });
+
+    await update({});
   };
 
   return (
