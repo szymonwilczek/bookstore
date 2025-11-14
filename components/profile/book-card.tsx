@@ -64,7 +64,7 @@ export function BookCard({
   );
 
   return (
-    <Card className="overflow-hidden min-w-[200px] h-full">
+    <Card className="overflow-hidden max-sm:max-w-[250px] max-sm:w-full min-w-[200px] h-full">
       <div className="aspect-square relative max-h-36">
         <Image
           width={200}
