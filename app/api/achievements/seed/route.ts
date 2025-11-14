@@ -430,32 +430,7 @@ const achievements = [
     points: 50,
     requirement: { exchangesInSummer: 10 },
   },
-  {
-    id: "new_year_contract",
-    seriesId: "new_year_contract",
-    seriesNameKey: "achievements.series.new_year",
-    nameKey: "achievements.new_year_contract.name",
-    descriptionKey: "achievements.new_year_contract.description",
-    icon: "🥂",
-    tier: "gold",
-    category: "special",
-    points: 50,
-    requirement: { exchangeOnNewYear: true },
-  },
-
   // ===== SPECIAL: Milestone =====
-  {
-    id: "king_of_merchant_guild",
-    seriesId: "king_of_merchant_guild",
-    seriesNameKey: "achievements.series.special",
-    nameKey: "achievements.king_of_merchant_guild.name",
-    descriptionKey: "achievements.king_of_merchant_guild.description",
-    icon: "👑",
-    tier: "platinum",
-    category: "special",
-    points: 200,
-    requirement: { totalPoints: 10000 },
-  },
   {
     id: "best_of_the_best",
     seriesId: "best_of_the_best",
@@ -485,7 +460,7 @@ export async function POST() {
     console.error("Error seeding achievements:", error);
     return NextResponse.json(
       { error: "Failed to seed achievements" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
