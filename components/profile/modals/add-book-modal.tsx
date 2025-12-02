@@ -57,7 +57,7 @@ export function AddBookModal({
   open,
   onOpenChange,
   onSave,
-  type = "offered",
+  type
 }: AddBookModalProps) {
   const [isCreating, setIsCreating] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -369,40 +369,45 @@ export function AddBookModal({
                 </>
               )}
 
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="condition" className="text-right">
-                  {t("bookCondition")}
-                </Label>
-                <Select
-                  value={formData.condition}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, condition: value })
-                  }
-                >
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="new">{t("new")}</SelectItem>
-                    <SelectItem value="used">{t("used")}</SelectItem>
-                    <SelectItem value="damaged">{t("damaged")}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="ownerNote" className="text-right">
-                  {t("ownerNote")}
-                </Label>
-                <Textarea
-                  id="ownerNote"
-                  value={formData.ownerNote}
-                  onChange={(e) =>
-                    setFormData({ ...formData, ownerNote: e.target.value })
-                  }
-                  placeholder={t("ownerNotePlaceholder")}
-                  className="col-span-3"
-                />
-              </div>
+              {type == "offered" && (
+                <>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="condition" className="text-right">
+                      {t("bookCondition")}
+                    </Label>
+                    <Select
+                      value={formData.condition}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, condition: value })
+                      }
+                    >
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="new">{t("new")}</SelectItem>
+                        <SelectItem value="used">{t("used")}</SelectItem>
+                        <SelectItem value="damaged">{t("damaged")}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="ownerNote" className="text-left">
+                      {t("ownerNote")}
+                    </Label>
+                    <Textarea
+                      id="ownerNote"
+                      value={formData.ownerNote}
+                      onChange={(e) =>
+                        setFormData({ ...formData, ownerNote: e.target.value })
+                      }
+                      placeholder={t("ownerNotePlaceholder")}
+                      className="col-span-3"
+                    />
+                  </div>
+                </>
+              )}
             </div>
             <DialogFooter>
               {isCreating && (
