@@ -85,7 +85,7 @@ export function ListingCard({
     if (!session) {
       toast.error(t("errors.waitASecond"), {
         position: "top-center",
-        description: t("errors.leggedInCartError"),
+        description: t("errors.loggedInCartError"),
       });
       return;
     }

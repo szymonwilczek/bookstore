@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { Search, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useSession } from "next-auth/react";
+import { useRouter } from "@/i18n/routing";
 
 interface SearchBarProps {
   searchQuery: string;
@@ -17,8 +19,18 @@ export function SearchBar({
   setSearchQuery,
   onAddBook,
 }: SearchBarProps) {
+  const { data: session } = useSession();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const t = useTranslations("listings");
+
+  const handleCreateOfferClick = () => {
+    if (session) {
+      onAddBook?.();
+    } else {
+      router.push("/login");
+    }
+  };
 
   return (
     <div className="flex gap-2">
@@ -38,7 +50,7 @@ export function SearchBar({
       {onAddBook && (
         <Button
           variant="default"
-          onClick={onAddBook}
+          onClick={handleCreateOfferClick}
           className="bg-green-600 hover:bg-green-700 text-white"
         >
           <Plus className="h-4 w-4 mr-2" />
