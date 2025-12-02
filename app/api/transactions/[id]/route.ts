@@ -5,6 +5,7 @@ import Transaction, { ITransaction } from "@/lib/models/Transaction";
 import Book from "@/lib/models/Book";
 import BookSnapshot, { IBookSnapshot } from "@/lib/models/BookSnapshot";
 import User from "@/lib/models/User";
+import PointsHistory from "@/lib/models/PointsHistory";
 import mongoose from "mongoose";
 import { checkAchievements } from "@/lib/achievements/checker";
 
@@ -50,7 +51,7 @@ interface UserWishlistData {
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const session = await auth();
   if (!session)
@@ -62,13 +63,13 @@ export async function PUT(
   const { id } = await params;
 
   const transaction = (await Transaction.findById(id).populate(
-    "initiator receiver requestedBook offeredBooks"
+    "initiator receiver requestedBook offeredBooks",
   )) as PopulatedTransaction | null;
 
   if (!transaction) {
     return NextResponse.json(
       { error: "Transaction not found" },
-      { status: 404 }
+      { status: 404 },
     );
   }
 
@@ -76,7 +77,7 @@ export async function PUT(
   if (!userEmail) {
     return NextResponse.json(
       { error: "User email not found" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -95,7 +96,7 @@ export async function PUT(
   if ((status === "accepted" || status === "rejected") && !isReceiver) {
     return NextResponse.json(
       { error: "Only receiver can accept or reject" },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
@@ -118,13 +119,13 @@ export async function PUT(
   // snapshoty i czyszczenie
   if (status === "completed" && oldStatus === "accepted") {
     const rawTransaction = (await Transaction.findById(
-      id
+      id,
     ).lean()) as ITransaction;
 
     if (!rawTransaction) {
       return NextResponse.json(
         { error: "Transaction not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -250,6 +251,27 @@ export async function PUT(
     await transaction.initiator.save();
     await transaction.receiver.save();
 
+    // zapis historii punktow
+    // inicjator (osoba, ktora wyslala propozycje wymiany)
+    await PointsHistory.create({
+      user: transaction.initiator._id,
+      amount: 10,
+      type: "earned",
+      source: "transaction_sent",
+      description: "Points for completing a transaction",
+      relatedTransaction: transaction._id,
+    });
+
+    // odbiorca (osoba, ktora zaakceptowala wymiane)
+    await PointsHistory.create({
+      user: transaction.receiver._id,
+      amount: 10,
+      type: "earned",
+      source: "transaction_received",
+      description: "Points for completing a transaction",
+      relatedTransaction: transaction._id,
+    });
+
     await checkAchievements(transaction.initiator._id.toString());
     await checkAchievements(transaction.receiver._id.toString());
   }
@@ -264,7 +286,7 @@ export async function PUT(
     if (transaction.offeredBooks && transaction.offeredBooks.length > 0) {
       await Book.updateMany(
         { _id: { $in: transaction.offeredBooks.map((b) => b._id) } },
-        { status: "available" }
+        { status: "available" },
       );
     }
   }
@@ -276,7 +298,7 @@ export async function PUT(
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const session = await auth();
   if (!session)
@@ -287,13 +309,13 @@ export async function GET(
   const { id } = await params;
 
   const rawTransaction = (await Transaction.findById(
-    id
+    id,
   ).lean()) as ITransaction;
 
   if (!rawTransaction) {
     return NextResponse.json(
       { error: "Transaction not found" },
-      { status: 404 }
+      { status: 404 },
     );
   }
 
@@ -301,7 +323,7 @@ export async function GET(
   if (!userEmail) {
     return NextResponse.json(
       { error: "User email not found" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -360,7 +382,7 @@ export async function GET(
       }
 
       return await Book.findById(bookId).lean();
-    })
+    }),
   );
 
   const validOfferedBooks = offeredBooks.filter(Boolean);
