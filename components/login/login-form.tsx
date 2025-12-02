@@ -97,7 +97,7 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
         <Label htmlFor="rememberMe">{t("rememberMe")}</Label>
       </div>
 
-      <Button className="w-full" type="submit">
+      <Button className="w-full cursor-pointer" type="submit">
         {t("signIn")}
       </Button>
     </form>

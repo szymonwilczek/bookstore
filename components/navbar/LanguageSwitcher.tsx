@@ -10,8 +10,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Languages } from "lucide-react";
 import { useTransition } from "react";
+import { cn } from "@/lib/utils";
 
-export function LanguageSwitcher() {
+interface LanguageSwitcherProps {
+  className?: string;
+}
+
+export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -28,7 +33,7 @@ export function LanguageSwitcher() {
     <DropdownMenu>
       <DropdownMenuTrigger
         asChild
-        className="flex w-full flex-row items-center cursor-pointer"
+        className={cn("flex w-full flex-row items-center cursor-pointer", className)}
         disabled={isPending}
       >
         <div className="justify-start items-center">

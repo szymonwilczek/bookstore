@@ -170,7 +170,7 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
         <p className="text-red-500 text-sm">{errors.agreeToTerms}</p>
       )}
 
-      <Button className="w-full" type="submit">
+      <Button className="cursor-pointer w-full" type="submit">
         {t("signUp")}
       </Button>
     </form>

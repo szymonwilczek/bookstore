@@ -16,6 +16,7 @@ import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { LanguageSwitcher } from "@/components/navbar/LanguageSwitcher";
+import { GoogleIcon } from "@/components/icons/GoogleIcon";
 
 export default function LoginPage() {
   const t = useTranslations("login");
@@ -52,9 +53,9 @@ export default function LoginPage() {
 
       <Card className="z-1 w-full border-none shadow-md sm:max-w-lg">
         <CardHeader className="gap-6">
-          <div className="flex justify-between items-center">
-            <Logo className="gap-3" />
-            <LanguageSwitcher />
+          <div className="flex flex-row justify-between items-center">
+            <Logo />
+            <LanguageSwitcher className="w-auto" />
           </div>
 
           <div>
@@ -89,10 +90,11 @@ export default function LoginPage() {
             </div>
 
             <Button
-              variant="ghost"
-              className="w-full"
+              variant="outline"
+              className="cursor-pointer w-full gap-2 bg-background hover:bg-accent text-foreground font-medium border-input"
               onClick={handleGoogleSignIn}
             >
+              <GoogleIcon className="h-5 w-5" />
               {t("google")}
             </Button>
           </div>
