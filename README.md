@@ -247,28 +247,80 @@ Fetches the global leaderboard with pagination.
 * **`GET /api/user/wishlist`**: Fetches books in the current user's wishlist.
 * **`GET /api/user/offered-books`**: Fetches books offered by the current user.
 
-## 🏗 Project Structure
+## 📁 Project Structure
 
 ```bash
 bookstore/
-├── app/                  # Next.js App Router (Pages & API)
-│   ├── [locale]/         # Internationalized routes (pl/en)
-│   │   ├── login/        # Login page
-│   │   ├── checkout/     # Exchange logic
-│   │   └── ...
-│   └── api/              # Backend API Endpoints
-├── components/           # Reusable React components
-│   ├── ui/               # Shadcn/Radix UI primitive components
-│   ├── navbar/           # Navigation components
-│   ├── ranking/          # Leaderboard specific components
-│   └── ...
-├── lib/                  # Utilities and Logic
-│   ├── db/               # Database connection
-│   ├── models/           # Mongoose Schemas
-│   └── hooks/            # Custom React Hooks
-├── public/               # Static assets (images, icons)
-├── messages/             # i18n JSON files (en.json, pl.json)
-└── ...
+├── app/                                  # Next.js App Router (Main Application Logic)
+│   ├── [locale]/                         # Internationalized routes (pl/en)
+│   │   ├── achievements/                 # User achievements and badges page
+│   │   ├── admin/                        # Admin dashboard
+│   │   ├── checkout/                     # Book exchange process (Drag & Drop interface)
+│   │   ├── leaderboard/                  # Global user ranking and statistics
+│   │   ├── login/                        # User authentication page
+│   │   ├── messages/                     # Real-time chat and conversation list
+│   │   ├── profile/                      # User profile management (dashboard, inventory)
+│   │   ├── register/                     # New user registration page
+│   │   ├── transactions/                 # Transaction history and status management
+│   │   ├── users/[id]/                   # Public profile view of other users
+│   │   ├── layout.tsx                    # Root layout (Providers, Navbar, Footer)
+│   │   └── page.tsx                      # Landing page with hero and featured books
+│   ├── api/                              # Backend API Endpoints (Route Handlers)
+│   │   ├── achievements/                 # Achievement verification and granting logic
+│   │   ├── auth/                         # Authentication handling (NextAuth, registration)
+│   │   ├── books/                        # Book CRUD, search, and promotion logic
+│   │   ├── cart/                         # Shopping cart management for exchanges
+│   │   ├── checkout/                     # Transaction finalization endpoints
+│   │   ├── conversations/                # Chat conversation management
+│   │   ├── cron/                         # Scheduled tasks
+│   │   ├── matches/                      # User-book matching algorithms
+│   │   ├── messages/                     # Message sending and Socket.io events
+│   │   ├── notifications/                # User notification system
+│   │   ├── ranking/                      # Leaderboard calculation and tier logic
+│   │   ├── reviews/                      # User rating and review system
+│   │   ├── transactions/                 # Exchange transaction processing
+│   │   ├── upload/                       # File upload handlers (images)
+│   │   └── user/                         # User data (onboarding, wishlist, stats)
+│   ├── favicon.ico                       # Application favicon
+│   └── globals.css                       # Global Tailwind CSS styles
+├── assets/                               # Static assets (SVG components)
+│   └── svg/                              # Custom SVG icons and backgrounds
+├── components/                           # Reusable React UI Components
+│   ├── achievements/                     # Badges, cards, and carousels for achievements
+│   ├── checkout/                         # Exchange UI (Inventory, Drag items, Zone)
+│   ├── home/                             # Landing page sections (Filters, Listings, Promoted)
+│   ├── icons/                            # Custom icon components
+│   ├── login/                            # Login forms and layouts
+│   ├── messages/                         # Chat UI (Window, Input, Conversation list)
+│   ├── navbar/                           # Navigation, User Menu, Cart Sheet
+│   ├── profile/                          # Profile sections (Stats, History, Wishlist, Modals)
+│   ├── ranking/                          # Leaderboard tables, cards, and comparison tools
+│   ├── register/                         # Registration forms
+│   ├── transactions/                     # Transaction cards and review modals
+│   └── ui/                               # Shadcn/Radix UI primitives (Button, Card, Dialog, etc.)
+├── lib/                                  # Business Logic, Utilities, and Hooks
+│   ├── achievements/                     # Achievement rules and checking engines
+│   ├── context/                          # React Contexts (Cart, Socket.io)
+│   ├── cron/                             # Background job logic
+│   ├── data/                             # Static data
+│   ├── db/                               # MongoDB connection configuration
+│   ├── hooks/                            # Custom React Hooks
+│   ├── models/                           # Mongoose Schemas
+│   ├── ranking/                          # Ranking algorithms and score calculators
+│   ├── types/                            # TypeScript type definitions
+│   ├── utils/                            # Utility functions (formatting, validation)
+│   └── matching.ts                       # Book matching logic
+├── messages/                             # Internationalization (i18n) translation files
+│   ├── en.json                           # English translations
+│   └── pl.json                           # Polish translations
+├── public/                               # Static public assets
+│   ├── images/                           # Placeholder images and banners
+│   └── sounds/                           # Notification sounds
+├── i18n.ts                               # Next-intl configuration
+├── middleware.ts                         # Middleware for locale routing and auth protection
+├── next.config.ts                        # Next.js framework configuration
+├── tailwind.config.ts                    # Tailwind CSS configuration
+└── tsconfig.json                         # TypeScript configuration
 ```
 
 ## 📜 License
